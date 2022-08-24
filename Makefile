@@ -15,9 +15,7 @@ DYLIB_FILE=$(JNI_DIR)/libbbssh.dylib
 JAVA_FILE=src/c/BbsshUtils.java
 C_FILE=src/c/BbsshUtils.c
 C_HEADER=$(JNI_DIR)/BbsshUtils.h
-ifndef JAVA_HOME
-	JAVA_HOME=$(GRAALVM)
-endif
+JAVA_HOME=$(GRAALVM)
 INCLUDE_DIRS=$(shell find $(JAVA_HOME)/include -type d)
 INCLUDE_ARGS=$(INCLUDE_DIRS:%=-I%) -I$(JNI_DIR)
 ifeq ($(UNAME),Linux)
@@ -28,6 +26,8 @@ else ifeq ($(UNAME),Darwin)
 	LIB_FILE=$(DYLIB_FILE)
 endif
 
+clean:
+	-rm -rf resources/libbbssh.so resources/libbbssh.dylib target
 
 $(CLASS_FILE): $(JAVA_FILE)
 	javac $(JAVA_FILE)

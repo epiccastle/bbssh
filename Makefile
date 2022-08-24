@@ -53,3 +53,7 @@ $(DYLIB_FILE):  $(C_FILE) $(C_HEADER)
 	cp $(SOLIB_FILE) resources
 
 lib: $(LIB_FILE)
+
+#
+# Clojure related targets
+#

@@ -29,6 +29,9 @@ endif
 clean:
 	-rm -rf resources/libbbssh.so resources/libbbssh.dylib target
 
+#
+# C library related targets
+#
 $(CLASS_FILE): $(JAVA_FILE)
 	javac $(JAVA_FILE)
 
@@ -39,8 +42,6 @@ $(C_HEADER): $(CLASS_FILE)
 	javac -h $(JNI_DIR) $(JAVA_FILE)
 	@touch $(C_HEADER)
 
-lib: $(LIB_FILE)
-
 $(SOLIB_FILE): $(C_FILE) $(C_HEADER)
 	mkdir -p resources
 	$(CC) $(INCLUDE_ARGS) -shared $(C_FILE) -o $(SOLIB_FILE) -fPIC
@@ -50,3 +51,5 @@ $(DYLIB_FILE):  $(C_FILE) $(C_HEADER)
 	mkdir -p resources
 	$(CC) $(INCLUDE_ARGS) -dynamiclib -undefined suppress -flat_namespace $(C_FILE) -o $(DYLIB_FILE) -fPIC
 	cp $(SOLIB_FILE) resources
+
+lib: $(LIB_FILE)

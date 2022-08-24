@@ -42,14 +42,11 @@ $(C_HEADER): $(CLASS_FILE)
 lib: $(LIB_FILE)
 
 $(SOLIB_FILE): $(C_FILE) $(C_HEADER)
-	$(CC) $(INCLUDE_ARGS) -shared $(C_FILE) -o $(SOLIB_FILE) -fPIC
-	cp $(SOLIB_FILE) ./
 	mkdir -p resources
-	cp $(SOLIB_FILE) ./resources/
+	$(CC) $(INCLUDE_ARGS) -shared $(C_FILE) -o $(SOLIB_FILE) -fPIC
+	cp $(SOLIB_FILE) resources
 
 $(DYLIB_FILE):  $(C_FILE) $(C_HEADER)
-	$(CC) $(INCLUDE_ARGS) -dynamiclib -undefined suppress -flat_namespace $(C_FILE) -o $(DYLIB_FILE) -fPIC
-	cp $(DYLIB_FILE) ./
 	mkdir -p resources
-	cp $(DYLIB_FILE) ./resources/
-	make copy-libs-to-resource
+	$(CC) $(INCLUDE_ARGS) -dynamiclib -undefined suppress -flat_namespace $(C_FILE) -o $(DYLIB_FILE) -fPIC
+	cp $(SOLIB_FILE) resources

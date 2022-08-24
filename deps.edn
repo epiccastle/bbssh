@@ -15,9 +15,11 @@
                 "--enable-https"
                 "--no-fallback"
                 "--allow-incomplete-classpath"
-                "--initialize-at-build-time"
                 "--enable-all-security-services"
                 "-H:+ReportExceptionStackTraces"
+                "-H:ConfigurationFileDirectories=graal-configs/"
+                "--initialize-at-build-time"
+                "--initialize-at-run-time=com.jcraft.jsch.PortWatcher"
                 "-H:Name=bbssh"]
    :jvm-opts   ["-Dclojure.compiler.direct-linking=true"]
    :extra-deps {clj.native-image

@@ -58,7 +58,7 @@ lib: $(LIB_FILE)
 # Clojure related targets
 #
 run:
-	clj -m bbssh.core
+	clj -J-Djava.library.path=resources -m bbssh.core
 
 uberjar:
 	clj -A:uberjar

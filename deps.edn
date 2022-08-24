@@ -1,0 +1,27 @@
+{:paths ["src/clj"]
+ :deps {org.clojure/clojure {:mvn/version "1.10.1"}}
+
+ :aliases
+ {:uberjar
+  {:extra-deps {luchiniatwork/cambada {:mvn/version "1.0.5"}}
+   :main-opts ["-m" "cambada.uberjar"
+               "-m" "bbssh.core"
+               "--app-version" "0.1.0-SNAPSHOT"
+               "--no-copy-source"]}
+
+  :native-image
+  {
+   :main-opts  ["-m clj.native-image bbssh.core"
+                "--enable-https"
+                "--no-fallback"
+                "--allow-incomplete-classpath"
+                "--initialize-at-build-time"
+                "--enable-all-security-services"
+                "-H:+ReportExceptionStackTraces"
+                "-H:Name=bbssh"]
+   :jvm-opts   ["-Dclojure.compiler.direct-linking=true"]
+   :extra-deps {clj.native-image
+                {:git/url    "https://github.com/taylorwood/clj.native-image.git"
+                 :exclusions [commons-logging/commons-logging
+                              org.slf4j/slf4j-nop]
+                 :sha        "7708e7fd4572459c81f6a6b8e44c96f41cdd92d4"}}}}}

@@ -1,8 +1,8 @@
-GRAALVM = $(HOME)/graalvm-ce-java11-21.3.0
-ifeq (,$(findstring java11,$(GRAALVM)))
+GRAALVM_HOME = $(HOME)/graalvm-ce-java11-21.3.0
+ifeq (,$(findstring java11,$(GRAALVM_HOME)))
 $(error Please use a Java 11 version of Graal)
 endif
-PATH := $(GRAALVM)/bin:$(PATH)
+PATH := $(GRAALVM_HOME)/bin:$(PATH)
 VERSION = $(shell cat .meta/VERSION)
 UNAME = $(shell uname)
 JNI_DIR=target/jni
@@ -15,7 +15,7 @@ DYLIB_FILE=$(JNI_DIR)/libbbssh.dylib
 JAVA_FILE=src/c/BbsshUtils.java
 C_FILE=src/c/BbsshUtils.c
 C_HEADER=$(JNI_DIR)/BbsshUtils.h
-JAVA_HOME=$(GRAALVM)
+JAVA_HOME=$(GRAALVM_HOME)
 INCLUDE_DIRS=$(shell find $(JAVA_HOME)/include -type d)
 INCLUDE_ARGS=$(INCLUDE_DIRS:%=-I%) -I$(JNI_DIR)
 ifeq ($(UNAME),Linux)
@@ -57,3 +57,20 @@ lib: $(LIB_FILE)
 #
 # Clojure related targets
 #
+run:
+	clj -m bbssh.core
+
+uberjar:
+	clj -A:uberjar
+
+uberjar-run:
+	java -cp target/bbssh-0.1.0-SNAPSHOT-standalone.jar clojure.main -m bbssh.core
+
+uberjar-ls:
+	jar tf target/bbssh-0.1.0-SNAPSHOT-standalone.jar
+
+#
+# Native image related targets
+#
+native-image:
+	GRAALVM_HOME=$(GRAALVM_HOME) clj -A:native-image

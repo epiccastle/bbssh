@@ -26,8 +26,12 @@ else ifeq ($(UNAME),Darwin)
 	LIB_FILE=$(DYLIB_FILE)
 endif
 
+.PHONY: clean header lib run uberjar uberjar-run uberjar-ls native-image
+
+all: bbssh
+
 clean:
-	-rm -rf resources/libbbssh.so resources/libbbssh.dylib target
+	-rm -rf resources/libbbssh.so resources/libbbssh.dylib target bbssh
 
 #
 # C library related targets
@@ -43,16 +47,16 @@ $(C_HEADER): $(CLASS_FILE)
 	@touch $(C_HEADER)
 
 $(SOLIB_FILE): $(C_FILE) $(C_HEADER)
-	mkdir -p resources
 	$(CC) $(INCLUDE_ARGS) -shared $(C_FILE) -o $(SOLIB_FILE) -fPIC
-	cp $(SOLIB_FILE) resources
 
 $(DYLIB_FILE):  $(C_FILE) $(C_HEADER)
-	mkdir -p resources
 	$(CC) $(INCLUDE_ARGS) -dynamiclib -undefined suppress -flat_namespace $(C_FILE) -o $(DYLIB_FILE) -fPIC
+
+resources/libbbssh.so: $(LIB_FILE)
+	mkdir -p resources
 	cp $(SOLIB_FILE) resources
 
-lib: $(LIB_FILE)
+lib: resources/libbbssh.so
 
 #
 # Clojure related targets
@@ -72,5 +76,7 @@ uberjar-ls:
 #
 # Native image related targets
 #
-native-image:
+bbssh: resources/libbbssh.so
 	GRAALVM_HOME=$(GRAALVM_HOME) clj -A:native-image
+
+native-image: bbssh

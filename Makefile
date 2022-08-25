@@ -6,9 +6,7 @@ PATH := $(GRAALVM_HOME)/bin:$(PATH)
 VERSION = $(shell cat .meta/VERSION)
 UNAME = $(shell uname)
 JNI_DIR=target/jni
-CLASS_DIR=target/default/classes
-CLASS_NAME=BbsshUtils
-CLASS_FILE=$(CLASS_DIR)/$(CLASS_NAME).class
+CLASS_FILE=src/c/BbsshUtils.class
 JAR_FILE=target/uberjar/bbssh-$(VERSION)-standalone.jar
 SOLIB_FILE=$(JNI_DIR)/libbbssh.so
 DYLIB_FILE=$(JNI_DIR)/libbbssh.dylib
@@ -18,6 +16,7 @@ C_HEADER=$(JNI_DIR)/BbsshUtils.h
 JAVA_HOME=$(GRAALVM_HOME)
 INCLUDE_DIRS=$(shell find $(JAVA_HOME)/include -type d)
 INCLUDE_ARGS=$(INCLUDE_DIRS:%=-I%) -I$(JNI_DIR)
+CLOJURE_FILES=$(shell find src/clj -name *.clj)
 ifeq ($(UNAME),Linux)
 	LIB_FILE=$(SOLIB_FILE)
 else ifeq ($(UNAME),FreeBSD)
@@ -26,7 +25,7 @@ else ifeq ($(UNAME),Darwin)
 	LIB_FILE=$(DYLIB_FILE)
 endif
 
-.PHONY: clean header lib run uberjar uberjar-run uberjar-ls native-image
+.PHONY: clean run uberjar uberjar-run uberjar-ls native-image
 
 all: bbssh
 
@@ -38,8 +37,6 @@ clean:
 #
 $(CLASS_FILE): $(JAVA_FILE)
 	javac $(JAVA_FILE)
-
-header: $(C_HEADER)
 
 $(C_HEADER): $(CLASS_FILE)
 	mkdir -p $(JNI_DIR)
@@ -55,8 +52,6 @@ $(DYLIB_FILE):  $(C_FILE) $(C_HEADER)
 resources/libbbssh.so: $(LIB_FILE)
 	mkdir -p resources
 	cp $(SOLIB_FILE) resources
-
-lib: resources/libbbssh.so
 
 #
 # Clojure related targets
@@ -76,7 +71,7 @@ uberjar-ls:
 #
 # Native image related targets
 #
-bbssh: resources/libbbssh.so
+bbssh: resources/libbbssh.so $(CLOJURE_FILES)
 	GRAALVM_HOME=$(GRAALVM_HOME) clj -A:native-image
 
 native-image: bbssh

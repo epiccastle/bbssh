@@ -14,9 +14,4 @@
 
   (lib/init!)
   (clojure.lang.RT/loadLibrary "bbssh")
-
-  (println "result:" (terminal/print-flush-ask-yes-no "continue? [y/n]"))
-
-
-
-  )
+  (pod/main))

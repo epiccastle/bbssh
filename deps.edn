@@ -1,5 +1,6 @@
-{:paths ["src/clj"]
- :deps {org.clojure/clojure {:mvn/version "1.10.1"}}
+{:paths ["src/clj" "src/c"]
+ :deps {org.clojure/clojure {:mvn/version "1.10.1"}
+        com.github.mwiede/jsch {:mvn/version "0.2.0"}}
 
  :aliases
  {:uberjar

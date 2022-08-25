@@ -44,8 +44,8 @@
                       )
                     (utils/string-to-byte-array private-key)
                     (utils/string-to-byte-array (or public-key ""))
-                    (utils/string-to-byte-array (or passphrase "")))
-      )
+                    (utils/string-to-byte-array (or passphrase ""))))
+
     ;; :strict-host-key-checking
     (doseq [[k v] session-options]
       (when-not (nil? v)

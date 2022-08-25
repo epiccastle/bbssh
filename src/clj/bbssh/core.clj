@@ -2,7 +2,8 @@
   (:require [bbssh.impl.lib :as lib]
             [bbssh.impl.terminal :as terminal]
             [bbssh.impl.userinfo :as userinfo]
-            [bbssh.impl.session :as session])
+            [bbssh.impl.session :as session]
+            [bbssh.impl.pod :as pod])
   (:gen-class))
 
 (defn -main [& args]

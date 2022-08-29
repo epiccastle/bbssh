@@ -1,8 +1,17 @@
 (ns bbssh.impl.pod
   (:refer-clojure :exclude [read-string read])
   (:require [bbssh.impl.lookup :as lookup]
-   [bencode.core :refer [read-bencode write-bencode]]
+            [pod.epiccastle.bbssh.impl.core]
+            [pod.epiccastle.bbssh.impl.cleaner]
+            [pod.epiccastle.bbssh.impl.agent]
+            [pod.epiccastle.bbssh.impl.session]
+            [pod.epiccastle.bbssh.core]
+            [pod.epiccastle.bbssh.cleaner]
+            [pod.epiccastle.bbssh.agent]
+            [pod.epiccastle.bbssh.session]
+            [bencode.core :refer [read-bencode write-bencode]]
             [clojure.edn :as edn]
+            [clojure.string :as string]
             [clojure.java.io :as io])
   (:import [java.io PushbackInputStream]
            [java.net ServerSocket]))
@@ -32,6 +41,40 @@
 (defn safe-read [d]
   (when d
     (read-string d)))
+
+(defmacro ns-public-describes [namespaces]
+  (into []
+        (for [namespace namespaces]
+          {"name" (str namespace)
+           "vars" (into []
+                        (for [[n var] (ns-publics namespace)]
+                          {"name" (name n)}))})))
+
+#_
+(macroexpand-1
+ '(ns-public-describes [pod.epiccastle.bbssh.impl.core
+                        pod.epiccastle.bbssh.impl.cleaner
+                        ]))
+
+(defmacro ns-public-slurps [namespaces]
+  (into []
+        (for [namespace namespaces]
+          {"name" (str namespace)
+           "vars" [{"name" "_"
+                     "code" (slurp
+                             (-> namespace
+                                 str
+                                 (string/split #"\.")
+                                 (->> (string/join "/")
+                                      (str "src/clj/"))
+                                 (str ".clj"))
+                             )}]})))
+
+#_
+(macroexpand-1
+ '(ns-public-slurps [pod.epiccastle.bbssh.core
+                     pod.epiccastle.bbssh.cleaner
+                     ]))
 
 (defn main []
   (let [server (ServerSocket. 0)
@@ -63,47 +106,46 @@
           (case op-decoded
             "describe"
             (do
+              (debug 'write-out {"port" port
+                                 "format" "edn"
+                                 "namespaces"
+                                 (concat
+                                  ;; pod side namespace
+                                  (ns-public-describes
+                                   [pod.epiccastle.bbssh.impl.core
+                                    pod.epiccastle.bbssh.impl.cleaner
+                                    pod.epiccastle.bbssh.impl.agent
+                                    pod.epiccastle.bbssh.impl.session
+                                    ])
+
+                                  ;; bb side code
+                                  (ns-public-slurps
+                                   [pod.epiccastle.bbssh.core
+                                    pod.epiccastle.bbssh.cleaner
+                                    pod.epiccastle.bbssh.agent
+                                    pod.epiccastle.bbssh.session]))
+
+                                 "id" (read-string id)})
               (write out
                      {"port" port
                       "format" "edn"
                       "namespaces"
-                      [
-
-                       ;; pod invokes
-                       {"name" "pod.epiccastle.bbssh.impl.core"
-                        "vars" []}
-
-                       {"name" "pod.epiccastle.bbssh.impl.cleaner"
-                        "vars" [{"name" "del-reference"}
-                                {"name" "get-references"}]}
-
-                       {"name" "pod.epiccastle.bbssh.impl.agent"
-                        "vars" [{"name" "new"}
-                                {"name" "get-session"}]}
-
-                       {"name" "pod.epiccastle.bbssh.impl.session"
-                        "vars" [{"name" "new"}]}
+                      (concat
+                       ;; pod side namespace
+                       (ns-public-describes
+                        [pod.epiccastle.bbssh.impl.core
+                         pod.epiccastle.bbssh.impl.cleaner
+                         pod.epiccastle.bbssh.impl.agent
+                         pod.epiccastle.bbssh.impl.session
+                         ])
 
                        ;; bb side code
-                       {"name" "pod.epiccastle.bbssh.core"
-                        "vars" [{"name" "_"
-                                 "code" (slurp "src/clj/pod/epiccastle/bbssh/core.clj")}]}
+                       (ns-public-slurps
+                        [pod.epiccastle.bbssh.core
+                         pod.epiccastle.bbssh.cleaner
+                         pod.epiccastle.bbssh.agent
+                         pod.epiccastle.bbssh.session]))
 
-                       {"name" "pod.epiccastle.bbssh.cleaner"
-                        "vars" [{"name" "_"
-                                 "code" (slurp "src/clj/pod/epiccastle/bbssh/cleaner.clj")}]}
-
-                       {"name" "pod.epiccastle.bbssh.agent"
-                        "vars" [{"name" "_"
-                                 "code" (slurp "src/clj/pod/epiccastle/bbssh/agent.clj")}]}
-
-                       {"name" "pod.epiccastle.bbssh.session"
-                        "vars" [{"name" "_"
-                                 "code" (slurp "src/clj/pod/epiccastle/bbssh/session.clj")}]}
-
-
-
-                       ]
                       "id" (read-string id)})
               (recur))
             "load-ns"

@@ -25,7 +25,7 @@ else ifeq ($(UNAME),Darwin)
 	LIB_FILE=$(DYLIB_FILE)
 endif
 
-.PHONY: clean run uberjar uberjar-run uberjar-ls native-image
+.PHONY: clean run uberjar uberjar-run uberjar-ls native-image test
 
 all: bbssh
 
@@ -75,3 +75,9 @@ bbssh: resources/libbbssh.so $(CLOJURE_FILES)
 	GRAALVM_HOME=$(GRAALVM_HOME) clj -A:native-image
 
 native-image: bbssh
+
+#
+# Babashka related targets
+#
+test:
+	bb test/bb.clj

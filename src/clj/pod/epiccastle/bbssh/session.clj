@@ -5,3 +5,8 @@
 (defn new [agent username host port]
   (cleaner/register
    (session/new agent username host port)))
+
+(defn set-password [session password]
+  (session/set-password
+   (cleaner/split-key session)
+   password))

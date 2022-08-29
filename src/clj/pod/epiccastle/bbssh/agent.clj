@@ -7,5 +7,4 @@
 
 (defn get-session [agent username host port]
   (cleaner/register
-   (agent/get-session [(namespace agent)
-                       (name agent)] username host port)))
+   (agent/get-session (cleaner/split-key agent) username host port)))

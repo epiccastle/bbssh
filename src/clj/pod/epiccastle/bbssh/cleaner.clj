@@ -4,6 +4,9 @@
 
 (def cleaner (Cleaner/create))
 
+(defn split-key [key]
+  [(namespace key) (name key)])
+
 (defn register [key]
   (let [[namespace name] key
 

@@ -9,7 +9,8 @@
 (def key-length 16)
 
 ;; on the pod side, keys are a vector of [namespace name] where
-;; both are strings
+;; both are strings. but on the bb side, these are used to construct
+;; (transient) keywords that will be eventually garbage collected.
 (defn make-key [namespace prefix]
   (->> key-length
        range
@@ -31,7 +32,7 @@
     ;; maps the reference keys to the object
     :key->instance {}}))
 
-(defn add-instance
+(defn add-instance*
   "returns the new references state with the instance added"
   [state instance key-ns key-prefix]
   (let [{:keys [instance->key]} state]
@@ -42,37 +43,37 @@
             (assoc-in [:instance->key instance] new-key)
             (assoc-in [:key->instance new-key] instance))))))
 
-(defn add-instance!
+(defn add-instance
   [instance key-ns key-prefix]
-  (-> (swap! references add-instance instance key-ns key-prefix)
+  (-> (swap! references add-instance* instance key-ns key-prefix)
       (get-in [:instance->key instance])))
 
-(defn get-key-for-instance [state instance]
+(defn get-key* [state instance]
   (get-in state [:instance->key instance]))
 
-(defn get-key-for-instance! [instance]
-  (get-key-for-instance @references instance))
+(defn get-key [instance]
+  (get-key* @references instance))
 
-(defn get-instance-for-key [state key]
+(defn get-instance* [state key]
   (get-in state [:key->instance key]))
 
-(defn get-instance-for-key! [key]
-  (get-instance-for-key @references key))
+(defn get-instance [key]
+  (get-instance* @references key))
 
-(defn delete-instance [references instance]
-  (let [key (get-key-for-instance references instance)]
+(defn delete-instance* [state instance]
+  (let [key (get-key* state instance)]
     (-> references
         (update :instance->key dissoc instance)
         (update :key->instance dissoc key))))
 
-(defn delete-instance! [instance]
-  (swap! references delete-instance instance))
+(defn delete-instance [instance]
+  (swap! references delete-instance* instance))
 
-(defn delete-key [state key]
-  (let [instance (get-instance-for-key state key)]
+(defn delete-key* [state key]
+  (let [instance (get-instance* state key)]
     (-> state
         (update :instance->key dissoc instance)
         (update :key->instance dissoc key))))
 
-(defn delete-key! [key]
-  (swap! references delete-key key))
+(defn delete-key [key]
+  (swap! references delete-key* key))

@@ -1,6 +1,7 @@
 (ns bbssh.impl.pod
   (:refer-clojure :exclude [read-string read])
-  (:require [bencode.core :refer [read-bencode write-bencode]]
+  (:require [bbssh.impl.lookup :as lookup]
+   [bencode.core :refer [read-bencode write-bencode]]
             [clojure.edn :as edn]
             [clojure.java.io :as io])
   (:import [java.io PushbackInputStream]
@@ -31,8 +32,6 @@
 (defn safe-read [d]
   (when d
     (read-string d)))
-
-(def lookup {})
 
 (defn main []
   (let [server (ServerSocket. 0)
@@ -68,7 +67,43 @@
                      {"port" port
                       "format" "edn"
                       "namespaces"
-                      []
+                      [
+
+                       ;; pod invokes
+                       {"name" "pod.epiccastle.bbssh.impl.core"
+                        "vars" []}
+
+                       {"name" "pod.epiccastle.bbssh.impl.cleaner"
+                        "vars" [{"name" "del-reference"}
+                                {"name" "get-references"}]}
+
+                       {"name" "pod.epiccastle.bbssh.impl.agent"
+                        "vars" [{"name" "new"}
+                                {"name" "get-session"}]}
+
+                       {"name" "pod.epiccastle.bbssh.impl.session"
+                        "vars" [{"name" "new"}]}
+
+                       ;; bb side code
+                       {"name" "pod.epiccastle.bbssh.core"
+                        "vars" [{"name" "_"
+                                 "code" (slurp "src/clj/pod/epiccastle/bbssh/core.clj")}]}
+
+                       {"name" "pod.epiccastle.bbssh.cleaner"
+                        "vars" [{"name" "_"
+                                 "code" (slurp "src/clj/pod/epiccastle/bbssh/cleaner.clj")}]}
+
+                       {"name" "pod.epiccastle.bbssh.agent"
+                        "vars" [{"name" "_"
+                                 "code" (slurp "src/clj/pod/epiccastle/bbssh/agent.clj")}]}
+
+                       {"name" "pod.epiccastle.bbssh.session"
+                        "vars" [{"name" "_"
+                                 "code" (slurp "src/clj/pod/epiccastle/bbssh/session.clj")}]}
+
+
+
+                       ]
                       "id" (read-string id)})
               (recur))
             "load-ns"
@@ -85,7 +120,7 @@
                       args args-decoded]
                   (debug 'invoke var args)
                   (let [args (edn/read-string args)]
-                    (if-let [f (lookup var)]
+                    (if-let [f (lookup/lookup var)]
                       (let [value (pr-str (apply f args))
                             reply {"value" value
                                    "id" id
@@ -94,8 +129,8 @@
                         (write out reply))
                       (throw (ex-info (str "Var not found: " var) {})))))
                 (catch Throwable e
-                  (binding [*out* *err*]
-                    (println e))
+                  #_(binding [*out* *err*]
+                      (println e))
                   (let [reply {"ex-message" (.getMessage e)
                                "ex-data" (pr-str
                                           (assoc (ex-data e)

@@ -49,21 +49,16 @@
   (println "force-gc done"))
 
 (defn foo []
-  (prn 1)
   (let [a (agent/new)]
-    (prn 2)
     (println "new returned:" a)
-    (force-gc)
-    (force-gc)
     (let [s (agent/get-session a "crispin" "localhost" 22)]
       (println "get-session returned:" s)
-      (force-gc)
       (prn (cleaner/get-references))
       )
     ))
 
 (foo)
-(force-gc)
+
 (force-gc)
 (Thread/sleep 1000)
 (prn (cleaner/get-references))

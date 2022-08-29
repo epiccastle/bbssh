@@ -5,6 +5,8 @@
 
 ;; pod.epiccastle.bbssh.impl.* are invoked on pod side.
 
+(set! *warn-on-reflection* true)
+
 (defn new []
   (references/add-instance
    (JSch.)
@@ -12,8 +14,9 @@
 
 (defn get-session [agent username host port]
   (references/add-instance
-   (.getSession (references/get-instance agent)
-                username
-                host
-                port)
+   (.getSession
+    ^JSch (references/get-instance agent)
+    ^String username
+    ^String host
+    ^int port)
    "pod.epiccastle.bbssh.session" "session"))

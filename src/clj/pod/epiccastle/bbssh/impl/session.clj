@@ -5,6 +5,8 @@
 
 ;; pod.epiccastle.bbssh.impl.* are invoked on pod side.
 
+(set! *warn-on-reflection* true)
+
 (defn new [agent username host port]
   #_(references/add-instance
    (Session.
@@ -12,3 +14,8 @@
     ^String username
     ^String host
     ^int port)))
+
+(defn set-password [session password]
+  (.setPassword
+   ^Session (references/get-instance session)
+   ^String password))

@@ -45,4 +45,4 @@ There are conventions with the namespace layout you should know if you plan to e
 
  - pod.epiccastle.bbssh.*
 
-     All code in these namespaces is injected into the babashka instance apon pod `describe`
+     All code in these namespaces is injected into the babashka instance apon pod `describe`. These namespaces comprise the API you call when using bbssh from babashka.

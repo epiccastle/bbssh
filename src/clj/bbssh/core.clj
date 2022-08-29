@@ -3,6 +3,7 @@
             [bbssh.impl.terminal :as terminal]
             [bbssh.impl.userinfo :as userinfo]
             [bbssh.impl.session :as session]
+            [bbssh.impl.references :as references]
             [bbssh.impl.pod :as pod])
   (:gen-class))
 

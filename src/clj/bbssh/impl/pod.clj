@@ -70,6 +70,7 @@
                      "code" (slurp
                              (-> namespace
                                  str
+                                 (string/replace #"-" "_")
                                  (string/split #"\.")
                                  (->> (string/join "/")
                                       (str "src/clj/"))

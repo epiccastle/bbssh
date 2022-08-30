@@ -1,6 +1,8 @@
 # bbssh
 Babashka pod for SSH support.
 
+This is a work in progress. It is not ready for use.
+
 ## Using
 
 Here is a simple script that connects with a password, the runs a command and disconnects:
@@ -21,7 +23,24 @@ Here is a simple script that connects with a password, the runs a command and di
                                  22)]
   (session/set-config session :strict-host-key-checking false)
   (session/set-password session "my-password")
-  (session/connect session))
+  (session/connect session)
+
+  (let [channel (session/open-channel session "exec")
+        input (input-stream/new)
+        [out-stream out-in] (streams-for-out)
+        [err-stream err-in] (streams-for-out)
+        ]
+    (input-stream/close input)
+    (channel-exec/set-command channel "id")
+    (channel-exec/set-input-stream channel input false)
+    (channel-exec/set-output-stream channel out-stream)
+    (channel-exec/set-error-stream channel err-stream)
+    (channel-exec/connect channel)
+    (let [buff (byte-array 1024)
+          num (input-stream/read out-in buff 0 1024)]
+      (println
+       (String. (java.util.Arrays/copyOfRange buff 0 num) "UTF-8")))))
+
 ```
 
 ## Building

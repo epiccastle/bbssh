@@ -1,7 +1,10 @@
 (ns bbssh.impl.lookup
   (:require [pod.epiccastle.bbssh.impl.agent]
             [pod.epiccastle.bbssh.impl.cleaner]
-            [pod.epiccastle.bbssh.impl.session]))
+            [pod.epiccastle.bbssh.impl.session]
+            [pod.epiccastle.bbssh.impl.channel-exec]
+            [pod.epiccastle.bbssh.impl.input-stream]
+            [pod.epiccastle.bbssh.impl.output-stream]))
 
 (defmacro ns-lookups [namespaces]
   (into {}
@@ -17,7 +20,11 @@
 (def lookup
   (ns-lookups [pod.epiccastle.bbssh.impl.agent
                pod.epiccastle.bbssh.impl.session
-               pod.epiccastle.bbssh.impl.cleaner])
+               pod.epiccastle.bbssh.impl.cleaner
+               pod.epiccastle.bbssh.impl.channel-exec
+               pod.epiccastle.bbssh.impl.input-stream
+               pod.epiccastle.bbssh.impl.output-stream
+               ])
   #_{
    'pod.epiccastle.bbssh.impl.agent/new
    pod.epiccastle.bbssh.impl.agent/new

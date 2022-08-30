@@ -26,9 +26,9 @@ Here is a simple script that connects with a password, the runs a command and di
 
 (let [agent (agent/new)
       session (agent/get-session agent
-                                 (System/getenv "USER")
-                                 "localhost"
-                                 22)]
+                                 (System/getenv "USER") ;; username
+                                 "localhost"            ;; hostname
+                                 22)]                   ;; port
   (session/set-config session :strict-host-key-checking false)
   (session/set-password session "my-password") ;; our password
   (session/connect session)

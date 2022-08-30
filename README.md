@@ -14,7 +14,16 @@ Here is a simple script that connects with a password, the runs a command and di
 (pods/load-pod "./bbssh" {:transport :socket})
 
 (require '[pod.epiccastle.bbssh.agent :as agent]
-         '[pod.epiccastle.bbssh.session :as session])
+         '[pod.epiccastle.bbssh.session :as session]
+         '[pod.epiccastle.bbssh.channel-exec :as channel-exec]
+         '[pod.epiccastle.bbssh.input-stream :as input-stream]
+         '[pod.epiccastle.bbssh.output-stream :as output-stream]
+         '[pod.epiccastle.bbssh.impl.cleaner :as cleaner])
+
+(defn streams-for-out []
+  (let [os (output-stream/new)
+        is (input-stream/new os 1024)]
+    [os is]))
 
 (let [agent (agent/new)
       session (agent/get-session agent

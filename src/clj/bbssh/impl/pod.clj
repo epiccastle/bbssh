@@ -113,26 +113,6 @@
           (case op-decoded
             "describe"
             (do
-              (debug 'write-out {"port" port
-                                 "format" "edn"
-                                 "namespaces"
-                                 (concat
-                                  ;; pod side namespace
-                                  (ns-public-describes
-                                   [pod.epiccastle.bbssh.impl.core
-                                    pod.epiccastle.bbssh.impl.cleaner
-                                    pod.epiccastle.bbssh.impl.agent
-                                    pod.epiccastle.bbssh.impl.session
-                                    ])
-
-                                  ;; bb side code
-                                  (ns-public-slurps
-                                   [pod.epiccastle.bbssh.core
-                                    pod.epiccastle.bbssh.cleaner
-                                    pod.epiccastle.bbssh.agent
-                                    pod.epiccastle.bbssh.session]))
-
-                                 "id" (read-string id)})
               (write out
                      {"port" port
                       "format" "edn"

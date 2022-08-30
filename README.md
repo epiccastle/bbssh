@@ -28,8 +28,7 @@ Here is a simple script that connects with a password, the runs a command and di
   (let [channel (session/open-channel session "exec")
         input (input-stream/new)
         [out-stream out-in] (streams-for-out)
-        [err-stream err-in] (streams-for-out)
-        ]
+        [err-stream err-in] (streams-for-out)]
     (input-stream/close input)
     (channel-exec/set-command channel "id")
     (channel-exec/set-input-stream channel input false)

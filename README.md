@@ -1,6 +1,29 @@
 # bbssh
 Babashka pod for SSH support.
 
+## Using
+
+Here is a simple script that connects with a password, the runs a command and disconnects:
+
+```clj
+(ns test-simple.core
+  (:require [babashka.pods :as pods]))
+
+(pods/load-pod "./bbssh" {:transport :socket})
+
+(require '[pod.epiccastle.bbssh.agent :as agent]
+         '[pod.epiccastle.bbssh.session :as session])
+
+(let [agent (agent/new)
+      session (agent/get-session agent
+                                 (System/getenv "USER")
+                                 "localhost"
+                                 22)]
+  (session/set-config session :strict-host-key-checking false)
+  (session/set-password session "my-password")
+  (session/connect session))
+```
+
 ## Building
 
 The bbssh pod is distributed as a static binary. Build it with:

@@ -9,8 +9,7 @@
 
 (defn new []
   (references/add-instance
-   (JSch.)
-   "pod.epiccastle.bbssh.agent" "agent"))
+   (JSch.)))
 
 (defn get-session [agent username host port]
   (references/add-instance
@@ -18,5 +17,4 @@
     ^JSch (references/get-instance agent)
     ^String username
     ^String host
-    ^int port)
-   "pod.epiccastle.bbssh.session" "session"))
+    ^int port)))

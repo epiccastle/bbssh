@@ -17,8 +17,7 @@ Here is a simple script that connects with a password, the runs a command and di
          '[pod.epiccastle.bbssh.session :as session]
          '[pod.epiccastle.bbssh.channel-exec :as channel-exec]
          '[pod.epiccastle.bbssh.input-stream :as input-stream]
-         '[pod.epiccastle.bbssh.output-stream :as output-stream]
-         '[pod.epiccastle.bbssh.impl.cleaner :as cleaner])
+         '[pod.epiccastle.bbssh.output-stream :as output-stream])
 
 (defn streams-for-out []
   (let [os (output-stream/new)

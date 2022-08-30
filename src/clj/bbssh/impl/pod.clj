@@ -124,6 +124,9 @@
                          pod.epiccastle.bbssh.impl.cleaner
                          pod.epiccastle.bbssh.impl.agent
                          pod.epiccastle.bbssh.impl.session
+                         pod.epiccastle.bbssh.impl.channel-exec
+                         pod.epiccastle.bbssh.impl.input-stream
+                         pod.epiccastle.bbssh.impl.output-stream
                          ])
 
                        ;; bb side code
@@ -131,7 +134,11 @@
                         [pod.epiccastle.bbssh.core
                          pod.epiccastle.bbssh.cleaner
                          pod.epiccastle.bbssh.agent
-                         pod.epiccastle.bbssh.session]))
+                         pod.epiccastle.bbssh.session
+                         pod.epiccastle.bbssh.channel-exec
+                         pod.epiccastle.bbssh.input-stream
+                         pod.epiccastle.bbssh.output-stream
+                         ]))
 
                       "id" (read-string id)})
               (recur))

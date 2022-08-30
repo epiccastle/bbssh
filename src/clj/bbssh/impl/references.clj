@@ -1,4 +1,5 @@
-(ns bbssh.impl.references)
+(ns bbssh.impl.references
+  (:require [clojure.string :as string]))
 
 ;; All the pod java instances need to stay in the pod heap memory.
 ;; On the babashka side, we need to refer to these objects with keywords.
@@ -44,9 +45,16 @@
             (assoc-in [:key->instance new-key] instance))))))
 
 (defn add-instance
-  [instance key-ns key-prefix]
-  (-> (swap! references add-instance* instance key-ns key-prefix)
-      (get-in [:instance->key instance])))
+  [instance & [{:keys [key-ns key-prefix]}]]
+  (let [class-name (.getName (class instance))
+        parts (string/split class-name #"\." -1)
+        simple-name (last parts)
+        package-name (string/join "." (butlast parts))
+        ]
+    (-> (swap! references add-instance* instance
+               (or key-ns package-name)
+               (or key-prefix simple-name))
+        (get-in [:instance->key instance]))))
 
 (defn get-key* [state instance]
   (get-in state [:instance->key instance]))

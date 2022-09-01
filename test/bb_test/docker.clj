@@ -31,3 +31,6 @@
       (format ssh-port)
       (run "docker run failed")
       string/trim))
+
+(defn stop []
+  (run! "docker container stop bbssh-test"))

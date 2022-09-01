@@ -109,5 +109,5 @@ $ make test
 In order to test against the native-image compiled version of the pod, use:
 
 ```
-make test BBSSH_TEST_TARGET=native-image
+$ make test BBSSH_TEST_TARGET=native-image
 ```

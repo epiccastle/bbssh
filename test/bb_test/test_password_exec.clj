@@ -31,23 +31,23 @@
       (session/connect session)
       (assert (session/connected? session))
       (let [channel (session/open-channel session "exec")
-            is (input-stream/new)
+            input-stream (input-stream/new)
             [out-stream out-in] (streams-for-out)
             [err-stream err-in] (streams-for-out)
             ]
         (channel-exec/set-command channel "id")
-        (channel-exec/set-input-stream channel is false)
-        (input-stream/close is)
+        (channel-exec/set-input-stream channel input-stream false)
+        (input-stream/close input-stream)
 
         (channel-exec/set-output-stream channel out-stream)
         (channel-exec/set-error-stream channel err-stream)
 
         (channel-exec/connect channel)
         (let [buff (byte-array 1024)
-              num (input-stream/read out-in buff 0 1024)]
-          (is
-           (-> (java.util.Arrays/copyOfRange buff 0 num)
-               (String. "UTF-8")
-               (string/starts-with? "uid=0(root) gid=0(root)")))))))
+              num (input-stream/read out-in buff 0 1024)
+              result (-> (java.util.Arrays/copyOfRange buff 0 num)
+                         (String. "UTF-8")
+                         )]
+          (is (string/starts-with? result "uid=0(root) gid=0(root)"))))))
 
   (docker/cleanup))

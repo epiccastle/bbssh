@@ -80,4 +80,4 @@ native-image: bbssh
 # Babashka related targets
 #
 test:
-	bb test/bb.clj
+	BABASHKA_CLASSPATH=test bb test/bb_test/core.clj

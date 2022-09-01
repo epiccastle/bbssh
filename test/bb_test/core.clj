@@ -33,8 +33,8 @@
          '[pod.epiccastle.bbssh.impl.cleaner :as cleaner])
 
 (docker/cleanup)
-(docker/build)
-(docker/start)
+(docker/build {:root-password "root-access-please"})
+(docker/start {:ssh-port 9876})
 
 (defn streams-for-out []
   (let [os (output-stream/new)
@@ -69,8 +69,8 @@
              (string/starts-with? "uid=0(root) gid=0(root)")))))))
 
 (test-exec-basic {:username "root"
-                  :password "password"
+                  :password "root-access-please"
                   :hostname "localhost"
-                  :port 8765})
+                  :port 9876})
 
 (docker/cleanup)

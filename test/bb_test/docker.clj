@@ -14,9 +14,11 @@
 (defn run! [command]
   (process/sh command))
 
-(defn build []
+(defn build [{:keys [root-password]}]
   (run
-    "docker build -t bbssh/test-base test"
+    (format
+     "docker build -t bbssh/test-base --build-arg root_password=%s test"
+     root-password)
     "docker build failed"))
 
 (defn cleanup []
@@ -24,7 +26,8 @@
   (run! "docker container rm bbssh-test")
   nil)
 
-(defn start []
-  (-> "docker run --name bbssh-test -d -p 8765:22 bbssh/test-base"
+(defn start [{:keys [ssh-port]}]
+  (-> "docker run --name bbssh-test -d -p %d:22 bbssh/test-base"
+      (format ssh-port)
       (run "docker run failed")
       string/trim))

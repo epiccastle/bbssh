@@ -14,17 +14,20 @@
       :out
       string/trim))
 
-;; run pod process under java in dev
-(pods/load-pod ["java"
-                "-Djava.library.path=resources"
-                "-cp"
-                class-path
-                "clojure.main"
-                "-m"
-                "bbssh.core"] {:transport :socket})
+(case (System/getenv "BBSSH_TEST_TARGET")
+  "native-image"
+  ;; run pod process from native-image to test
+  (pods/load-pod "./bbssh" {:transport :socket})
 
-;; run pod process from native-image to test
-#_(pods/load-pod "./bbssh" {:transport :socket})
+  ;; by default: run pod process under java in dev
+  (pods/load-pod ["java"
+                  "-Djava.library.path=resources"
+                  "-cp"
+                  class-path
+                  "clojure.main"
+                  "-m"
+                  "bbssh.core"] {:transport :socket}))
+
 
 (require '[bb-test.test-password-exec])
 

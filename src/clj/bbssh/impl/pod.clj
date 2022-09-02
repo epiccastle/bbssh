@@ -145,10 +145,8 @@
                       "id" (read-string id)})
               (recur))
             "load-ns"
-            (do
-              ;;(prn "load-ns")
-              (recur)
-              )
+            (recur)
+
             "invoke"
             (do
               (try

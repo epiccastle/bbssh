@@ -157,12 +157,49 @@
                   (debug 'invoke var args)
                   (let [args (edn/read-string args)]
                     (if-let [f (lookup/lookup var)]
-                      (let [value (pr-str (apply f args))
-                            reply {"value" value
-                                   "id" id
-                                   "status" ["done"]}]
-                        (debug 'reply reply)
-                        (write out reply))
+                      (let [f-meta (meta f)]
+                        (cond
+                          (:async f-meta)
+                          ;; functions marked async are passed their reply function
+                          ;; as a first argument
+                          (apply f (fn [value & [status]]
+                                     (write out {"value" (pr-str value)
+                                                 "id" id
+                                                 "status" (or status [])}))
+                                 args)
+
+
+                          (:blocking f-meta)
+                          ;; functions marked blocking are invoked in a thread so we can
+                          ;; still process messages that come to the pod. These messages
+                          ;; need to be processed in order to complete *this* blocking
+                          ;; function.
+                          (future
+                            (try
+                              (let [value (pr-str (apply f args))
+                                    _ (debug 'value value)
+                                    reply {"value" value
+                                           "id" id
+                                           "status" ["done"]}]
+                                (write out reply))
+                              (catch Throwable e
+                                (let [reply {"ex-message" (.getMessage e)
+                                             "ex-data" (pr-str
+                                                        (assoc (ex-data e)
+                                                               :type (class e)))
+                                             "id" id
+                                             "status" ["done" "error"]}]
+                                  (write out reply)))))
+
+                          :else
+                          ;; normal synchronous invoke
+                          (do
+                            (let [value (pr-str (apply f args))
+                                  _ (debug 'value value)
+                                  reply {"value" value
+                                         "id" id
+                                         "status" ["done"]}]
+                              (write out reply)))))
                       (throw (ex-info (str "Var not found: " var) {})))))
                 (catch Throwable e
                   #_(binding [*out* *err*]

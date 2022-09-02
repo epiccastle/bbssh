@@ -115,6 +115,10 @@
                       "format" "edn"
                       "namespaces"
                       (concat
+                       ;; this comes first to create an internal name
+                       ;; for the pod to use in manual invoke calls
+                       [{"name" "pod.epiccastle.bbssh"
+                         "vars" []}]
                        ;; pod side namespace
                        (ns-public-describes
                         [pod.epiccastle.bbssh.impl.core

@@ -16,9 +16,7 @@
 
            ;; the returned object
            :result
-           (deliver
-            p
-            (cleaner/register value))
+           (deliver p value)
 
            ;; a callback message
            :method
@@ -36,4 +34,4 @@
                 (callbacks/return-result id result))))))
        :error (fn [err]
                 (prn 'error err))}})
-    @p))
+    (cleaner/register @p)))

@@ -5,7 +5,8 @@
             [pod.epiccastle.bbssh.impl.channel-exec]
             [pod.epiccastle.bbssh.impl.input-stream]
             [pod.epiccastle.bbssh.impl.output-stream]
-            [pod.epiccastle.bbssh.impl.user-info]))
+            [pod.epiccastle.bbssh.impl.user-info]
+            [pod.epiccastle.bbssh.impl.callbacks]))
 
 (defmacro ns-lookups [namespaces]
   (into {}
@@ -26,6 +27,7 @@
                pod.epiccastle.bbssh.impl.input-stream
                pod.epiccastle.bbssh.impl.output-stream
                pod.epiccastle.bbssh.impl.user-info
+               pod.epiccastle.bbssh.impl.callbacks
                ])
   #_{
    'pod.epiccastle.bbssh.impl.agent/new

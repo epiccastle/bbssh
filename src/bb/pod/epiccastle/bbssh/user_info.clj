@@ -1,5 +1,6 @@
 (ns pod.epiccastle.bbssh.user-info
   (:require [pod.epiccastle.bbssh.impl.user-info :as user-info]
+            [pod.epiccastle.bbssh.impl.callbacks :as callbacks]
             [pod.epiccastle.bbssh.cleaner :as cleaner]))
 
 (defn new [callbacks]
@@ -32,7 +33,7 @@
                  ;; https://github.com/babashka/pods/blob/eb0b01c0a69cf7ef24b0277d4449a157253a3037/src/babashka/pods/impl.clj#L231
                  ;; and then it can't process any more async
                  ;; responses.
-                (user-info/sync-result id result))))))
+                (callbacks/return-result id result))))))
        :error (fn [err]
                 (prn 'error err))}})
     @p))

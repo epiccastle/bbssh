@@ -32,8 +32,11 @@
 
 (def stdin (PushbackInputStream. System/in))
 
+(def write-lock (Object.))
+
 (defn write [out v]
-  (write-bencode out v))
+  (locking write-lock
+    (write-bencode out v)))
 
 (defn read [in]
   (read-bencode in))

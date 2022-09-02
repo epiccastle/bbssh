@@ -4,14 +4,15 @@
             [pod.epiccastle.bbssh.impl.session]
             [pod.epiccastle.bbssh.impl.channel-exec]
             [pod.epiccastle.bbssh.impl.input-stream]
-            [pod.epiccastle.bbssh.impl.output-stream]))
+            [pod.epiccastle.bbssh.impl.output-stream]
+            [pod.epiccastle.bbssh.impl.user-info]))
 
 (defmacro ns-lookups [namespaces]
   (into {}
         (for [namespace namespaces
               [name var] (ns-publics namespace)]
           [(list 'quote (symbol (str namespace) (str name)))
-           (symbol var)])))
+            var])))
 
 #_ (macroexpand-1 '(ns-lookups [pod.epiccastle.bbssh.impl.session
                                 pod.epiccastle.bbssh.impl.agent
@@ -24,6 +25,7 @@
                pod.epiccastle.bbssh.impl.channel-exec
                pod.epiccastle.bbssh.impl.input-stream
                pod.epiccastle.bbssh.impl.output-stream
+               pod.epiccastle.bbssh.impl.user-info
                ])
   #_{
    'pod.epiccastle.bbssh.impl.agent/new

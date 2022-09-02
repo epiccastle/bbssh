@@ -17,6 +17,5 @@
      (reify
        java.lang.Runnable
        (run [_]
-         (println "deleting" (keyword namespace name))
          (cleaner/del-reference [namespace name]))))
     ref))

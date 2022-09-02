@@ -96,7 +96,7 @@
         ]
     (try
       (loop []
-        (let [{:strs [id op var args ns]} (read in)
+        (let [{:strs [id op var args ns]} (read in) ;; blocking read
               id-decoded (safe-read id)
               op-decoded (safe-read op)
               var-decoded (safe-read var)

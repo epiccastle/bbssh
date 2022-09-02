@@ -1,6 +1,7 @@
 (ns pod.epiccastle.bbssh.impl.user-info
   (:require [bbssh.impl.references :as references]
-            [pod.epiccastle.bbssh.impl.callbacks :as callbacks])
+            [pod.epiccastle.bbssh.impl.callbacks :as callbacks]
+            [pod.epiccastle.bbssh.impl.cleaner :as cleaner])
   (:import [com.jcraft.jsch UserInfo]))
 
 ;; pod.epiccastle.bbssh.impl.* are invoked on pod side.
@@ -23,5 +24,6 @@
              (callbacks/call-method reply-fn :prompt-password [s]))
            (showMessage [^String s]
              (callbacks/call-method reply-fn :show-message [s]))))]
+    (cleaner/register-delete-fn result #(reply-fn [:done] ["done"]))
     (reply-fn [:result result])
     nil))

@@ -28,4 +28,7 @@
                 {:git/url    "https://github.com/taylorwood/clj.native-image.git"
                  :exclusions [commons-logging/commons-logging
                               org.slf4j/slf4j-nop]
-                 :sha        "7708e7fd4572459c81f6a6b8e44c96f41cdd92d4"}}}}}
+                 :sha        "7708e7fd4572459c81f6a6b8e44c96f41cdd92d4"}}}
+
+  :cider-clj {:extra-deps {cider/cider-nrepl {:mvn/version "0.22.4"}}
+              :main-opts ["-m" "nrepl.cmdline" "--middleware" "[cider.nrepl/cider-middleware]"]}}}

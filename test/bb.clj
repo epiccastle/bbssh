@@ -1,8 +1,7 @@
 (ns my-project.core
   (:require [babashka.pods :as pods]
             [babashka.process :as process]
-            [clojure.string :as string])
-  (:import [java.lang.ref WeakReference]))
+            [clojure.string :as string]))
 
 (def class-path
   (-> "clj -Spath -m bbssh.core"
@@ -10,7 +9,7 @@
       :out
       string/trim))
 
-(println "loading..." )
+(println "loading pod..." )
 
 ;; run pod process under java in dev
 (pods/load-pod ["java"

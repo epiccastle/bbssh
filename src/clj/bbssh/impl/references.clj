@@ -70,7 +70,7 @@
 
 (defn delete-instance* [state instance]
   (let [key (get-key* state instance)]
-    (-> references
+    (-> state
         (update :instance->key dissoc instance)
         (update :key->instance dissoc key))))
 

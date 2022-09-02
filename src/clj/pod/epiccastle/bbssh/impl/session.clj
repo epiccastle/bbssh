@@ -8,14 +8,6 @@
 
 (set! *warn-on-reflection* true)
 
-(defn new [agent username host port]
-  #_(references/add-instance
-   (Session.
-    ^com.jcraft.jsch.Jsch (references/get-instance agent)
-    ^String username
-    ^String host
-    ^int port)))
-
 (defn set-password [session password]
   (.setPassword
    ^Session (references/get-instance session)

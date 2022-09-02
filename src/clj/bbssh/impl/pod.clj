@@ -128,6 +128,7 @@
                          pod.epiccastle.bbssh.impl.channel-exec
                          pod.epiccastle.bbssh.impl.input-stream
                          pod.epiccastle.bbssh.impl.output-stream
+                         pod.epiccastle.bbssh.impl.user-info
                          ])
 
                        ;; bb side code
@@ -139,7 +140,7 @@
                          pod.epiccastle.bbssh.channel-exec
                          pod.epiccastle.bbssh.input-stream
                          pod.epiccastle.bbssh.output-stream
-                         ]))
+                         pod.epiccastle.bbssh.user-info]))
 
                       "id" (read-string id)})
               (recur))

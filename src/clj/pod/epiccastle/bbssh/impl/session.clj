@@ -18,7 +18,11 @@
    ^Session (references/get-instance session)
    ^UserInfo (references/get-instance user-info)))
 
-(defn connect [session & [timeout]]
+(defn ^:blocking connect
+  "marked ^:blocking because connect blocks until the connection
+  is made. This process may need many async callbacks via user-info
+  and identity stores"
+  [session & [timeout]]
   (if timeout
     (.connect
      ^Session (references/get-instance session)

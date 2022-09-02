@@ -29,6 +29,9 @@
                   "bbssh.core"] {:transport :socket}))
 
 
-(require '[bb-test.test-password-exec])
+(require '[bb-test.test-password-exec]
+         '[bb-test.test-user-info])
 
-(test/run-tests 'bb-test.test-password-exec)
+(test/run-tests 'bb-test.test-password-exec
+                'bb-test.test-user-info
+                )

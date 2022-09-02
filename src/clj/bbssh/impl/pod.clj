@@ -70,7 +70,7 @@
                                  (string/replace #"-" "_")
                                  (string/split #"\.")
                                  (->> (string/join "/")
-                                      (str "src/clj/"))
+                                      (str "src/bb/"))
                                  (str ".clj"))
                              )}]})))
 

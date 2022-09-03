@@ -30,8 +30,10 @@
 
 
 (require '[bb-test.test-password-exec]
-         '[bb-test.test-user-info])
+         '[bb-test.test-user-info]
+         '[bb-test.test-garbage-collection])
 
 (test/run-tests 'bb-test.test-password-exec
                 'bb-test.test-user-info
+                'bb-test.test-garbage-collection
                 )

@@ -1,16 +1,7 @@
 (ns pod.epiccastle.bbssh.impl.key-pair
   (:require [bbssh.impl.references :as references]
             [bbssh.impl.utils :as utils])
-  (:import [com.jcraft.jsch
-            JSch KeyPair
-            ;; KeyPair$DSA
-            ;; KeyPair$RSA
-            ;; KeyPair$ECDSA
-            ;; KeyPair$UNKNOWN
-            ;; KeyPair$ED25519
-            ;; KeyPair$ED448
-            ])
-  )
+  (:import [com.jcraft.jsch JSch KeyPair]))
 
 ;; pod.epiccastle.bbssh.impl.* are invoked on pod side.
 

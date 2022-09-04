@@ -10,6 +10,7 @@
             [pod.epiccastle.bbssh.impl.output-stream]
             [pod.epiccastle.bbssh.impl.user-info]
             [pod.epiccastle.bbssh.impl.callbacks]
+            [pod.epiccastle.bbssh.impl.key-pair]
             [bencode.core :refer [read-bencode write-bencode]]
             [clojure.edn :as edn]
             [clojure.string :as string]
@@ -131,6 +132,7 @@
                          pod.epiccastle.bbssh.impl.output-stream
                          pod.epiccastle.bbssh.impl.user-info
                          pod.epiccastle.bbssh.impl.callbacks
+                         pod.epiccastle.bbssh.impl.key-pair
                          ])
 
                        ;; bb side code
@@ -142,7 +144,9 @@
                          pod.epiccastle.bbssh.channel-exec
                          pod.epiccastle.bbssh.input-stream
                          pod.epiccastle.bbssh.output-stream
-                         pod.epiccastle.bbssh.user-info]))
+                         pod.epiccastle.bbssh.user-info
+                         pod.epiccastle.bbssh.key-pair
+                         ]))
 
                       "id" (read-string id)})
               (recur))

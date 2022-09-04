@@ -1,7 +1,8 @@
 (ns pod.epiccastle.bbssh.input-stream
   (:refer-clojure :exclude [read])
   (:require [pod.epiccastle.bbssh.impl.input-stream :as input-stream]
-            [pod.epiccastle.bbssh.cleaner :as cleaner]))
+            [pod.epiccastle.bbssh.cleaner :as cleaner]
+            [pod.epiccastle.bbssh.utils :as utils]))
 
 (defn new
   "Create a new PipedInputStream."
@@ -43,7 +44,7 @@
    (let [base64 (input-stream/read
                  (cleaner/split-key stream)
                  length)
-         decoded (.decode (java.util.Base64/getDecoder) base64)]
+         decoded (utils/decode-base64 base64)]
      (System/arraycopy decoded 0 bytes offset (count decoded))
      (count decoded))))
 

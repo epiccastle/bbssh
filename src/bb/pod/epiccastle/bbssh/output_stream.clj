@@ -1,7 +1,8 @@
 (ns pod.epiccastle.bbssh.output-stream
   (:refer-clojure :exclude [flush])
   (:require [pod.epiccastle.bbssh.impl.output-stream :as output-stream]
-            [pod.epiccastle.bbssh.cleaner :as cleaner]))
+            [pod.epiccastle.bbssh.cleaner :as cleaner]
+            [pod.epiccastle.bbssh.utils :as utils]))
 
 (defn new
   "Create a new PipedOutputStream.
@@ -37,8 +38,7 @@
   ([stream byte-array offset length]
    (output-stream/write
     (cleaner/split-key stream)
-    (.encodeToString
-     (java.util.Base64/getEncoder)
+    (utils/encode-base64
      (java.util.Arrays/copyOfRange byte-array offset length))
     length)))
 

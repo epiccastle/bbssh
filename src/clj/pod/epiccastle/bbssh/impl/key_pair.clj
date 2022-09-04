@@ -25,13 +25,33 @@
    ^KeyPair (references/get-instance key-pair)
    ^String passphrase))
 
-(defn write-private-key [key-pair filename]
-  (.writePrivateKey
-   ^KeyPair (references/get-instance key-pair)
-   ^String filename))
+(defn write-private-key
+  ([key-pair filename]
+   (.writePrivateKey
+    ^KeyPair (references/get-instance key-pair)
+    ^String filename))
+  ([key-pair filename passphrase]
+   (.writePrivateKey
+    ^KeyPair (references/get-instance key-pair)
+    ^String filename
+    ^bytes (utils/decode-base64 passphrase))))
 
 (defn write-public-key [key-pair filename comment]
   (.writePublicKey
    ^KeyPair (references/get-instance key-pair)
    ^String filename
    ^String comment))
+
+(defn get-finger-print [key-pair]
+  (.getFingerPrint
+   ^KeyPair (references/get-instance key-pair))
+  )
+
+(defn get-public-key-blob [key-pair]
+  (utils/encode-base64
+   (.getPublicKeyBlob
+    ^KeyPair (references/get-instance key-pair))))
+
+(defn get-key-size [key-pair]
+  (.getKeySize
+    ^KeyPair (references/get-instance key-pair)))

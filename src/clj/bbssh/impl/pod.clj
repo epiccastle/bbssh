@@ -138,6 +138,7 @@
                        ;; bb side code
                        (ns-public-slurps
                         [pod.epiccastle.bbssh.core
+                         pod.epiccastle.bbssh.utils
                          pod.epiccastle.bbssh.cleaner
                          pod.epiccastle.bbssh.agent
                          pod.epiccastle.bbssh.session

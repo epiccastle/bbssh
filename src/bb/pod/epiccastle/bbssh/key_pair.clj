@@ -66,3 +66,41 @@
   [key-pair]
   (key-pair/get-key-size
    (cleaner/split-key key-pair)))
+
+(defn dispose
+  "zero out the memory holding the private key passphrase
+  so subsequent attacks on stale memory are thwarted"
+  [key-pair]
+  (key-pair/dispose
+   (cleaner/split-key key-pair)))
+
+(defn is-encrypted
+  "returns true if the private key is encrypted with a
+  passphrase"
+  [key-pair]
+  (key-pair/is-encrypted
+   (cleaner/split-key key-pair)))
+
+(defn decrypt
+  "decrypt the private key with the passed in byte-array
+  so that the private key is no longer stored encrypted.
+  Can be followed up with setting a new passphrase to
+  re-encrypt. Returns true if the decryption succeeded."
+  [key-pair passphrase]
+  (key-pair/decrypt
+   (cleaner/split-key key-pair)
+   (utils/encode-base64 passphrase)))
+
+(defn load
+  "Load the key pair from a file. Pass both private and
+  public filenames in to load from those files. If public
+  key filename is omitted, the private key filename with
+  \".pub\" appended is used"
+  ([agent private-key-file]
+   (load agent private-key-file (str private-key-file ".pub")))
+  ([agent private-key-file public-key-file]
+   (cleaner/register
+    (key-pair/load
+     (cleaner/split-key agent)
+     private-key-file
+     public-key-file))))

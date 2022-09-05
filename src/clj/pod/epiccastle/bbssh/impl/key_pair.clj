@@ -1,4 +1,5 @@
 (ns pod.epiccastle.bbssh.impl.key-pair
+  (:refer-clojure :exclude [load])
   (:require [bbssh.impl.references :as references]
             [bbssh.impl.utils :as utils])
   (:import [com.jcraft.jsch JSch KeyPair]))
@@ -54,4 +55,24 @@
 
 (defn get-key-size [key-pair]
   (.getKeySize
-    ^KeyPair (references/get-instance key-pair)))
+   ^KeyPair (references/get-instance key-pair)))
+
+(defn dispose [key-pair]
+  (.dispose
+   ^KeyPair (references/get-instance key-pair)))
+
+(defn is-encrypted [key-pair]
+  (.isEncrypted
+   ^KeyPair (references/get-instance key-pair)))
+
+(defn decrypt [key-pair passphrase]
+  (.decrypt
+   ^KeyPair (references/get-instance key-pair)
+   ^bytes (utils/decode-base64 passphrase)))
+
+(defn load [agent private-key-file public-key-file]
+  (references/add-instance
+   (KeyPair/load
+    ^JSch (references/get-instance agent)
+    ^String private-key-file
+    ^String public-key-file)))

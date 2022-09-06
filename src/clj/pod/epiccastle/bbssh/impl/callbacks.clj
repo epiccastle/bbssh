@@ -4,11 +4,11 @@
 
 (defn return-result [id result]
   (let [p (@result-register id)]
-    (deliver p  result)
+    (deliver p result)
     nil))
 
 (defn call-method [reply-fn method args]
-  (let [id (str (gensym "user-info"))
+  (let [id (str (gensym "callback-"))
         p (promise)]
     (swap! result-register assoc id p)
     (reply-fn [:method {:id id

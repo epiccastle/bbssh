@@ -16,3 +16,17 @@
   [agent username host port]
   (cleaner/register
    (agent/get-session (cleaner/split-key agent) username host port)))
+
+(defn get-identity-repository
+  "gets the presently set identity-repository"
+  [agent]
+  (cleaner/register
+   (agent/get-identity-repository
+    (cleaner/split-key agent))))
+
+(defn set-identity-repository
+  "gets the presently set identity-repository"
+  [agent identity-repository]
+  (agent/set-identity-repository
+   (cleaner/split-key agent)
+   (cleaner/split-key identity-repository)))

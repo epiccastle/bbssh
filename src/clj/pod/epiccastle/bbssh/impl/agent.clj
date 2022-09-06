@@ -1,6 +1,6 @@
 (ns pod.epiccastle.bbssh.impl.agent
   (:require [bbssh.impl.references :as references])
-  (:import [com.jcraft.jsch JSch])
+  (:import [com.jcraft.jsch JSch IdentityRepository])
   )
 
 ;; pod.epiccastle.bbssh.impl.* are invoked on pod side.
@@ -18,3 +18,15 @@
     ^String username
     ^String host
     ^int port)))
+
+(defn get-identity-repository
+  [agent]
+  (references/add-instance
+   (.getIdentityRepository
+    ^JSch (references/get-instance agent))))
+
+(defn set-identity-repository
+  [agent identity-repository]
+  (.setIdentityRepository
+   ^JSch (references/get-instance agent)
+   ^IdentityRepository (references/get-instance identity-repository)))

@@ -109,3 +109,11 @@
    (session/open-channel
     (cleaner/split-key session)
     type)))
+
+(defn set-identity-repository
+  "sets the identity-repository that will be used in the
+  public key authentication"
+  [session identity-repository]
+  (session/set-identity-repository
+   (cleaner/split-key session)
+   (cleaner/split-key identity-repository)))

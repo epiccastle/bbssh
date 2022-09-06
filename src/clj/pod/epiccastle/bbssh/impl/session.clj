@@ -1,7 +1,7 @@
 (ns pod.epiccastle.bbssh.impl.session
   (:require [bbssh.impl.references :as references]
             [bbssh.impl.utils :as utils])
-  (:import [com.jcraft.jsch JSch Session UserInfo])
+  (:import [com.jcraft.jsch JSch Session UserInfo IdentityRepository])
   )
 
 ;; pod.epiccastle.bbssh.impl.* are invoked on pod side.
@@ -112,6 +112,10 @@
   (references/add-instance
    (.openChannel
     ^Session (references/get-instance session)
-    ^String type)
-   ;;"pod.epiccastle.bbssh.channel-exec" "channel-exec"
-   ))
+    ^String type)))
+
+(defn set-identity-repository
+  [session identity-repository]
+  (.setIdentityRepository
+   ^Session (references/get-instance session)
+   ^IdentityRepository (references/get-instance identity-repository)))

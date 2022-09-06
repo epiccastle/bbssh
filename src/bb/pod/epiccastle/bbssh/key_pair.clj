@@ -104,3 +104,18 @@
      (cleaner/split-key agent)
      private-key-file
      public-key-file))))
+
+(defn get-signature
+  "Sign the passed in data with the private key, using algorithm
+  if it is passed aswell"
+  ([key-pair data]
+   (utils/decode-base64
+    (key-pair/get-signature
+     (cleaner/split-key key-pair)
+     (utils/encode-base64 data))))
+  ([key-pair data algorithm]
+   (utils/decode-base64
+    (key-pair/get-signature
+     (cleaner/split-key key-pair)
+     (utils/encode-base64 data)
+     algorithm))))

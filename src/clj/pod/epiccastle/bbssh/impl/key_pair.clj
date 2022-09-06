@@ -49,9 +49,12 @@
   )
 
 (defn get-public-key-blob [key-pair]
-  (utils/encode-base64
-   (.getPublicKeyBlob
-    ^KeyPair (references/get-instance key-pair))))
+  (let [result (.getPublicKeyBlob
+                ^KeyPair (references/get-instance key-pair))
+        result2 (utils/encode-base64 result
+                         )]
+    result2
+    ))
 
 (defn get-key-size [key-pair]
   (.getKeySize
@@ -76,3 +79,17 @@
     ^JSch (references/get-instance agent)
     ^String private-key-file
     ^String public-key-file)))
+
+(defn get-signature
+  ([key-pair data]
+   (utils/encode-base64
+    (.getSignature
+     ^KeyPair (references/get-instance key-pair)
+     ^bytes (utils/decode-base64 data))))
+  ([key-pair data algorithm]
+   (utils/encode-base64
+    (.getSignature
+     ^KeyPair (references/get-instance key-pair)
+     ^bytes (utils/decode-base64 data)
+     ^String algorithm)))
+  )

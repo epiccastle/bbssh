@@ -38,10 +38,10 @@
            (getName []
              (callbacks/call-method reply-fn :get-name []))
            (isEncrypted []
-             (callbacks/call-method reply-fn :is-encrypted []))
+             (boolean
+              (callbacks/call-method reply-fn :is-encrypted [])))
            (clear []
-             (callbacks/call-method reply-fn :clear []))
-           ))]
+             (callbacks/call-method reply-fn :clear []))))]
     (cleaner/register-delete-fn result #(reply-fn [:done] ["done"]))
     (reply-fn [:result result])
     nil))

@@ -1,4 +1,5 @@
-(ns bb-test.keys)
+(ns bb-test.keys
+  (:require [pod.epiccastle.bbssh.key-pair :as key-pair]))
 
 (def keys
   {:rsa-nopassphrase
@@ -20,6 +21,7 @@ AXNFDKvrZPavJbaza89ZAcjXYUCIQaxQDFM2RzISjw==
 -----END RSA PRIVATE KEY-----
 "
     :passphrase nil
+    :fingerprint "e6:a0:ce:eb:00:0c:6d:a3:8f:b6:cb:c0:ea:47:74:74"
     :public-blob '(0 0 0 7 115 115 104 45 114 115 97 0 0 0 3 1 0 1 0 0 0 -127 0 -52 91 43 -47 50 17 104 85 107 21 -23 -90 108 -16 71 -54 -109 76 -61 -13 37 -21 -45 111 74 -80 78 94 -67 56 37 -90 64 -14 -60 -41 22 127 40 -80 -86 2 -99 -28 -74 -34 -23 77 -61 -63 -120 -104 64 55 -11 121 102 109 36 55 -59 44 -11 -113 -15 20 -81 75 -41 35 -91 108 -12 24 76 -51 -67 -79 -105 24 -83 59 42 -57 43 86 84 113 -44 -85 85 53 -94 87 -98 30 -97 29 -91 -89 -89 110 -106 4 69 65 -72 56 71 14 -106 -73 -57 118 -67 -55 -96 110 -21 46 -44 97 -2 63 -57 114 31 -17)}
 
    :rsa-passphrase
@@ -44,6 +46,12 @@ v/EIaz+MRNrAP9q22qOK+PnN1vzRZgdVAh7+j9XXSHg=
 -----END RSA PRIVATE KEY-----
 "
     :passphrase "passphrase"
+    :fingerprint "58:a5:65:1c:8c:12:c9:6e:67:aa:70:e6:11:e3:c3:10"
     :public-blob '(0 0 0 7 115 115 104 45 114 115 97 0 0 0 3 1 0 1 0 0 0 -127 0 -54 2 -55 -105 66 77 61 -74 6 35 3 101 -23 98 -54 53 -38 118 -8 41 9 -99 53 111 8 92 43 -61 37 -41 17 -28 -64 94 -108 -65 -24 126 60 41 -33 2 -58 8 -116 -62 88 -68 -123 -101 -37 -68 -36 -40 85 -79 -117 -109 -46 101 -2 -66 67 110 -65 -58 -116 31 -13 31 10 -57 2 -89 107 97 0 15 -119 -46 78 -60 15 64 -58 -68 -5 -23 -115 -16 -126 36 73 -39 11 116 87 -65 6 60 124 81 85 99 101 75 64 -31 -112 0 -84 -34 -108 77 -47 53 -89 121 106 41 -26 50 -34 -69 110 -64 33 -99)
     }
    })
+
+(defn create-key-pair [agent key-id]
+  (spit "/tmp/bbssh-test-key" (get-in keys [key-id :private]))
+  (spit "/tmp/bbssh-test-key.pub" (get-in keys [key-id :public]))
+  (key-pair/load agent "/tmp/bbssh-test-key" "/tmp/bbssh-test-key.pub"))

@@ -6,6 +6,8 @@
             [pod.epiccastle.bbssh.impl.input-stream]
             [pod.epiccastle.bbssh.impl.output-stream]
             [pod.epiccastle.bbssh.impl.user-info]
+            [pod.epiccastle.bbssh.impl.identity]
+            [pod.epiccastle.bbssh.impl.identity-repository]
             [pod.epiccastle.bbssh.impl.callbacks]
             [pod.epiccastle.bbssh.impl.key-pair]))
 
@@ -28,6 +30,8 @@
                pod.epiccastle.bbssh.impl.input-stream
                pod.epiccastle.bbssh.impl.output-stream
                pod.epiccastle.bbssh.impl.user-info
+               pod.epiccastle.bbssh.impl.identity
+               pod.epiccastle.bbssh.impl.identity-repository
                pod.epiccastle.bbssh.impl.callbacks
                pod.epiccastle.bbssh.impl.key-pair
                ])

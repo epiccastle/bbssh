@@ -43,7 +43,7 @@
 
   ;; takes some time for the references to be removed
   ;; from the pod. TODO: investigate why its slow
-  (Thread/sleep 2000)
+  (Thread/sleep 5000)
 
   (is (empty? (cleaner/get-references)))
   (docker/cleanup))

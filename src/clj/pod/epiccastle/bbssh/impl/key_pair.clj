@@ -45,16 +45,12 @@
 
 (defn get-finger-print [key-pair]
   (.getFingerPrint
-   ^KeyPair (references/get-instance key-pair))
-  )
+   ^KeyPair (references/get-instance key-pair)))
 
 (defn get-public-key-blob [key-pair]
-  (let [result (.getPublicKeyBlob
-                ^KeyPair (references/get-instance key-pair))
-        result2 (utils/encode-base64 result
-                         )]
-    result2
-    ))
+  (utils/encode-base64
+   (.getPublicKeyBlob
+    ^KeyPair (references/get-instance key-pair))))
 
 (defn get-key-size [key-pair]
   (.getKeySize

@@ -50,23 +50,15 @@
                 :get-public-key-blob
                 (fn []
                   (prn :get-public-key-blob)
-                  (utils/encode-base64
-                   (key-pair/get-public-key-blob kp)))
+                  (key-pair/get-public-key-blob kp))
                 :get-signature
                 (fn
                   ([data]
                    (prn :get-signature data)
-                   (utils/encode-base64
-                    (key-pair/get-signature
-                     kp
-                     (utils/decode-base64 data))))
+                   (key-pair/get-signature kp data))
                   ([data algo]
                    (prn :get-signature data algo)
-                   (utils/encode-base64
-                    (key-pair/get-signature
-                     kp
-                     (utils/decode-base64 data)
-                     algo))))
+                   (key-pair/get-signature kp data algo)))
                 :decrypt
                 (fn []
                   (prn :decrypt))
@@ -94,8 +86,7 @@
                     :get-identities
                     (fn []
                       (prn :get-identities)
-                      [(cleaner/split-key idn)]
-                      )
+                      [idn])
                     :add
                     (fn [data] (prn :add data))
                     :remove

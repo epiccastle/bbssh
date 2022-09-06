@@ -1,7 +1,26 @@
 (ns pod.epiccastle.bbssh.identity
   (:require [pod.epiccastle.bbssh.impl.identity :as identity]
             [pod.epiccastle.bbssh.impl.callbacks :as callbacks]
-            [pod.epiccastle.bbssh.cleaner :as cleaner]))
+            [pod.epiccastle.bbssh.cleaner :as cleaner]
+            [pod.epiccastle.bbssh.utils :as utils]))
+
+(defn- preprocess-args [method args]
+  (case method
+    :get-signature
+    (let [[data & remain] args]
+      (concat [(utils/decode-base64 data)] remain))
+
+    args))
+
+(defn- postprocess-returns [method result]
+  (case method
+    :get-signature
+    (utils/encode-base64 result)
+
+    :get-public-key-blob
+    (utils/encode-base64 result)
+
+    result))
 
 (defn new [callbacks]
   (let [p (promise)]
@@ -30,7 +49,11 @@
              ;; and then it can't process any more async
              ;; responses.
              (future
-               (callbacks/return-result id (apply f args))))
+               (->> args
+                    (preprocess-args method)
+                    (apply f)
+                    (postprocess-returns method)
+                    (callbacks/return-result id))))
 
            ;; final message apon deletion triggers this response
            :done

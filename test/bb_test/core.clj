@@ -31,9 +31,13 @@
 
 (require '[bb-test.test-password-exec]
          '[bb-test.test-user-info]
-         '[bb-test.test-garbage-collection])
+         '[bb-test.test-garbage-collection]
+         '[bb-test.test-key-pair]
+         '[bb-test.test-identity-repository])
 
 (test/run-tests 'bb-test.test-password-exec
                 'bb-test.test-user-info
                 'bb-test.test-garbage-collection
+                'bb-test.test-key-pair
+                'bb-test.test-identity-repository
                 )

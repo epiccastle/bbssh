@@ -34,3 +34,26 @@
 
 (defn stop []
   (run! "docker container stop bbssh-test"))
+
+(defn exec [command]
+  (run
+    (str "docker exec bbssh-test " command)
+    "docker exec failed"))
+
+(defn cp-to [local-src remote-dest]
+  (run
+    (format "docker copy \"%s\" \"bbssh-test:%s\"" local-src remote-dest)
+    "docker cp failed"))
+
+(defn cp-from [remote-src local-dest]
+  (run
+    (format "docker copy \"bbssh-test:%s\" \"%s\"" remote-src local-dest)
+    "docker cp failed"))
+
+(defn put-file [contents remote-dest]
+  (process/sh
+   ["docker" "exec" "bbssh-test" "ash" "-c"
+    (format "echo '%s' > '%s'"
+            contents
+            remote-dest)])
+  )

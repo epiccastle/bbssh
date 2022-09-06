@@ -15,13 +15,16 @@
            (getPassword []
              (callbacks/call-method reply-fn :get-password []))
            (promptYesNo [^String s]
-             (callbacks/call-method reply-fn :prompt-yes-no [s]))
+             (boolean
+              (callbacks/call-method reply-fn :prompt-yes-no [s])))
            (getPassphrase []
              (callbacks/call-method reply-fn :get-passphase []))
            (promptPassphrase [^String s]
-             (callbacks/call-method reply-fn :prompt-passphrase [s]))
+             (boolean
+              (callbacks/call-method reply-fn :prompt-passphrase [s])))
            (promptPassword [^String s]
-             (callbacks/call-method reply-fn :prompt-password [s]))
+             (boolean
+              (callbacks/call-method reply-fn :prompt-password [s])))
            (showMessage [^String s]
              (callbacks/call-method reply-fn :show-message [s]))))]
     (cleaner/register-delete-fn result #(reply-fn [:done] ["done"]))

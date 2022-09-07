@@ -81,3 +81,10 @@ native-image: bbssh
 #
 test:
 	BABASHKA_CLASSPATH=test bb test/bb_test/core.clj
+
+codox:
+	-rm -rf codox-processed
+	mkdir codox-processed
+	cp -a src/bb codox-processed
+	sed -e "s/babashka.pods/'babashka.pods/" codox-processed/bb/pod/epiccastle/bbssh/utils.clj -i
+	clj -X:codox

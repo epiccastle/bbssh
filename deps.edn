@@ -30,5 +30,11 @@
                               org.slf4j/slf4j-nop]
                  :sha        "7708e7fd4572459c81f6a6b8e44c96f41cdd92d4"}}}
 
+  :codox {:extra-deps {codox/codox {:mvn/version "0.10.8"}}
+          :exec-fn codox.main/generate-docs
+          :exec-args {:source-paths ["codox-processed/bb"]
+                      :metadata {:doc/format :markdown}}
+          :extra-paths ["codox-processed/bb"]}
+
   :cider-clj {:extra-deps {cider/cider-nrepl {:mvn/version "0.22.4"}}
               :main-opts ["-m" "nrepl.cmdline" "--middleware" "[cider.nrepl/cider-middleware]"]}}}

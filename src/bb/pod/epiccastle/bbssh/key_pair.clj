@@ -3,6 +3,7 @@
   generating, loading, saving, encrypting and decrypting keys. Also
   a function for signing arbitrary data with the private key.
   "
+  (:refer-clojure :exclude [load])
   (:require [pod.epiccastle.bbssh.impl.key-pair :as key-pair]
             [pod.epiccastle.bbssh.cleaner :as cleaner]
             [pod.epiccastle.bbssh.utils :as utils]))

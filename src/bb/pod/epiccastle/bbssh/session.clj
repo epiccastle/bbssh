@@ -11,8 +11,8 @@
    password))
 
 (defn set-user-info
-  "Set the user-info structure the session will use to gather
-  keys and associated information from to `user-info`"
+  "Set the `user-info` for the `session`. The session will
+  use this user-info structure to ask for passwords and passphrases."
   [session user-info]
   (session/set-user-info
    (cleaner/split-key session)
@@ -41,10 +41,10 @@
   ```clj
   {
     :bind-address \"127.0.0.1\"              ;; the local interface to bind to. Use \"*\" or \"0.0.0.0\" for all interfaces.
-    :local-port 2200                         ;; the local port to listen on
+    :local-port 2200                       ;; the local port to listen on
     :remote-host \"jump-target.domain.com\"  ;; the remote host to forward the connection to on the remote side
-    :remote-port 22                          ;; the remote port to forward to
-    :connect-timeout 30000                   ;; how long to try to connect for
+    :remote-port 22                        ;; the remote port to forward to
+    :connect-timeout 30000                 ;; how long to try to connect for
   }
   ```
   "

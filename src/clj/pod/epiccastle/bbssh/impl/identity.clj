@@ -31,7 +31,8 @@
                (callbacks/call-method
                 reply-fn :get-signature
                 [(some-> data utils/encode-base64) alg]))))
-           (decrypt []
+           ;; deprecated in JSch
+           #_(decrypt []
              (callbacks/call-method reply-fn :decrypt []))
            (getAlgName []
              (callbacks/call-method reply-fn :get-alg-name []))

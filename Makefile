@@ -1,4 +1,4 @@
-GRAALVM_HOME = $(HOME)/graalvm-ce-java11-21.3.0
+GRAALVM_HOME = $(HOME)/graalvm-ce-java11-22.2.0
 ifeq (,$(findstring java11,$(GRAALVM_HOME)))
 $(error Please use a Java 11 version of Graal)
 endif

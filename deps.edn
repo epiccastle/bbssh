@@ -35,8 +35,16 @@
   :codox {:extra-deps {codox/codox {:mvn/version "0.10.8"}}
           :exec-fn codox.main/generate-docs
           :exec-args {:source-paths ["codox-processed/bb"]
-                      :metadata {:doc/format :markdown}}
-          :extra-paths ["codox-processed/bb"]}
+                      :metadata {:doc/format :markdown}
+                      :output-path "target/docs"
+                      :doc-paths ["docs"]
+                      :themes [:epiccastle]
+                      :name "bbssh"
+                      :version "0.1.0-SNAPSHOT"
+                      :description "A babashka pod providing SSH support"
+                      :license {:name "Eclipse Public License 2.0"
+                                :url "https://github.com/epiccastle/bbssh/blob/main/LICENSE"}}
+          :extra-paths ["codox-processed/bb" "resources"]}
 
   :cider-clj {:extra-deps {cider/cider-nrepl {:mvn/version "0.22.4"}}
               :main-opts ["-m" "nrepl.cmdline" "--middleware" "[cider.nrepl/cider-middleware]"]}}}

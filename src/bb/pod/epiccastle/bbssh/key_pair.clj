@@ -1,4 +1,8 @@
 (ns pod.epiccastle.bbssh.key-pair
+  "Everything related to SSH public/private key pairs. Functions for
+  generating, loading, saving, encrypting and decrypting keys. Also
+  a function for signing arbitrary data with the private key.
+  "
   (:require [pod.epiccastle.bbssh.impl.key-pair :as key-pair]
             [pod.epiccastle.bbssh.cleaner :as cleaner]
             [pod.epiccastle.bbssh.utils :as utils]))
@@ -49,7 +53,7 @@
    comment))
 
 (defn get-finger-print
-  "return the key finger print as a string.`"
+  "return the key finger print as a string."
   [key-pair]
   (key-pair/get-finger-print
    (cleaner/split-key key-pair)))

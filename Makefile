@@ -82,6 +82,9 @@ native-image: bbssh
 test:
 	BABASHKA_CLASSPATH=test bb test/bb_test/core.clj
 
+test-bb:
+	BABASHKA_CLASSPATH=test java -jar $(BABASHKA_SRC)/target/babashka-0.9.162-SNAPSHOT-standalone.jar test/bb_test/core.clj
+
 codox:
 	-rm -rf codox-processed
 	mkdir codox-processed

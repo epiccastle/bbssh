@@ -1,5 +1,7 @@
-{:paths ["src/clj" "src/c"]
+{:paths ["src/clj" "src/c" "resources"
+         ]
  :deps {org.clojure/clojure {:mvn/version "1.11.1"}
+        org.clojure/tools.cli {:mvn/version "1.0.206"}
         com.github.mwiede/jsch {:mvn/version "0.2.3"}
         nrepl/bencode {:mvn/version "1.1.0"}}
 
@@ -13,7 +15,7 @@
 
   :native-image
   {
-   :main-opts  ["-m clj.native-image bbssh.core"
+   :main-opts  ["-m" "clj.native-image" "bbssh.core"
                 "--enable-https"
                 "--no-fallback"
                 "--allow-incomplete-classpath"

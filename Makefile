@@ -60,7 +60,7 @@ run:
 	clj -J-Djava.library.path=resources -m bbssh.core
 
 uberjar:
-	clj -A:uberjar
+	clj -M:uberjar
 
 uberjar-run:
 	java -cp target/bbssh-0.1.0-SNAPSHOT-standalone.jar clojure.main -m bbssh.core
@@ -72,7 +72,7 @@ uberjar-ls:
 # Native image related targets
 #
 bbssh: resources/libbbssh.so $(CLOJURE_FILES)
-	GRAALVM_HOME=$(GRAALVM_HOME) clj -A:native-image
+	GRAALVM_HOME=$(GRAALVM_HOME) clj -M:native-image
 
 native-image: bbssh
 

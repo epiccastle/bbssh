@@ -6,14 +6,7 @@
         nrepl/bencode {:mvn/version "1.1.0"}}
 
  :aliases
- {:uberjar
-  {:extra-deps {luchiniatwork/cambada {:mvn/version "1.0.5"}}
-   :main-opts ["-m" "cambada.uberjar"
-               "-m" "bbssh.core"
-               "--app-version" "0.1.0-SNAPSHOT"
-               "--no-copy-source"]}
-
-  :native-image
+ {:native-image
   {
    :main-opts  ["-m" "clj.native-image" "bbssh.core"
                 "--enable-https"

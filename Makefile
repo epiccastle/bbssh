@@ -59,15 +59,6 @@ resources/libbbssh.so: $(LIB_FILE)
 run:
 	clj -J-Djava.library.path=resources -m bbssh.core
 
-uberjar:
-	clj -M:uberjar
-
-uberjar-run:
-	java -cp target/bbssh-0.1.0-SNAPSHOT-standalone.jar clojure.main -m bbssh.core
-
-uberjar-ls:
-	jar tf target/bbssh-0.1.0-SNAPSHOT-standalone.jar
-
 #
 # Native image related targets
 #

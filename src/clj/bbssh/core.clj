@@ -4,15 +4,28 @@
             [bbssh.impl.userinfo :as userinfo]
             [bbssh.impl.session :as session]
             [bbssh.impl.references :as references]
-            [bbssh.impl.pod :as pod])
+            [bbssh.impl.pod :as pod]
+            [clojure.string :as string]
+            [clojure.java.io :as io]
+            [clojure.tools.cli :as cli])
   (:gen-class))
 
-(defn -main [& args]
-  (when-not (System/getenv "BABASHKA_POD")
-    (binding [*out* *err*]
-      (println "Error: bbssh needs to be run as a babashka pod."))
-    (System/exit 1))
+(def version
+  (-> "BBSSH_VERSION"
+      io/resource
+      slurp
+      string/trim))
 
-  (lib/init!)
-  (clojure.lang.RT/loadLibrary "bbssh")
-  (pod/main))
+(defn -main [& args]
+  (let [{:keys [options]} (cli/parse-opts args [["-v" "--version"]])]
+    (if (:version options)
+      (println "bbssh version" version)
+      (do
+        (when-not (System/getenv "BABASHKA_POD")
+          (binding [*out* *err*]
+            (println "Error: bbssh needs to be run as a babashka pod."))
+          (System/exit 1))
+
+        (lib/init!)
+        (clojure.lang.RT/loadLibrary "bbssh")
+        (pod/main)))))

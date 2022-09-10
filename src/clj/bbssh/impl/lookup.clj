@@ -9,7 +9,8 @@
             [pod.epiccastle.bbssh.impl.identity]
             [pod.epiccastle.bbssh.impl.identity-repository]
             [pod.epiccastle.bbssh.impl.callbacks]
-            [pod.epiccastle.bbssh.impl.key-pair]))
+            [pod.epiccastle.bbssh.impl.key-pair]
+            [pod.epiccastle.bbssh.impl.host-key]))
 
 (defmacro ns-lookups [namespaces]
   (into {}
@@ -34,6 +35,7 @@
                pod.epiccastle.bbssh.impl.identity-repository
                pod.epiccastle.bbssh.impl.callbacks
                pod.epiccastle.bbssh.impl.key-pair
+               pod.epiccastle.bbssh.impl.host-key
                ])
   #_{
    'pod.epiccastle.bbssh.impl.agent/new

@@ -48,10 +48,9 @@
 
 (defn add-instance
   [instance & [{:keys [key-ns key-prefix]}]]
-  (let [class-name (.getName (class instance))
-        parts (string/split class-name #"\." -1)
-        simple-name (last parts)
-        package-name (string/join "." (butlast parts))
+  (let [the-class ^java.lang.Class (class instance)
+        simple-name (.getSimpleName the-class)
+        package-name (.getPackageName the-class)
         ]
     (-> (swap! references add-instance* instance
                (or key-ns package-name)

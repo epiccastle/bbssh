@@ -44,3 +44,10 @@
   (agent/set-host-key-repository
    (cleaner/split-key agent)
    (cleaner/split-key host-key-repository)))
+
+(defn set-known-hosts
+  "Set the known hosts file location"
+  [agent filename]
+  (agent/set-known-hosts
+   (cleaner/split-key agent)
+   filename))

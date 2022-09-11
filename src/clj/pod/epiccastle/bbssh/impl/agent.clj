@@ -42,3 +42,9 @@
   (.setHostKeyRepository
    ^JSch (references/get-instance agent)
    ^HostKeyRepository (references/get-instance host-key-repository)))
+
+(defn set-known-hosts
+  [agent filename]
+  (.setKnownHosts
+   ^JSch (references/get-instance agent)
+   ^String filename))

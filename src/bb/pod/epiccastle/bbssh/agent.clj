@@ -30,3 +30,17 @@
   (agent/set-identity-repository
    (cleaner/split-key agent)
    (cleaner/split-key identity-repository)))
+
+(defn get-host-key-repository
+  "Get the current host-key-repository from the agent."
+  [agent]
+  (cleaner/register
+   (agent/get-host-key-repository
+    (cleaner/split-key agent))))
+
+(defn set-host-key-repository
+  "Set the host-key-repository the agent should use."
+  [agent host-key-repository]
+  (agent/set-host-key-repository
+   (cleaner/split-key agent)
+   (cleaner/split-key host-key-repository)))

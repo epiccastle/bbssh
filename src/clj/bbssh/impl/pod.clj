@@ -15,6 +15,7 @@
             [pod.epiccastle.bbssh.impl.key-pair]
             [pod.epiccastle.bbssh.impl.host-key]
             [pod.epiccastle.bbssh.impl.known-hosts]
+            [pod.epiccastle.bbssh.impl.host-key-repository]
             [bencode.core :refer [read-bencode write-bencode]]
             [clojure.edn :as edn]
             [clojure.string :as string]
@@ -141,6 +142,7 @@
                          pod.epiccastle.bbssh.impl.key-pair
                          pod.epiccastle.bbssh.impl.host-key
                          pod.epiccastle.bbssh.impl.known-hosts
+                         pod.epiccastle.bbssh.impl.host-key-repository
                          ])
 
                        ;; bb side code
@@ -159,6 +161,7 @@
                          pod.epiccastle.bbssh.key-pair
                          pod.epiccastle.bbssh.host-key
                          pod.epiccastle.bbssh.known-hosts
+                         pod.epiccastle.bbssh.host-key-repository
                          ]))
 
                       "id" (read-string id)})

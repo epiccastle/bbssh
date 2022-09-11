@@ -11,7 +11,8 @@
             [pod.epiccastle.bbssh.impl.callbacks]
             [pod.epiccastle.bbssh.impl.key-pair]
             [pod.epiccastle.bbssh.impl.host-key]
-            [pod.epiccastle.bbssh.impl.known-hosts]))
+            [pod.epiccastle.bbssh.impl.known-hosts]
+            [pod.epiccastle.bbssh.impl.host-key-repository]))
 
 (defmacro ns-lookups [namespaces]
   (into {}
@@ -38,6 +39,7 @@
                pod.epiccastle.bbssh.impl.key-pair
                pod.epiccastle.bbssh.impl.host-key
                pod.epiccastle.bbssh.impl.known-hosts
+               pod.epiccastle.bbssh.impl.host-key-repository
                ])
   #_{
    'pod.epiccastle.bbssh.impl.agent/new

@@ -1,6 +1,8 @@
 (ns bbssh.impl.references
   (:require [clojure.string :as string]))
 
+(set! *warn-on-reflection* true)
+
 ;; All the pod java instances need to stay in the pod heap memory.
 ;; On the babashka side, we need to refer to these objects with keywords.
 ;; We need to look up an instance from a keyword, and a keyword from

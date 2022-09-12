@@ -50,3 +50,16 @@
   [host-key]
   (host-key/get-marker
    (cleaner/split-key host-key)))
+
+(defn get-info [host-key agent]
+  (host-key/get-info
+   (cleaner/split-key host-key)
+   (cleaner/split-key agent)))
+
+(defn get-infos [host-keys agent]
+  (->> (host-key/get-infos
+        (mapv cleaner/split-key host-keys)
+        (cleaner/split-key agent))
+       (map (fn [[k v]]
+              [(cleaner/register k) v]))
+       (into {})))

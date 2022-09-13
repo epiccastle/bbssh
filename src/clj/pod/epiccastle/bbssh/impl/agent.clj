@@ -126,3 +126,14 @@
    ^JSch (references/get-instance agent)
    ^Identity (references/get-instance identity)))
 
+(defn get-identity-names
+  [agent]
+  (into []
+        (.getIdentityNames
+         ^JSch (references/get-instance agent))))
+
+(defn remove-all-identities
+  [agent]
+  (.removeAllIdentity
+   ^JSch (references/get-instance agent)))
+

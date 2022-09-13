@@ -123,3 +123,15 @@
      (cleaner/split-key agent)
      (cleaner/split-key identity))))
 
+(defn get-identity-names
+  "Lists names of identities included in the identity-repository"
+  [agent]
+  (agent/get-identity-names
+   (cleaner/split-key agent)))
+
+(defn remove-all-identities
+  "Removes all identities from the identity-repository."
+  [agent]
+  (agent/remove-all-identities
+   (cleaner/split-key agent)))
+

@@ -1,5 +1,6 @@
 (ns pod.epiccastle.bbssh.agent
   (:require [pod.epiccastle.bbssh.impl.agent :as agent]
+            [pod.epiccastle.bbssh.utils :as utils]
             [pod.epiccastle.bbssh.cleaner :as cleaner]))
 
 (defn new
@@ -71,3 +72,43 @@
   (agent/set-known-hosts
    (cleaner/split-key agent)
    filename))
+
+(defn add-identity
+  "Add the private key to be used in authentication. Optionally
+  add the public key aswell. Private key can be decrypted with passphrase."
+  ([agent private-key-filename]
+   (agent/add-identity
+    (cleaner/split-key agent)
+    private-key-filename))
+  ([agent private-key-filename-or-identity passphrase]
+   (if (string? private-key-filename-or-identity)
+     ;; filename string is 2nd arg
+     (if (string? passphrase)
+       (agent/add-identity
+        (cleaner/split-key agent)
+        private-key-filename-or-identity
+        passphrase)
+       (agent/add-identity2
+        (cleaner/split-key agent)
+        private-key-filename-or-identity
+        (utils/encode-base64 passphrase)))
+     ;; identity reference is 2nd arg
+     (agent/add-identity3
+      (cleaner/split-key agent)
+      (cleaner/split-key private-key-filename-or-identity)
+      (utils/encode-base64 passphrase))
+     ))
+  ([agent private-key-filename public-key-filename passphrase]
+   (agent/add-identity
+    (cleaner/split-key agent)
+    private-key-filename
+    public-key-filename
+    (utils/encode-base64 passphrase)))
+  ([agent ^String identity-name ^bytes private-key ^bytes public-key ^bytes passphrase]
+   (agent/add-identity
+    (cleaner/split-key agent)
+    identity-name
+    (utils/encode-base64 private-key)
+    (utils/encode-base64 public-key)
+    (utils/encode-base64 passphrase))))
+

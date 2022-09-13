@@ -75,3 +75,41 @@
   (.setKnownHosts
    ^JSch (references/get-instance agent)
    ^String filename))
+
+(defn add-identity
+  ([agent filename]
+   (.addIdentity
+    ^JSch (references/get-instance agent)
+    ^String filename))
+  ([agent filename passphrase]
+   (.addIdentity
+    ^JSch (references/get-instance agent)
+    ^String filename
+    ^String passphrase))
+  ([agent private-key-filename public-key-filename passphrase]
+   (.addIdentity
+    ^JSch (references/get-instance agent)
+    ^String private-key-filename
+    ^String public-key-filename
+    ^bytes (utils/decode-base64 passphrase)))
+  ([agent identity-name private-key public-key passphrase]
+   (.addIdentity
+    ^JSch (references/get-instance agent)
+    ^String identity-name
+    ^bytes (utils/decode-base64 private-key)
+    ^bytes (utils/decode-base64 public-key)
+    ^bytes (utils/decode-base64 passphrase))))
+
+(defn add-identity2
+  [agent filename passphrase]
+  (.addIdentity
+   ^JSch (references/get-instance agent)
+   ^String filename
+   ^bytes (utils/decode-base64 passphrase)))
+
+(defn add-identity3
+  [agent identity passphrase]
+  (.addIdentity
+   ^JSch (references/get-instance agent)
+   ^Identity (references/get-instance identity)
+   ^bytes (utils/decode-base64 passphrase)))

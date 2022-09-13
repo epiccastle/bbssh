@@ -52,12 +52,12 @@
 
 (defn remove
   ([host-key-repository host type]
-   (host-key-repository/add
+   (host-key-repository/remove
     (cleaner/split-key host-key-repository)
     host
     type))
   ([host-key-repository host type key]
-   (host-key-repository/add
+   (host-key-repository/remove
     (cleaner/split-key host-key-repository)
     host
     type

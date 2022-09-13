@@ -71,12 +71,12 @@
 
 (defn remove
   ([host-key-repository host type]
-   (.add
+   (.remove
     ^HostKeyRepository (references/get-instance host-key-repository)
     ^String host
     ^String type))
   ([host-key-repository host type key]
-   (.add
+   (.remove
     ^HostKeyRepository (references/get-instance host-key-repository)
     ^String host
     ^String type

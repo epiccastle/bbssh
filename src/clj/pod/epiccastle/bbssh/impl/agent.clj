@@ -1,9 +1,11 @@
 (ns pod.epiccastle.bbssh.impl.agent
   (:require [bbssh.impl.references :as references]
-            [bbssh.impl.utils :as utils])
+            [bbssh.impl.utils :as utils]
+            [clojure.java.io :as io])
   (:import [com.jcraft.jsch JSch
             IdentityRepository HostKeyRepository
-            ConfigRepository Identity])
+            ConfigRepository Identity]
+           [java.io InputStream])
   )
 
 ;; pod.epiccastle.bbssh.impl.* are invoked on pod side.
@@ -75,6 +77,12 @@
   (.setKnownHosts
    ^JSch (references/get-instance agent)
    ^String filename))
+
+(defn set-known-hosts-content
+  [agent content]
+  (.setKnownHosts
+   ^JSch (references/get-instance agent)
+   ^InputStream (io/input-stream (utils/decode-base64 content))))
 
 (defn add-identity
   ([agent filename]

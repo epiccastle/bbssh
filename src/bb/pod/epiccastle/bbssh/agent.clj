@@ -73,6 +73,13 @@
    (cleaner/split-key agent)
    filename))
 
+(defn set-known-hosts-content
+  "Set the known hosts file location"
+  [agent content]
+  (agent/set-known-hosts-content
+   (cleaner/split-key agent)
+   (utils/encode-base64 content)))
+
 (defn add-identity
   "Add the private key to be used in authentication. Optionally
   add the public key aswell. Private key can be decrypted with passphrase."

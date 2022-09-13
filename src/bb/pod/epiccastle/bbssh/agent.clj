@@ -135,3 +135,14 @@
   (agent/remove-all-identities
    (cleaner/split-key agent)))
 
+(defn get-config
+  "Returns the config value for the specified key"
+  [key]
+  (agent/get-config key))
+
+(defn set-config
+  "Sets or overrides the configuration."
+  ([hashmap]
+   (agent/set-config hashmap))
+  ([key value]
+   (agent/set-config key value)))

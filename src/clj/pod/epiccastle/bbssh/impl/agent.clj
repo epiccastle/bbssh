@@ -137,3 +137,17 @@
   (.removeAllIdentity
    ^JSch (references/get-instance agent)))
 
+(defn get-config
+  [key]
+  (JSch/getConfig ^String key))
+
+(defn set-config
+  ([hashmap]
+   (doseq [[key value] hashmap]
+     (JSch/setConfig
+      ^String key
+      ^String value)))
+  ([key value]
+   (JSch/setConfig
+    ^String key
+    ^String value)))

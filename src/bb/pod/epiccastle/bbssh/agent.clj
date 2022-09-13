@@ -37,6 +37,20 @@
    (cleaner/split-key agent)
    (cleaner/split-key identity-repository)))
 
+(defn get-config-repository
+  "Get the current config-repository from the agent."
+  [agent]
+  (cleaner/register
+   (agent/get-config-repository
+    (cleaner/split-key agent))))
+
+(defn set-config-repository
+  "Set the config-repository the agent should use."
+  [agent config-repository]
+  (agent/set-config-repository
+   (cleaner/split-key agent)
+   (cleaner/split-key config-repository)))
+
 (defn get-host-key-repository
   "Get the current host-key-repository from the agent."
   [agent]

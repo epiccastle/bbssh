@@ -34,7 +34,8 @@
          '[bb-test.test-garbage-collection]
          '[bb-test.test-key-pair]
          '[bb-test.test-identity-repository]
-         '[bb-test.test-host-key])
+         '[bb-test.test-host-key]
+         '[bb-test.test-known-hosts])
 
 (test/run-tests 'bb-test.test-password-exec
                 'bb-test.test-user-info
@@ -42,4 +43,5 @@
                 'bb-test.test-key-pair
                 'bb-test.test-identity-repository
                 'bb-test.test-host-key
+                'bb-test.test-known-hosts
                 )

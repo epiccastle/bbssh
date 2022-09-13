@@ -13,9 +13,15 @@
   "Construct a new JSch connection session. Does not start the ssh
   connection.
   "
-  [agent username host port]
-  (cleaner/register
-   (agent/get-session (cleaner/split-key agent) username host port)))
+  ([agent host]
+   (cleaner/register
+    (agent/get-session (cleaner/split-key agent) host)))
+  ([agent username host]
+   (cleaner/register
+    (agent/get-session (cleaner/split-key agent) username host)))
+  ([agent username host port]
+   (cleaner/register
+    (agent/get-session (cleaner/split-key agent) username host port))))
 
 (defn get-identity-repository
   "Get the current identity-repository from the agent."

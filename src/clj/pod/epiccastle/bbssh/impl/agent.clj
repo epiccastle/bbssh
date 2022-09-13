@@ -11,13 +11,25 @@
   (references/add-instance
    (JSch.)))
 
-(defn get-session [agent username host port]
-  (references/add-instance
-   (.getSession
-    ^JSch (references/get-instance agent)
-    ^String username
-    ^String host
-    ^int port)))
+(defn get-session
+  ([agent host]
+   (references/add-instance
+    (.getSession
+     ^JSch (references/get-instance agent)
+     ^String host)))
+  ([agent username host]
+   (references/add-instance
+    (.getSession
+     ^JSch (references/get-instance agent)
+     ^String username
+     ^String host)))
+  ([agent username host port]
+   (references/add-instance
+    (.getSession
+     ^JSch (references/get-instance agent)
+     ^String username
+     ^String host
+     ^int port))))
 
 (defn get-identity-repository
   [agent]

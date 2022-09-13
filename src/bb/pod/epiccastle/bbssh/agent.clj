@@ -112,3 +112,14 @@
     (utils/encode-base64 public-key)
     (utils/encode-base64 passphrase))))
 
+(defn remove-identity
+  "remove an identity by its name or its reference"
+  [agent identity]
+  (if (string? identity)
+    (agent/remove-identity
+     (cleaner/split-key agent)
+     identity)
+    (agent/remove-identity2
+     (cleaner/split-key agent)
+     (cleaner/split-key identity))))
+

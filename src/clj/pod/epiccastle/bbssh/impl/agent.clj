@@ -113,3 +113,16 @@
    ^JSch (references/get-instance agent)
    ^Identity (references/get-instance identity)
    ^bytes (utils/decode-base64 passphrase)))
+
+(defn remove-identity
+  [agent identity-name]
+  (.removeIdentity
+   ^JSch (references/get-instance agent)
+   ^String identity-name))
+
+(defn remove-identity2
+  [agent identity]
+  (.removeIdentity
+   ^JSch (references/get-instance agent)
+   ^Identity (references/get-instance identity)))
+

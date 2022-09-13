@@ -1,4 +1,5 @@
 (ns pod.epiccastle.bbssh.impl.host-key-repository
+  (:refer-clojure :exclude [remove])
   (:require [bbssh.impl.references :as references]
             [bbssh.impl.utils :as utils]
             [pod.epiccastle.bbssh.impl.callbacks :as callbacks]

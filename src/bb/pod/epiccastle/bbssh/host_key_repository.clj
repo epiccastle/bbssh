@@ -37,6 +37,31 @@
     :preprocess-args-fn preprocess-args
     :postprocess-returns-fn postprocess-returns}))
 
+(defn check [host-key-repository host key]
+  (host-key-repository/check
+   (cleaner/split-key host-key-repository)
+   host
+   (utils/encode-base64 key)))
+
+(defn add [host-key-repository host-key user-info]
+  (host-key-repository/add
+   (cleaner/split-key host-key-repository)
+   (cleaner/split-key host-key)
+   (cleaner/split-key user-info)))
+
+(defn remove
+  ([host-key-repository host type]
+   (host-key-repository/add
+    (cleaner/split-key host-key-repository)
+    host
+    type))
+  ([host-key-repository host type key]
+   (host-key-repository/add
+    (cleaner/split-key host-key-repository)
+    host
+    type
+    (utils/encode-base64 key))))
+
 (defn get-host-key
   ([host-key-repository]
    (mapv cleaner/register

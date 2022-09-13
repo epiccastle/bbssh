@@ -51,6 +51,36 @@
     (reply-fn [:result result])
     nil))
 
+(defn check
+  [host-key-repository host key]
+  ({0 :ok
+    1 :not-included
+    2 :changed}
+   (.check
+    ^HostKeyRepository (references/get-instance host-key-repository)
+    ^String host
+    (utils/decode-base64 key))))
+
+(defn add
+  [host-key-repository host-key user-info]
+  (.add
+   ^HostKeyRepository (references/get-instance host-key-repository)
+   ^HostKey (references/get-instance host-key)
+   ^UserInfo (references/get-instance user-info)))
+
+(defn remove
+  ([host-key-repository host type]
+   (.add
+    ^HostKeyRepository (references/get-instance host-key-repository)
+    ^String host
+    ^String type))
+  ([host-key-repository host type key]
+   (.add
+    ^HostKeyRepository (references/get-instance host-key-repository)
+    ^String host
+    ^String type
+    ^bytes (utils/decode-base64 key))))
+
 (defn get-host-key
   ([host-key-repository]
    (mapv references/add-instance

@@ -19,15 +19,15 @@
   ([^String host ^bytes key]
    (references/add-instance
     (HostKey. host (utils/decode-base64 key))))
-  ([^String host ^clojure.lang.Keyword type ^bytes key]
+  ([^String host type ^bytes key]
    (references/add-instance
-    (HostKey. host (types type) (utils/decode-base64 key))))
-  ([^String host ^clojure.lang.Keyword type ^bytes key ^String comment]
+    (HostKey. host (types type HostKey/GUESS) (utils/decode-base64 key))))
+  ([^String host type ^bytes key ^String comment]
    (references/add-instance
-    (HostKey. host (types type) (utils/decode-base64 key) comment)))
-  ([^String marker ^String host ^clojure.lang.Keyword type ^bytes key ^String comment]
+    (HostKey. host (types type HostKey/GUESS) (utils/decode-base64 key) comment)))
+  ([^String marker ^String host type ^bytes key ^String comment]
    (references/add-instance
-    (HostKey. marker host (types type) (utils/decode-base64 key) comment))
+    (HostKey. marker host (types type HostKey/GUESS) (utils/decode-base64 key) comment))
    ))
 
 (defn get-host

@@ -1,5 +1,7 @@
 (ns bb-test.keys
-  (:require [pod.epiccastle.bbssh.key-pair :as key-pair]))
+  [:refer-clojure :exclude [keys]]
+  (:require [pod.epiccastle.bbssh.key-pair :as key-pair]
+            [clojure.string :as string]))
 
 (def keys
   {:rsa-nopassphrase
@@ -22,6 +24,7 @@ AXNFDKvrZPavJbaza89ZAcjXYUCIQaxQDFM2RzISjw==
 "
     :passphrase nil
     :fingerprint "e6:a0:ce:eb:00:0c:6d:a3:8f:b6:cb:c0:ea:47:74:74"
+    :fingerprint-256 "1e:56:bb:f4:5c:91:f6:f6:a7:74:79:44:49:9a:6e:19:22:05:05:be:0b:bb:1c:cc:65:0e:03:2a:de:cd:5e:72"
     :public-blob '(0 0 0 7 115 115 104 45 114 115 97 0 0 0 3 1 0 1 0 0 0 -127 0 -52 91 43 -47 50 17 104 85 107 21 -23 -90 108 -16 71 -54 -109 76 -61 -13 37 -21 -45 111 74 -80 78 94 -67 56 37 -90 64 -14 -60 -41 22 127 40 -80 -86 2 -99 -28 -74 -34 -23 77 -61 -63 -120 -104 64 55 -11 121 102 109 36 55 -59 44 -11 -113 -15 20 -81 75 -41 35 -91 108 -12 24 76 -51 -67 -79 -105 24 -83 59 42 -57 43 86 84 113 -44 -85 85 53 -94 87 -98 30 -97 29 -91 -89 -89 110 -106 4 69 65 -72 56 71 14 -106 -73 -57 118 -67 -55 -96 110 -21 46 -44 97 -2 63 -57 114 31 -17)}
 
    :rsa-passphrase
@@ -47,11 +50,54 @@ v/EIaz+MRNrAP9q22qOK+PnN1vzRZgdVAh7+j9XXSHg=
 "
     :passphrase "passphrase"
     :fingerprint "58:a5:65:1c:8c:12:c9:6e:67:aa:70:e6:11:e3:c3:10"
-    :public-blob '(0 0 0 7 115 115 104 45 114 115 97 0 0 0 3 1 0 1 0 0 0 -127 0 -54 2 -55 -105 66 77 61 -74 6 35 3 101 -23 98 -54 53 -38 118 -8 41 9 -99 53 111 8 92 43 -61 37 -41 17 -28 -64 94 -108 -65 -24 126 60 41 -33 2 -58 8 -116 -62 88 -68 -123 -101 -37 -68 -36 -40 85 -79 -117 -109 -46 101 -2 -66 67 110 -65 -58 -116 31 -13 31 10 -57 2 -89 107 97 0 15 -119 -46 78 -60 15 64 -58 -68 -5 -23 -115 -16 -126 36 73 -39 11 116 87 -65 6 60 124 81 85 99 101 75 64 -31 -112 0 -84 -34 -108 77 -47 53 -89 121 106 41 -26 50 -34 -69 110 -64 33 -99)
-    }
-   })
+    :public-blob '(0 0 0 7 115 115 104 45 114 115 97 0 0 0 3 1 0 1 0 0 0 -127 0 -54 2 -55 -105 66 77 61 -74 6 35 3 101 -23 98 -54 53 -38 118 -8 41 9 -99 53 111 8 92 43 -61 37 -41 17 -28 -64 94 -108 -65 -24 126 60 41 -33 2 -58 8 -116 -62 88 -68 -123 -101 -37 -68 -36 -40 85 -79 -117 -109 -46 101 -2 -66 67 110 -65 -58 -116 31 -13 31 10 -57 2 -89 107 97 0 15 -119 -46 78 -60 15 64 -58 -68 -5 -23 -115 -16 -126 36 73 -39 11 116 87 -65 6 60 124 81 85 99 101 75 64 -31 -112 0 -84 -34 -108 77 -47 53 -89 121 106 41 -26 50 -34 -69 110 -64 33 -99)}
+
+   :dsa-no-passphrase
+   {:public "ssh-dss AAAAB3NzaC1kc3MAAACBANwXiWoL2TTyIlRLcFXsddbq6c/7MI7RhQTs26Wdgd3ONIxH0ElQzUhDpE/Tc3URcYnddJAKuHXgrYSS/9X93JbY986uJvzXBO3MkXOHU2E472wSmd/4IvuEFvPvs9cLkTgE6l659FkmDg73Fm2/HCLRZmZA/Mtyi3Ho7HtScvyhAAAAFQDykMtFP/qgUm1LYtCKMnCHqlUkLwAAAIBbWiLBTlCofUNmuJQsgWT8TitEFrBYstD5D7Qf0JisYUB+VQcMesWaXlnelTK03Jcz3LDKqEyWCyA6KeVCrQlrc7xFKeOyiLiPc403STW9sROA8hkk2CjouzEK1JXjretMBmLE0u98NcBR61UXHRu06JvHZy3/uLj9UeUWYONJpAAAAIAopNa0RQSIYty161l2vbJrG7zSSchora1VRaYEqOapnjOCp8FyUtvyZaJBca64TsJ86xsVA4EiMAtkmJ1cs610JcPaqu3Qe8WJQENSALSPo8HgdaqNvZ+p6GJvCINLy+ZFyVweDsmIqY0/NmQyXu0TAADFCkATzPERL2wIqPkEYg== crispin@vash"
+    :private "-----BEGIN DSA PRIVATE KEY-----
+MIIBugIBAAKBgQDcF4lqC9k08iJUS3BV7HXW6unP+zCO0YUE7NulnYHdzjSMR9BJ
+UM1IQ6RP03N1EXGJ3XSQCrh14K2Ekv/V/dyW2PfOrib81wTtzJFzh1NhOO9sEpnf
++CL7hBbz77PXC5E4BOpeufRZJg4O9xZtvxwi0WZmQPzLcotx6Ox7UnL8oQIVAPKQ
+y0U/+qBSbUti0IoycIeqVSQvAoGAW1oiwU5QqH1DZriULIFk/E4rRBawWLLQ+Q+0
+H9CYrGFAflUHDHrFml5Z3pUytNyXM9ywyqhMlgsgOinlQq0Ja3O8RSnjsoi4j3ON
+N0k1vbETgPIZJNgo6LsxCtSV463rTAZixNLvfDXAUetVFx0btOibx2ct/7i4/VHl
+FmDjSaQCgYAopNa0RQSIYty161l2vbJrG7zSSchora1VRaYEqOapnjOCp8FyUtvy
+ZaJBca64TsJ86xsVA4EiMAtkmJ1cs610JcPaqu3Qe8WJQENSALSPo8HgdaqNvZ+p
+6GJvCINLy+ZFyVweDsmIqY0/NmQyXu0TAADFCkATzPERL2wIqPkEYgIUGecWrvym
+R2z2URa4sc6x5E95LyA=
+-----END DSA PRIVATE KEY-----
+"
+    :passphrase nil}
+
+   :ecdsa-no-passphrase
+   {:public "ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBES/2+pFmCaPolVkrWuOL9X7R6i1YyoHG5F+UWh9b5tFKxvajx7qtch7+09d39rDFG5UUxr4071lxkiijX2hFvw= crispin@vash"
+    :private "-----BEGIN EC PRIVATE KEY-----
+MHcCAQEEIIUyuwjbNAKlbYsDBeds0d30FYlKdnt2v0vLW2Z3/p04oAoGCCqGSM49
+AwEHoUQDQgAERL/b6kWYJo+iVWSta44v1ftHqLVjKgcbkX5RaH1vm0UrG9qPHuq1
+yHv7T13f2sMUblRTGvjTvWXGSKKNfaEW/A==
+-----END EC PRIVATE KEY-----
+"
+    :passphrase nil}
+
+   :ed25519-no-passphrase
+   {:public "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDLPYenxnXHlc44gNJ4x4Gr/XhzDqj/oj12oH+G4k4we crispin@vash"
+    :private "-----BEGIN OPENSSH PRIVATE KEY-----
+b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAAAMwAAAAtzc2gtZW
+QyNTUxOQAAACAyz2Hp8Z1x5XOOIDSeMeBq/14cw6o/6I9dqB/huJOMHgAAAJCZ781xme/N
+cQAAAAtzc2gtZWQyNTUxOQAAACAyz2Hp8Z1x5XOOIDSeMeBq/14cw6o/6I9dqB/huJOMHg
+AAAECvtLycE1Yy7e6yZDxFXyT5dJSZ7WXCzOtv+mEhq437fTLPYenxnXHlc44gNJ4x4Gr/
+XhzDqj/oj12oH+G4k4weAAAADGNyaXNwaW5AdmFzaAE=
+-----END OPENSSH PRIVATE KEY-----
+"
+    :passphrase nil}})
 
 (defn create-key-pair [agent key-id]
   (spit "/tmp/bbssh-test-key" (get-in keys [key-id :private]))
   (spit "/tmp/bbssh-test-key.pub" (get-in keys [key-id :public]))
   (key-pair/load agent "/tmp/bbssh-test-key" "/tmp/bbssh-test-key.pub"))
+
+(defn get-public-key-base64 [key-id]
+  (-> keys
+      (get-in [key-id :public])
+      (string/split #" ")
+      second))

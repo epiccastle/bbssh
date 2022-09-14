@@ -29,24 +29,35 @@
 
   ```clojure
   :get-name (fn [] ...)
-  ;; return a string specifying the name of this repository
-
-  :get-status (fn [] ...)
-  ;; return the present status of this repository. Can be :unavailable,
-  ;; :not-running or :running
-
-  :get-identities (fn [] ...)
-  ;; return a sequence of the identities stored in this repository
-
-  :add (fn [^bytes identity-data] ...)
-  ;; add the passed in raw data as an identity
-
-  :remove (fn [^bytes identity-data] ...)
-  ;; remove the passed in raw data identity from the repository.
-
-  :removeAll (fn [] ...)
-  ;; empty the repository
   ```
+    return a string specifying the name of this repository
+
+  ```clojure
+  :get-status (fn [] ...)
+  ```
+    return the present status of this repository. Can be :unavailable,
+    :not-running or :running
+
+  ```clojure
+  :get-identities (fn [] ...)
+  ```
+    return a sequence of the identities stored in this repository
+
+  ```clojure
+  :add (fn [^bytes identity-data] ...)
+  ```
+    add the passed in raw data as an identity
+
+  ```clojure
+  :remove (fn [^bytes identity-data] ...)
+  ```
+    remove the passed in raw data identity from the repository.
+
+  ```clojure
+  :removeAll (fn [] ...)
+  ```
+    empty the repository
+
   "
   [callbacks]
   (utils/new-invoker

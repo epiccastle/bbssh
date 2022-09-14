@@ -14,13 +14,13 @@
   (let [result
         (references/add-instance
          (proxy [HostKeyRepository] []
-           (check [^String host ^bytes key]
+           (check [^String host ^bytes public-key]
              ({:ok 0
                :not-included 1
                :changed 2}
               (callbacks/call-method
                reply-fn :check
-               [host (utils/encode-base64 key)])))
+               [host (utils/encode-base64 public-key)])))
            (add [^HostKey host-key ^UserInfo user-info]
              (callbacks/call-method
               reply-fn :add
@@ -31,10 +31,10 @@
               (callbacks/call-method
                reply-fn :remove
                [host type]))
-             ([^String host ^String type ^bytes key]
+             ([^String host ^String type ^bytes public-key]
               (callbacks/call-method
                reply-fn :remove
-               [host type (utils/encode-base64 key)])))
+               [host type (utils/encode-base64 public-key)])))
            (getKnownHostsRepositoryID []
              (callbacks/call-method reply-fn :get-known-hosts-repository-id []))
            (getHostKey

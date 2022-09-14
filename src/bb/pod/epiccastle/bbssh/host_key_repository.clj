@@ -68,8 +68,23 @@
     of `type` for `host`. `type` will be one of SSH public key
     prefix strings `\"ssh-rsa\"`, `\"ssh-dss\"`,
     `\"ecdsa-sha2-nistp256\"` or `\"ssh-ed25519\"`. Other key
-    types may be added with later releases and so should be
-    accomodated.
+    types may be added with later releases.
+
+  ```clojure
+  :get-known-hosts-repository-id (fn [] ...)
+  ```
+
+    Return a string to refer to the known hosts repository.
+
+  ```clojure
+  :get-host-key (fn
+                  ([] ...)
+                  ([^String host ^String type]))
+  ```
+
+    When called with a `host` and `type`, return a vector of
+    `host-key` references. When called with no args, return a
+    vector of all `host-key` references.
 
   "
   [callbacks]
@@ -80,42 +95,69 @@
     :preprocess-args-fn preprocess-args
     :postprocess-returns-fn postprocess-returns}))
 
-(defn check [host-key-repository host key]
+(defn check
+  "Checks the repository for the presence of the passed in public key
+  under the specified hostname. Returns `:ok` if the key is present
+  and matches, `:not-included` if no matching key is found and
+  `:changed` if there is a conflicting key of that type stored against
+  the hostname."
+  [^clojure.lang.Keyword host-key-repository ^String host ^bytes key]
   (host-key-repository/check
    (cleaner/split-key host-key-repository)
    host
    (utils/encode-base64 key)))
 
-(defn add [host-key-repository host-key user-info]
+(defn add
+  "Add the referenced `host-key` into the repository. If the key
+  requires user interaction use the passed in `user-info` to do so."
+  [^clojure.lang.Keyword host-key-repository
+   ^clojure.lang.Keyword host-key
+   ^clojure.lang.Keyword user-info]
   (host-key-repository/add
    (cleaner/split-key host-key-repository)
    (cleaner/split-key host-key)
    (cleaner/split-key user-info)))
 
 (defn remove
-  ([host-key-repository host type]
+  "Remove the referenced `public-key` of `type` being stored for
+  `host`. If `public-key` is not passed, remove all keys of `type` for
+  `host`. `type` should be a SSH public key prefix
+  string. `public-key` should be a `byte-array` of raw data."
+  ([^clojure.lang.Keyword host-key-repository
+    ^String host
+    ^String type]
    (host-key-repository/remove
     (cleaner/split-key host-key-repository)
     host
     type))
-  ([host-key-repository host type key]
+  ([^clojure.lang.Keyword host-key-repository
+    ^String host
+    ^String type
+    ^bytes public-key]
    (host-key-repository/remove
     (cleaner/split-key host-key-repository)
     host
     type
-    (utils/encode-base64 key))))
+    (utils/encode-base64 public-key))))
 
 (defn get-host-key
-  ([host-key-repository]
+  "Get a vector of `host-key` references from the repository.
+  If passed a `host` and `type` then only return keys matching
+  these. Otherwise return all the keys."
+  ([^clojure.lang.Keyword host-key-repository]
    (mapv cleaner/register
          (host-key-repository/get-host-key
           (cleaner/split-key host-key-repository))))
-  ([host-key-repository host type]
+  ([^clojure.lang.Keyword host-key-repository
+    ^String host
+    ^String type]
    (mapv cleaner/register
          (host-key-repository/get-host-key
           (cleaner/split-key host-key-repository)
           host type))))
 
-(defn get-known-hosts-repository-id [host-key-repository]
+(defn get-known-hosts-repository-id
+  "Returns and identification string for this repository."
+  [host-key-repository]
   (host-key-repository/get-known-hosts-repository-id
    (cleaner/split-key host-key-repository)))

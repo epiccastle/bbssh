@@ -34,7 +34,7 @@
              ([^String host ^String type ^bytes public-key]
               (callbacks/call-method
                reply-fn :remove
-               [host type (utils/encode-base64 public-key)])))
+               [host type (some-> public-key utils/encode-base64)])))
            (getKnownHostsRepositoryID []
              (callbacks/call-method reply-fn :get-known-hosts-repository-id []))
            (getHostKey

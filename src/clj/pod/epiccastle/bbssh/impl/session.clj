@@ -1,7 +1,9 @@
 (ns pod.epiccastle.bbssh.impl.session
   (:require [bbssh.impl.references :as references]
             [bbssh.impl.utils :as utils])
-  (:import [com.jcraft.jsch JSch Session UserInfo IdentityRepository])
+  (:import [com.jcraft.jsch JSch Session
+            UserInfo IdentityRepository
+            HostKeyRepository])
   )
 
 ;; pod.epiccastle.bbssh.impl.* are invoked on pod side.

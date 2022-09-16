@@ -1,5 +1,6 @@
 (ns pod.epiccastle.bbssh.user-info
-  (:require [pod.epiccastle.bbssh.utils :as utils]))
+  (:require [pod.epiccastle.bbssh.utils :as utils]
+            [pod.epiccastle.bbssh.terminal :as terminal]))
 
 (defn new
   "Create a new user-info structure. Pass in a hashmap containing the

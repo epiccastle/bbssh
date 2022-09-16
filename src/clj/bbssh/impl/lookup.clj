@@ -1,5 +1,6 @@
 (ns bbssh.impl.lookup
   (:require [pod.epiccastle.bbssh.impl.agent]
+            [pod.epiccastle.bbssh.impl.terminal]
             [pod.epiccastle.bbssh.impl.cleaner]
             [pod.epiccastle.bbssh.impl.session]
             [pod.epiccastle.bbssh.impl.channel-exec]
@@ -28,6 +29,7 @@
 (def lookup
   (ns-lookups [pod.epiccastle.bbssh.impl.agent
                pod.epiccastle.bbssh.impl.session
+               pod.epiccastle.bbssh.impl.terminal
                pod.epiccastle.bbssh.impl.cleaner
                pod.epiccastle.bbssh.impl.channel-exec
                pod.epiccastle.bbssh.impl.input-stream

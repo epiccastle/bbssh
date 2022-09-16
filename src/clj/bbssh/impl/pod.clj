@@ -16,6 +16,7 @@
             [pod.epiccastle.bbssh.impl.host-key]
             [pod.epiccastle.bbssh.impl.known-hosts]
             [pod.epiccastle.bbssh.impl.host-key-repository]
+            [pod.epiccastle.bbssh.impl.terminal]
             [bencode.core :refer [read-bencode write-bencode]]
             [clojure.edn :as edn]
             [clojure.string :as string]
@@ -129,7 +130,8 @@
                          "vars" []}]
                        ;; pod side namespace
                        (ns-public-describes
-                        [pod.epiccastle.bbssh.impl.cleaner
+                        [pod.epiccastle.bbssh.impl.terminal
+                         pod.epiccastle.bbssh.impl.cleaner
                          pod.epiccastle.bbssh.impl.agent
                          pod.epiccastle.bbssh.impl.session
                          pod.epiccastle.bbssh.impl.channel-exec
@@ -148,7 +150,8 @@
 
                        ;; bb side code
                        (ns-public-slurps
-                        [pod.epiccastle.bbssh.cleaner
+                        [pod.epiccastle.bbssh.terminal
+                         pod.epiccastle.bbssh.cleaner
                          pod.epiccastle.bbssh.utils
                          pod.epiccastle.bbssh.agent
                          pod.epiccastle.bbssh.session

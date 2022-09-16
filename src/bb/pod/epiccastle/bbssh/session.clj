@@ -89,6 +89,14 @@
    key
    value))
 
+(defn set-configs
+  "Merge the config values from the passed in hashmap into the session
+  config"
+  [session hashmap]
+  (session/set-configs
+   (cleaner/split-key session)
+   hashmap))
+
 (defn get-config
   "Get the current config setting `key`"
   [session key]

@@ -95,14 +95,28 @@
   [session key value]
   (.setConfig
    ^Session (references/get-instance session)
-   ^String (utils/to-camel-case (name key))
+   ^String (if (keyword? key)
+             (utils/to-camel-case (name key))
+             key)
    ^String (utils/boolean-to-yes-no value)))
+
+(defn set-configs
+  [session hashmap]
+  (doseq [[key value] hashmap]
+    (.setConfig
+     ^Session (references/get-instance session)
+     ^String (if (keyword? key)
+               (utils/to-camel-case (name key))
+               key)
+     ^String (utils/boolean-to-yes-no value))))
 
 (defn get-config
   [session key]
   (.getConfig
    ^Session (references/get-instance session)
-   ^String (utils/to-camel-case (name key))))
+   ^String (if (keyword? key)
+             (utils/to-camel-case (name key))
+             key)))
 
 (defn connected?
   [session]

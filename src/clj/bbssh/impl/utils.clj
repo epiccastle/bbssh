@@ -7,6 +7,9 @@
 (defn to-camel-case [^String a]
   (apply str (map string/capitalize (.split (name a) "-"))))
 
+#_ (to-camel-case "one-two-three")
+#_ (to-camel-case "one")
+
 (defn string-to-byte-array [^String s]
   (byte-array (map int s)))
 

@@ -38,7 +38,6 @@
     (let [nk (name k)
           config-var-names
           (get special-config-var-names nk [nk])]
-      (prn 'CFN config-var-names)
       (if (ifn? v)
         ;; function value based config
         (doseq [n config-var-names]
@@ -49,6 +48,143 @@
         ;; string value based config
         (doseq [n config-var-names]
           (session/set-config session n v))))))
+
+(defn- print-flush-ask-yes-no [s]
+  (print (str s " "))
+  (.flush *out*)
+  (let [response (read-line)
+        first-char (first response)]
+    (boolean (#{\y \Y} first-char))))
+
+(defn make-default-user-info
+  [{:keys [strict-host-key-checking
+           accept-host-key]
+    :or {strict-host-key-checking :ask}}]
+  (let [message (atom nil)]
+    (user-info/new
+     {:get-password
+      (fn []
+        (print (str "Enter " @message ": "))
+        (.flush *out*)
+        (if-let [password (terminal/raw-mode-readline)]
+          (do
+            (println)
+            password)
+          (do
+            (println "^C")
+            (System/exit 1))))
+
+      :prompt-yes-no
+      (fn [s]
+        (let [host-key-missing?
+              (and (.contains s "authenticity of host")
+                   (.contains s "can't be established"))
+              host-key-changed?
+              (.contains s "IDENTIFICATION HAS CHANGED")
+              ]
+          (cond
+            host-key-missing?
+            (let [fingerprint (second (re-find #"fingerprint is (.+)." s))]
+              (cond
+                (#{:new "new"} accept-host-key)
+                true
+
+                (= true accept-host-key)
+                true
+
+                (= false accept-host-key)
+                false
+
+                (and (string? accept-host-key)
+                     (= fingerprint
+                        accept-host-key))
+                true ;; fingerprint matches
+
+                (string? accept-host-key)
+                false ;; fingerprint does not match
+
+                :else
+                (print-flush-ask-yes-no s)))
+
+            host-key-changed?
+            (let [fingerprint (second (re-find #"The fingerprint for the .+ key sent by the remote host .+ is\n(.+).\n" s))]
+              (cond
+                (#{:new "new"} accept-host-key)
+                false
+
+                (= true accept-host-key)
+                true
+
+                (= false accept-host-key)
+                false
+
+                (and (string? accept-host-key)
+                     (= fingerprint
+                        accept-host-key))
+                true ;; fingerprint matches
+
+                (string? accept-host-key)
+                false ;; fingerprint does not match
+
+                :else
+                (print-flush-ask-yes-no s)))
+
+            :else
+            (print-flush-ask-yes-no s))))
+
+      :get-passphrase
+      (fn []
+        (print (str "Enter " @message ": "))
+        (.flush *out*)
+        (if-let [passphrase (terminal/raw-mode-readline)]
+          (do
+            (println)
+            passphrase)
+          (do
+            (println "^C")
+            (System/exit 1))))
+
+      :prompt-passphrase
+      (fn [s]
+        (reset! message s)
+        ;; true: continue to decrypt key. false: cancel key decrypt
+        true)
+
+      :prompt-password
+      (fn [s]
+        (reset! message s)
+        ;; true: continue to connect. false: cancel authentication
+        true)
+
+      :show-message
+      (fn [s]
+        (println s))})))
+
+(defn make-default-host-key-repository []
+  (host-key-repository/new
+   {:check (fn [host key]
+             (prn :check host key)
+             :changed)
+    :add (fn [host-key user-info]
+           (prn :add host-key user-info)
+           nil)
+    :remove (fn
+              ([host type]
+               (prn :remove1 host type)
+               nil)
+              ([host type key]
+               (prn :remove2 host type key)
+               nil))
+    :get-known-hosts-repository-id (fn []
+                                     (prn :get-known-hosts-repository-id)
+                                     "my-khr")
+    :get-host-key (fn
+                    ([]
+                     (prn :get-host-key)
+                     [])
+                    ([host type]
+                     (prn :get-host-key host type)
+                     []))}))
 
 (defn ssh
   "Start an SSH session. If connection is successful, returns the SSH
@@ -71,15 +207,27 @@
   - `:agent-forwarding` If using an ssh-agent for authentication then
     turn on SSH agent authentication forwarding for this session.
     Default is `false`
-  - `:strict-host-key-checking` Turn on or off strict host key checking.
-    Default is `true`
+  - `:strict-host-key-checking` Control strict host key checking.
+    If set to `true`, bbssh will never add host keys to known host
+    and will refuse to connect to hosts whose host key has changed.
+    If set to `false`, bbssh will allow connection to hosts with
+    unknown or changed keys. If the key is unknown it will add it to known
+    hosts, but it will not change a key if it is present. A
+    value of `:ask` will mean new host keys will be added to the known
+    hosts, or a changed key modified, only after the user has confirmed
+    this is what they wish to do.
+    Default is `:ask`
   - `:known-hosts` A string defining the path to the known_hosts file
     to use. It is set to ~/.ssh/known_hosts by default. Set to `false`
     to disable using a known hosts file.
-  - `:accept-host-key` If `true` accept the host key if it is unknown.
-    If `false` reject the host connection if the host key is unknown.
-    If a string, accept the host-key only if the key fingerprint matches
-    the string. Defaults to `false`.
+  - `:accept-host-key` When `:strict-host-key-checking` is set to `:ask`
+    this setting controls the adding of the key. If unset, or set to `nil`
+    the default behavior of asking the user applies. If `true` accept the host key
+    if it is unknown or changed. If `false` reject the connection if the host key
+    is unknown or changed. If set to a string, accept the host-key only if the
+    key fingerprint matches the string. If set to `:new`, accept the key
+    if it is unknown, but reject it if it has changed.
+    Defaults to `nil`.
   - `:connection-options` A hashmap of lesser used connection options.
     See below for details.
   - `:no-connect` Set to true to prevent the connection from being
@@ -120,7 +268,7 @@
               host-key-repository]
        :or {port 22
             agent-forwarding false
-            strict-host-key-checking true
+            strict-host-key-checking :ask
             accept-host-key false
             connection-options {}}
        :as options}]]
@@ -128,11 +276,11 @@
         agent (or agent (agent/new))
         session (agent/get-session agent username hostname port)]
     (if (not= false known-hosts)
-      (agent/set-known-hosts
-       agent
-       (or known-hosts
-           (str (System/getProperty "user.home")
-                "/.ssh/known_hosts"))))
+        (agent/set-known-hosts
+         agent
+         (or known-hosts
+             (str (System/getProperty "user.home")
+                  "/.ssh/known_hosts"))))
     (when password (session/set-password session password))
     (when identity
       (if passphrase
@@ -145,17 +293,26 @@
        (utils/opt-decode-base64 private-key)
        (utils/opt-decode-base64 (or public-key ""))
        (utils/opt-get-bytes (or passphrase ""))))
-    (session/set-configs
-     session
-     (select-keys options [:agent-forwarding :strict-host-key-checking]))
+    (cond
+      (#{:ask "ask"} strict-host-key-checking)
+      (session/set-config session :strict-host-key-checking "ask")
+      strict-host-key-checking
+      (session/set-config session :strict-host-key-checking true)
+      :else
+      (session/set-config session :strict-host-key-checking false))
     (when connection-options
       (process-session-connection-options session connection-options))
     (when identity-repository
       (session/set-identity-repository session identity-repository))
-    (when user-info
-      (session/set-user-info session user-info))
+    (session/set-user-info
+     session
+     (or user-info
+         (make-default-user-info options)))
     (when host-key-repository
-      (session/set-host-key-repository session host-key-repository))
+        (session/set-host-key-repository session host-key-repository))
+
+    #_(session/set-host-key-repository session (make-default-host-key-repository))
+
     (when-not no-connect
       (session/connect session))
     session))

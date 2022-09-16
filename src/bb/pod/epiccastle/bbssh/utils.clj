@@ -73,5 +73,4 @@
            nil))
        :error (fn [err]
                 (prn 'error err))}})
-    (cleaner/register @p))
-  )
+    (cleaner/register @p)))

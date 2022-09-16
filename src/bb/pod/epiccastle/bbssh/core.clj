@@ -71,7 +71,8 @@
   - `:strict-host-key-checking` Turn on or off strict host key checking.
     Default is `true`
   - `:known-hosts` A string defining the path to the known_hosts file
-    to use. Is set to ~/.ssh/known_hosts by default.
+    to use. It is set to ~/.ssh/known_hosts by default. Set to `false`
+    to disable using a known hosts file.
   - `:accept-host-key` If `true` accept the host key if it is unknown.
     If `false` reject the host connection if the host key is unknown.
     If a string, accept the host-key only if the key fingerprint matches
@@ -123,11 +124,12 @@
   (let [username (or username (System/getProperty "user.name"))
         agent (or agent (agent/new))
         session (agent/get-session agent username hostname port)]
-    (agent/set-known-hosts
-     agent
-     (or known-hosts
-         (str (System/getProperty "user.home")
-              "/.ssh/known_hosts")))
+    (if (not= false known-hosts)
+      (agent/set-known-hosts
+       agent
+       (or known-hosts
+           (str (System/getProperty "user.home")
+                "/.ssh/known_hosts"))))
     (when password (session/set-password session password))
     (when identity
       (if passphrase

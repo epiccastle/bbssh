@@ -119,3 +119,9 @@
   (.setIdentityRepository
    ^Session (references/get-instance session)
    ^IdentityRepository (references/get-instance identity-repository)))
+
+(defn set-host-key-repository
+  [session host-key-repository]
+  (.setIdentityRepository
+   ^Session (references/get-instance session)
+   ^HostKeyRepository (references/get-instance host-key-repository)))

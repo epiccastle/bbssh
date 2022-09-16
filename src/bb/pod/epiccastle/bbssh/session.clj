@@ -117,3 +117,11 @@
   (session/set-identity-repository
    (cleaner/split-key session)
    (cleaner/split-key identity-repository)))
+
+(defn set-host-key-repository
+  "sets the host-key-repository that will be used in the
+  public key authentication"
+  [session host-key-repository]
+  (session/set-host-key-repository
+   (cleaner/split-key session)
+   (cleaner/split-key host-key-repository)))

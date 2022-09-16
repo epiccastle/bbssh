@@ -42,12 +42,12 @@
               (->>
                (callbacks/call-method reply-fn :get-host-key [])
                (mapv references/get-instance)
-               make-array))
+               (into-array HostKey)))
              ([^String host ^String type]
               (->>
                (callbacks/call-method reply-fn :get-host-key [host type])
                (mapv references/get-instance)
-               make-array)))))]
+               (into-array HostKey))))))]
     (cleaner/register-delete-fn result #(reply-fn [:done] ["done"]))
     (reply-fn [:result result])
     nil))

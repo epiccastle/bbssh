@@ -138,6 +138,6 @@
 
 (defn set-host-key-repository
   [session host-key-repository]
-  (.setIdentityRepository
+  (.setHostKeyRepository
    ^Session (references/get-instance session)
    ^HostKeyRepository (references/get-instance host-key-repository)))

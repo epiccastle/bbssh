@@ -129,8 +129,7 @@
                          "vars" []}]
                        ;; pod side namespace
                        (ns-public-describes
-                        [pod.epiccastle.bbssh.impl.core
-                         pod.epiccastle.bbssh.impl.cleaner
+                        [pod.epiccastle.bbssh.impl.cleaner
                          pod.epiccastle.bbssh.impl.agent
                          pod.epiccastle.bbssh.impl.session
                          pod.epiccastle.bbssh.impl.channel-exec
@@ -144,12 +143,12 @@
                          pod.epiccastle.bbssh.impl.host-key
                          pod.epiccastle.bbssh.impl.known-hosts
                          pod.epiccastle.bbssh.impl.host-key-repository
+                         pod.epiccastle.bbssh.impl.core
                          ])
 
                        ;; bb side code
                        (ns-public-slurps
-                        [pod.epiccastle.bbssh.core
-                         pod.epiccastle.bbssh.cleaner
+                        [pod.epiccastle.bbssh.cleaner
                          pod.epiccastle.bbssh.utils
                          pod.epiccastle.bbssh.agent
                          pod.epiccastle.bbssh.session
@@ -163,6 +162,7 @@
                          pod.epiccastle.bbssh.host-key
                          pod.epiccastle.bbssh.known-hosts
                          pod.epiccastle.bbssh.host-key-repository
+                         pod.epiccastle.bbssh.core
                          ]))
 
                       "id" (read-string id)})

@@ -16,10 +16,10 @@
        (cleaner/register user-info)])
 
     :remove
-    (let [[host type key] args]
-      (if key
-        [host type (utils/decode-base64 key)]
-        [host key]))
+    (let [[host arg2 arg3] args]
+      (if (= 3 (count args))
+        [host arg2 (some-> arg3 utils/decode-base64)]
+        [host arg2]))
 
     args))
 

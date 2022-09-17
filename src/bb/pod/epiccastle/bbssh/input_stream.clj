@@ -68,3 +68,18 @@
   (cleaner/register
    (input-stream/byte-array-input-stream
     string)))
+
+(defn make-proxy
+  "Make a babashka java.io.PipedInputStream that calls
+  the pod heap input-stream `stream`."
+  [stream]
+  (proxy [java.io.PipedInputStream] []
+    (close []
+      (close stream))
+    (read
+      ([]
+       (read stream))
+      ([bytes offset length]
+       (read stream bytes offset length)))
+    (available []
+      (available stream))))

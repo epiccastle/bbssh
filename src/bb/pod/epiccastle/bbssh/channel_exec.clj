@@ -20,7 +20,7 @@
   ([channel input-stream dont-close?]
    (channel-exec/set-input-stream
     (cleaner/split-key channel)
-    (cleaner/split-key input-stream)
+    (some-> input-stream cleaner/split-key)
     dont-close?))
   ([channel input-stream]
    (set-input-stream channel input-stream false)))

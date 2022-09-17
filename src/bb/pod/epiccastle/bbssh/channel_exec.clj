@@ -1,6 +1,7 @@
 (ns pod.epiccastle.bbssh.channel-exec
   (:require [pod.epiccastle.bbssh.impl.channel-exec :as channel-exec]
-            [pod.epiccastle.bbssh.cleaner :as cleaner]))
+            [pod.epiccastle.bbssh.cleaner :as cleaner]
+            [pod.epiccastle.bbssh.utils :as utils]))
 
 (defn set-command [channel command]
   (channel-exec/set-command
@@ -55,3 +56,53 @@
   (cleaner/register
    (channel-exec/get-input-stream
     (cleaner/split-key channel))))
+
+(defn set-pty [channel enable]
+  (channel-exec/set-pty
+   (cleaner/split-key channel)
+   enable))
+
+(defn set-pty-size [channel col row width-pixels height-pixels]
+  (channel-exec/set-pty
+   (cleaner/split-key channel)
+   col
+   row
+   width-pixels
+   height-pixels))
+
+(defn set-pty-type
+  ([channel terminal-type]
+   (channel-exec/set-pty-type
+    (cleaner/split-key channel)
+    terminal-type)
+   )
+  ([channel terminal-type col row width-pixels height-pixels]
+   (channel-exec/set-pty-type
+    (cleaner/split-key channel)
+    terminal-type
+    col
+    row
+    width-pixels
+    height-pixels)))
+
+(defn set-terminal-mode
+  [channel terminal-mode]
+  (channel-exec/set-terminal-mode
+   (cleaner/split-key channel)
+   (utils/encode-base64 terminal-mode)))
+
+(defn set-agent-forwarding [channel enable]
+  (channel-exec/set-agent-forwarding
+   (cleaner/split-key channel)
+   enable))
+
+(defn set-x-forwarding [channel enable]
+  (channel-exec/set-agent-forwarding
+   (cleaner/split-key channel)
+   enable))
+
+(defn set-env [channel name value]
+  (channel-exec/set-env
+   (cleaner/split-key channel)
+   name
+   value))

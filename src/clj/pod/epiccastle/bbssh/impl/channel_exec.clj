@@ -50,3 +50,52 @@
   (references/add-instance
    (.getOutputStream
     ^ChannelExec (references/get-instance channel))))
+
+(defn set-pty [channel enable]
+  (.setPty
+   ^ChannelExec (references/get-instance channel)
+   ^boolean enable))
+
+(defn set-pty-size [channel col row width-pixels height-pixels]
+  (.setPtySize
+   ^ChannelExec (references/get-instance channel)
+   ^int col
+   ^int row
+   ^int width-pixels
+   ^int height-pixels))
+
+(defn set-pty-type
+  ([channel terminal-type]
+   (.setPtyType
+    ^ChannelExec (references/get-instance channel)
+    ^String terminal-type))
+  ([channel terminal-type col row width-pixels height-pixels]
+   (.setPtyType
+    ^ChannelExec (references/get-instance channel)
+    ^String terminal-type
+    ^int col
+    ^int row
+    ^int width-pixels
+    ^int height-pixels)))
+
+(defn set-terminal-mode
+  [channel terminal-mode]
+  (.setTerminalMode
+   ^ChannelExec (references/get-instance channel)
+   ^bytes (utils/decode-base64 terminal-mode)))
+
+(defn set-agent-forwarding [channel enable]
+  (.setAgentForwarding
+   ^ChannelExec (references/get-instance channel)
+   ^boolean enable))
+
+(defn set-x-forwarding [channel enable]
+  (.setAgentForwarding
+   ^ChannelExec (references/get-instance channel)
+   ^boolean enable))
+
+(defn set-env [channel name value]
+  (.setEnv
+   ^ChannelExec (references/get-instance channel)
+   ^String name
+   ^String value))

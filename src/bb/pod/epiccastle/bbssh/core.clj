@@ -215,14 +215,15 @@
     hosts, but it will not change a key if it is present. A
     value of `:ask` will mean new host keys will be added to the known
     hosts, or a changed key modified, only after the user has confirmed
-    this is what they wish to do.
+    this is what they wish to do via the terminal.
     Default is `:ask`
   - `:known-hosts` A string defining the path to the known_hosts file
     to use. It is set to ~/.ssh/known_hosts by default. Set to `false`
     to disable using a known hosts file.
   - `:accept-host-key` When `:strict-host-key-checking` is set to `:ask`
     this setting controls the adding of the key. If unset, or set to `nil`
-    the default behavior of asking the user applies. If `true` accept the host key
+    the default behavior of asking the user via the terminal applies.
+    If `true` accept the host key
     if it is unknown or changed. If `false` reject the connection if the host key
     is unknown or changed. If set to a string, accept the host-key only if the
     key fingerprint matches the string. If set to `:new`, accept the key
@@ -234,12 +235,18 @@
     initiated. Just returns the prepared session reference. You will then
     need to call `session/connect` on it to initiate the connection.
   - `:agent` The bbssh agent to use to construct the session. If none
-    is supplied a new bbssh agent will be created.
+    is supplied a new bbssh agent will be created. Note: this is not
+    an ssh-agent. It is the root class that contains all the session
+    instances and settings.
   - `:identity-repository` Use a custom identity-repository in the
     connection.
-  - `:user-info` Use a custom user-info in the connection.
+  - `:user-info` Use a custom user-info in the connection. Specifying
+    this value will override `:accept-host-key` and change the behavior
+    of password and passphrase prompts (your user-info functions will
+    be called instead).
   - `:host-key-repository` Use a custom host-key-repository in the
-    connection.
+    connection. Specifying this value will override `:known-hosts`
+    setting (your host-key-repository functions will be called instead).
 
   The hashmap passed in `:connection-options` can have the following
   keys. Each key takes a string or a function as a configuration
@@ -248,7 +255,7 @@
   argument and return a string. It will be passed the existing
   configuration setting and should return the new configuration
   setting. These can be used to append or prepend extra values onto
-  the default setting.
+  the default settings.
 
   `:kex`, `:server-host-key`, `:prefer-known-host-key-types`,
   `:enable-server-sig-algs`, `:cipher`, `:cipher-s2c`, `:cipher-c2s`,

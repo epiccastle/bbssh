@@ -18,6 +18,10 @@
   (.connect
    ^ChannelExec (references/get-instance channel)))
 
+(defn disconnect [channel]
+  (.disconnect
+   ^ChannelExec (references/get-instance channel)))
+
 (defn set-input-stream [channel input-stream dont-close?]
   (.setInputStream
    ^ChannelExec (references/get-instance channel)
@@ -99,3 +103,24 @@
    ^ChannelExec (references/get-instance channel)
    ^String name
    ^String value))
+
+(defn is-closed [channel]
+  (.isClosed
+   ^ChannelExec (references/get-instance channel)))
+
+(defn is-connected [channel]
+  (.isConnected
+   ^ChannelExec (references/get-instance channel)))
+
+(defn send-signal [channel signal]
+  (.sendSignal
+   ^ChannelExec (references/get-instance channel)
+   ^String signal))
+
+(defn get-exit-status [channel]
+  (.getExitStatus
+   ^ChannelExec (references/get-instance channel)))
+
+(defn get-id [channel]
+  (.getId
+   ^ChannelExec (references/get-instance channel)))

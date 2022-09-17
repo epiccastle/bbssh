@@ -12,6 +12,10 @@
   (channel-exec/connect
    (cleaner/split-key channel)))
 
+(defn disconnect [channel]
+  (channel-exec/disconnect
+   (cleaner/split-key channel)))
+
 (defn set-input-stream
   ([channel input-stream dont-close?]
    (channel-exec/set-input-stream
@@ -106,3 +110,24 @@
    (cleaner/split-key channel)
    name
    value))
+
+(defn is-closed [channel]
+  (channel-exec/is-closed
+   (cleaner/split-key channel)))
+
+(defn is-connected [channel]
+  (channel-exec/is-connected
+   (cleaner/split-key channel)))
+
+(defn send-signal [channel signal]
+  (channel-exec/send-signal
+   (cleaner/split-key channel)
+   signal))
+
+(defn get-exit-status [channel]
+  (channel-exec/get-exit-status
+   (cleaner/split-key channel)))
+
+(defn get-id [channel]
+  (channel-exec/get-id
+   (cleaner/split-key channel)))

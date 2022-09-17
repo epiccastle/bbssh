@@ -2,7 +2,9 @@
   (:refer-clojure :exclude [read])
   (:require [bbssh.impl.references :as references]
             [bbssh.impl.utils :as utils])
-  (:import [java.io PipedInputStream PipedOutputStream]
+  (:import [java.io
+            PipedInputStream PipedOutputStream
+            ByteArrayInputStream ByteArrayOutputStream]
            [java.util Arrays]))
 
 ;; pod.epiccastle.bbssh.impl.* are invoked on pod side.
@@ -56,3 +58,8 @@
   (.connect
    ^PipedInputStream (references/get-instance stream)
    ^PipedOutputStream (references/get-instance source)))
+
+(defn byte-array-input-stream [string]
+  (references/add-instance
+   (ByteArrayInputStream.
+    ^bytes (.getBytes string "utf-8"))))

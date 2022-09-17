@@ -62,3 +62,9 @@
   (input-stream/connect
    (cleaner/split-key stream)
    (cleaner/split-key source)))
+
+(defn byte-array-input-stream
+  [string]
+  (cleaner/register
+   (input-stream/byte-array-input-stream
+    string)))

@@ -5,7 +5,8 @@
             [pod.epiccastle.bbssh.utils :as utils]))
 
 (defn new
-  "Create a new PipedInputStream."
+  "Create a new PipedInputStream on the pod heap. Return
+  a reference to it for babashka use."
   ([]
    (cleaner/register
     (input-stream/new)))

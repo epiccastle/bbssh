@@ -59,7 +59,7 @@
    ^PipedInputStream (references/get-instance stream)
    ^PipedOutputStream (references/get-instance source)))
 
-(defn byte-array-input-stream [string]
+(defn byte-array-input-stream [^String string]
   (references/add-instance
    (ByteArrayInputStream.
     ^bytes (.getBytes string "utf-8"))))

@@ -42,7 +42,11 @@
           arr
           0
           bytes)]
-     (utils/encode-base64 (Arrays/copyOfRange arr 0 bytes-read)))))
+     [bytes-read
+      (case bytes-read
+        -1 nil
+        0 ""
+        (utils/encode-base64 (Arrays/copyOfRange arr 0 bytes-read)))])))
 
 (defn available [stream]
   (.available

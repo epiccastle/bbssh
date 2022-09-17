@@ -42,12 +42,12 @@
    (input-stream/read
     (cleaner/split-key stream)))
   ([stream bytes offset length]
-   (let [base64 (input-stream/read
-                 (cleaner/split-key stream)
-                 length)
-         decoded (utils/decode-base64 base64)]
-     (System/arraycopy decoded 0 bytes offset (count decoded))
-     (count decoded))))
+   (let [[bytes-read base64] (input-stream/read
+                              (cleaner/split-key stream)
+                              length)]
+     (when (pos? bytes-read)
+       (System/arraycopy (utils/decode-base64 base64) 0 bytes offset bytes-read))
+     bytes-read)))
 
 (defn available
   "Return the number of bytes available and waiting to be read

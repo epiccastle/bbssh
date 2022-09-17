@@ -323,3 +323,42 @@
     (when-not no-connect
       (session/connect session))
     session))
+
+(defn exec
+  "Execute a `command` on the remote host over the ssh `session`.
+  `options` should be a hashmap with the following keys:
+
+  - `:agent-forwarding` Set to `true` enables ssh authentication agent
+    for this command.
+  - `:pty` If set to `true` allocate a pseudo terminal for this
+    command execution.
+  - `:stdin` Specify the data to be passed to stdin of the process. Can
+    be a string, a byte array, or an InputStream instance.
+  - `:format` Specify the format the stdout and stderr should be returned
+    as. `:stream` will return stream objects, `:bytes` will return
+    byte arrays and `:string` will return strings. Default is `:string`
+  - `:encoding` When `:format` is set to `:string` this option controls
+    the encoding used to generate the string. Default is `\"utf-8\".
+
+  "
+  [session command
+   {:keys [agent-forwarding pty in out err
+           ;;format encoding
+           ]
+    :as options}]
+  (let [channel (session/open-channel session "exec")]
+    (channel-exec/set-command channel command)
+    (channel-exec/set-input-stream channel in false)
+    (when pty
+      (channel-exec/set-pty channel (boolean pty)))
+    (when agent-forwarding
+      (channel-exec/set-agent-forwarding channel (boolean agent-forwarding)))
+    (when out
+      (channel-exec/set-output-stream channel out))
+    (when err
+      (channel-exec/set-error-stream channel err))
+    (channel-exec/connect channel)
+    {:channel channel
+     :out (or out (channel-exec/get-input-stream channel))
+     :err (or err (channel-exec/get-error-stream channel))
+     :in (or in (channel-exec/get-output-stream channel))}))

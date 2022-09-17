@@ -1,10 +1,12 @@
 (ns pod.epiccastle.bbssh.core
+  "Basic connection, execution, shell and copying functionality."
   (:require [pod.epiccastle.bbssh.agent :as agent]
             [pod.epiccastle.bbssh.session :as session]
             [pod.epiccastle.bbssh.utils :as utils]
             [pod.epiccastle.bbssh.user-info :as user-info]
             [pod.epiccastle.bbssh.host-key-repository :as host-key-repository]
             [pod.epiccastle.bbssh.terminal :as terminal]
+            [pod.epiccastle.bbssh.channel-exec :as channel-exec]
             [clojure.string :as string]))
 
 (def ^:private special-config-var-names
@@ -56,10 +58,8 @@
         first-char (first response)]
     (boolean (#{\y \Y} first-char))))
 
-(defn make-default-user-info
-  [{:keys [strict-host-key-checking
-           accept-host-key]
-    :or {strict-host-key-checking :ask}}]
+(defn- make-default-user-info
+  [{:keys [accept-host-key]}]
   (let [message (atom nil)]
     (user-info/new
      {:get-password
@@ -160,7 +160,7 @@
       (fn [s]
         (println s))})))
 
-(defn make-default-host-key-repository []
+(defn- make-default-host-key-repository []
   (host-key-repository/new
    {:check (fn [host key]
              (prn :check host key)

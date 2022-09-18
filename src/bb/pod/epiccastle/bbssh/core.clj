@@ -7,6 +7,8 @@
             [pod.epiccastle.bbssh.host-key-repository :as host-key-repository]
             [pod.epiccastle.bbssh.terminal :as terminal]
             [pod.epiccastle.bbssh.channel-exec :as channel-exec]
+            [pod.epiccastle.bbssh.input-stream :as input-stream]
+            [pod.epiccastle.bbssh.output-stream :as output-stream]
             [clojure.string :as string]))
 
 (def ^:private special-config-var-names
@@ -342,23 +344,29 @@
 
   "
   [session command
-   {:keys [agent-forwarding pty in out err
-           ;;format encoding
-           ]
-    :as options}]
+   & [{:keys [agent-forwarding pty in
+              pipe-buffer-size
+              ]
+       :or {pipe-buffer-size 8192}
+       :as options}]]
   (let [channel (session/open-channel session "exec")]
     (channel-exec/set-command channel command)
-    (channel-exec/set-input-stream channel in false)
     (when pty
       (channel-exec/set-pty channel (boolean pty)))
     (when agent-forwarding
       (channel-exec/set-agent-forwarding channel (boolean agent-forwarding)))
-    (when out
-      (channel-exec/set-output-stream channel out))
-    (when err
-      (channel-exec/set-error-stream channel err))
-    (channel-exec/connect channel)
-    {:channel channel
-     :out (or out (channel-exec/get-input-stream channel))
-     :err (or err (channel-exec/get-error-stream channel))
-     :in (or in (channel-exec/get-output-stream channel))}))
+    (let [out-stream (output-stream/new)
+          out-input-stream (input-stream/new out-stream pipe-buffer-size)
+          err-stream (output-stream/new)
+          err-input-stream (input-stream/new err-stream pipe-buffer-size)
+          in-stream (input-stream/byte-array-input-stream in)]
+      (channel-exec/set-output-stream channel out-stream)
+      (channel-exec/set-error-stream channel err-stream)
+      (channel-exec/set-input-stream channel in-stream false)
+      (channel-exec/connect channel)
+
+      {:channel channel
+       :out (input-stream/make-proxy out-input-stream)
+       :err (input-stream/make-proxy err-input-stream)
+       :in in-stream}
+      )))

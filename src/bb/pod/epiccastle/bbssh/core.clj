@@ -359,7 +359,13 @@
           out-input-stream (input-stream/new out-stream pipe-buffer-size)
           err-stream (output-stream/new)
           err-input-stream (input-stream/new err-stream pipe-buffer-size)
-          in-stream (input-stream/byte-array-input-stream in)]
+          in-string? (string? in)
+          in-stream (if (string? in)
+                      (input-stream/byte-array-input-stream in)
+                      (input-stream/new pipe-buffer-size))
+          in-output-stream (when-not in-string?
+                             (output-stream/new in-stream))
+          ]
       (channel-exec/set-output-stream channel out-stream)
       (channel-exec/set-error-stream channel err-stream)
       (channel-exec/set-input-stream channel in-stream false)
@@ -368,5 +374,7 @@
       {:channel channel
        :out (input-stream/make-proxy out-input-stream)
        :err (input-stream/make-proxy err-input-stream)
-       :in in-stream}
+       :in (if in-string?
+             in-stream
+             (output-stream/make-proxy in-output-stream))}
       )))

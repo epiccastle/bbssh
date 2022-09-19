@@ -220,6 +220,7 @@
                           :else
                           ;; normal synchronous invoke
                           (do
+                            ;;(prn 'invoke-blocking var)
                             (let [value (pr-str (apply f args))
                                   _ (debug 'value value)
                                   reply {"value" value

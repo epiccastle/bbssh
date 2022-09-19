@@ -369,13 +369,65 @@
           out-input-stream (input-stream/new out-stream pipe-buffer-size)
           err-stream (output-stream/new)
           err-input-stream (input-stream/new err-stream pipe-buffer-size)
-          in-string? (string? in)
-          in-stream (if (string? in)
-                      (input-stream/byte-array-input-stream in)
-                      (input-stream/new pipe-buffer-size))
-          in-output-stream (when-not in-string?
-                             (output-stream/new in-stream))
-          ]
+          ;; in-string? (string? in)
+          ;; in-stream (if (string? in)
+          ;;             (input-stream/byte-array-input-stream in)
+          ;;             (input-stream/new pipe-buffer-size))
+          ;; in-output-stream (when-not in-string?
+          ;;                    (output-stream/new in-stream))
+
+          in-stream
+          (cond
+            (nil? in)
+            (do
+              (->> (input-stream/byte-array-input-stream "")
+                   (channel-exec/set-input-stream channel))
+              nil)
+
+            (string? in)
+            (let [in-stream (input-stream/byte-array-input-stream in in-enc)]
+              (channel-exec/set-input-stream channel in-stream)
+              in-stream)
+
+            (bytes? in)
+            (let [in-stream (input-stream/byte-array-input-stream in)]
+              (channel-exec/set-input-stream channel in-stream)
+              in-stream)
+
+            (= :stream in)
+            (let [in-output-stream (output-stream/new)
+                  in-stream (input-stream/new in-output-stream pipe-buffer-size)]
+              (channel-exec/set-input-stream channel in-stream)
+              (output-stream/make-proxy in-output-stream))
+
+            (keyword? in) ;; pod input-stream
+            (do
+              (channel-exec/set-input-stream channel in)
+              in)
+
+            :else ;; bb InputStream
+            (do
+              (->> (input-stream/new-pod-proxy
+                    {:available (fn []
+                                  (.available in))
+                     :close (fn []
+                              (.close in))
+                     :mark #(.mark in %)
+                     :mark-supported #(.markSupported in)
+                     :read (fn
+                             ([]
+                              (.read in) ;; returns int
+                              )
+                             ([len]
+                              (let [buff (byte-array len)
+                                    bytes-read (.read in buff)]
+                                (if (neg? bytes-read)
+                                  [bytes-read nil]
+                                  [bytes-read (java.util.Arrays/copyOfRange buff 0 bytes-read)]))))
+                     :reset #(.reset in)
+                     :skip #(.skip in %)})
+                   (channel-exec/set-input-stream channel))
+              in))]
       (channel-exec/set-output-stream channel out-stream)
       (channel-exec/set-error-stream channel err-stream)
       (channel-exec/set-input-stream channel in-stream false)

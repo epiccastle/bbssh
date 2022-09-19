@@ -131,3 +131,7 @@
 (defn get-id [channel]
   (channel-exec/get-id
    (cleaner/split-key channel)))
+
+(defn is-eof [channel]
+  (channel-exec/get-id
+   (cleaner/split-key channel)))

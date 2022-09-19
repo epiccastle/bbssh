@@ -124,3 +124,7 @@
 (defn get-id [channel]
   (.getId
    ^ChannelExec (references/get-instance channel)))
+
+(defn is-eof [channel]
+  (.isEOF
+   ^ChannelExec (references/get-instance channel)))

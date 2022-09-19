@@ -85,7 +85,7 @@
 (defn new-pod-proxy
   [callbacks]
   (utils/new-invoker
-   {:call-sym 'pod.epiccastle.bbssh.impl.output-stream/new-proxy
+   {:call-sym 'pod.epiccastle.bbssh.impl.output-stream/new-pod-proxy
     :args []
     :callbacks callbacks
     :preprocess-args-fn preprocess-args}))

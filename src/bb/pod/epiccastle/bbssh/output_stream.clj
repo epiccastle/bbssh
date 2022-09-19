@@ -71,3 +71,21 @@
       (connect stream sink))
     (flush []
       (flush stream))))
+
+(defn- preprocess-args [method args]
+  (case method
+    :write
+    (let [[base64-or-int] args]
+      [(if (string? base64-or-int)
+         (utils/decode-base64 base64-or-int)
+         base64-or-int)])
+
+    args))
+
+(defn new-pod-proxy
+  [callbacks]
+  (utils/new-invoker
+   {:call-sym 'pod.epiccastle.bbssh.impl.output-stream/new-proxy
+    :args []
+    :callbacks callbacks
+    :preprocess-args-fn preprocess-args}))

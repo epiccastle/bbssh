@@ -53,7 +53,7 @@
           (is (string/starts-with? result "uid=0(root) gid=0(root)"))))))
   (docker/cleanup))
 
-(deftest exec-in-nil
+(deftest exec-in-all-types
   (docker/cleanup)
   (docker/build {:root-password "root-access-please"})
   (docker/start {:ssh-port 9876})
@@ -119,10 +119,40 @@
       (is (channel-exec/is-closed channel))
       (is (= 0 (channel-exec/get-exit-status channel))))
 
+    ;; :in pod side input-stream
+    (let [in-output-stream (output-stream/new)
+          in-stream (input-stream/new in-output-stream)
+          {:keys [channel out err in]}
+          (bbssh/exec
+           session "cat"
+           {:in in-stream})]
+      (doseq [n (range 128)]
+        (output-stream/write in-output-stream n))
+      (output-stream/close in-output-stream)
+      (let [buff (byte-array 256)]
+        (is (= 128 (.read out buff 0 256)))
+        (is (-> (java.util.Arrays/copyOfRange buff 0 128)
+                seq
+                (= (range 128)))))
+      (is (channel-exec/is-closed channel))
+      (is (= 0 (channel-exec/get-exit-status channel))))
 
+    ;; :in :stream
+    (let [{:keys [channel out err in]}
+          (bbssh/exec
+           session "cat"
+           {:in :stream})]
+      (doseq [n (range 128)]
+        (.write in n))
+      (.close in)
+      (let [buff (byte-array 256)]
+        (is (= 128 (.read out buff 0 256)))
+        (is (-> (java.util.Arrays/copyOfRange buff 0 128)
+                seq
+                (= (range 128)))))
+      (is (channel-exec/is-closed channel))
+      (is (= 0 (channel-exec/get-exit-status channel)))))
 
-
-    )
   (docker/cleanup))
 
 #_

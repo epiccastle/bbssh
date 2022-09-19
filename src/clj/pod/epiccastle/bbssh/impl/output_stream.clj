@@ -66,7 +66,7 @@
               (callbacks/call-method
                reply-fn :write
                [(utils/encode-base64
-                 (java.util.Arrays/copyOfRange byte-array offset (+ offset length)))])))))]
+                 (java.util.Arrays/copyOfRange byte-array ^int offset ^int (+ offset length)))])))))]
     (cleaner/register-delete-fn result #(reply-fn [:done] ["done"]))
     (reply-fn [:result result])
     nil))

@@ -64,10 +64,13 @@
    (cleaner/split-key source)))
 
 (defn byte-array-input-stream
-  [string]
+  [string-or-bytes & [encoding]]
   (cleaner/register
-   (input-stream/byte-array-input-stream
-    string)))
+   (if (string? string-or-bytes)
+     (input-stream/byte-array-input-stream-from-string
+      string-or-bytes encoding)
+     (input-stream/byte-array-input-stream-from-bytes
+      (utils/encode-base64 string-or-bytes)))))
 
 (defn make-proxy
   "Make a babashka java.io.PipedInputStream that calls

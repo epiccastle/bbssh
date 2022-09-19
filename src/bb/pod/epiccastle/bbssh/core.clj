@@ -330,20 +330,28 @@
   "Execute a `command` on the remote host over the ssh `session`.
   `options` should be a hashmap with the following keys:
 
-  - `:agent-forwarding` Set to `true` enables ssh authentication agent
+  - `:agent-forwarding` If set to `true` enables ssh authentication agent
     for this command.
   - `:pty` If set to `true` allocate a pseudo terminal for this
     command execution.
   - `:in` Specify the data to be passed to stdin of the process. Can
-    be nil, a string, a local byte array, a local InputStream instance (which
+    be `nil`, a string, a local byte array, a local InputStream instance (which
     will be .read from), a pod input-stream reference, or the keyword `:stream`.
     If the keyword `:stream` is specified, a PipedInputStream/PipedOutputStream
     instance pair will be created and the PipedOutputStream will be returned
     in the `:in` key of the result (for you to .write or clojure.java.io/copy
     to).
-  - `:out` Specify how you want the output...
-  - `:in-enc` If `:in` is a string then optionally set the input encoding
-    with this. Defaults to \"utf-8\".
+  - `:in-enc` If `:in` is a string then optionally set the input encoding with this. Defaults to \"utf-8\".
+  - `:out` Specify how you want the output to be handled. Use keyword
+    :string to
+    store a string when the process is complete. Use keyword :bytes
+    to store a byte array when the output is complete. Pass a local
+    OutputStream instance (which will be used to .write to) or a pod
+    output-stream reference (which will be used to output-stream/write
+    to). If passed a value of `:stream` is passed or the value is
+    ommitted, a PipedOutputStream/PipedInputStream instance pair
+    is created and the PipedInputStream will be returned in the `:out`
+    key of the result (for you to .read or clojure.java.io/copy from).
   - `:format` Specify the format the stdout and stderr should be returned
     as. `:stream` will return stream objects, `:bytes` will return
     byte arrays and `:string` will return strings. Default is `:string`

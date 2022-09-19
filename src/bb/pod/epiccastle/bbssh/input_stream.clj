@@ -86,3 +86,22 @@
        (read stream bytes offset length)))
     (available []
       (available stream))))
+
+(defn- postprocess-returns [method val]
+  (case method
+    :read
+    (if (int? val)
+      val
+      (let [[bytes-read base64] val]
+        [bytes-read (some-> base64 utils/encode-base64)]))
+
+    val))
+
+(defn new-pod-proxy
+  [callbacks]
+  (utils/new-invoker
+   {:call-sym 'pod.epiccastle.bbssh.impl.input-stream/new-pod-proxy
+    :args []
+    :callbacks callbacks
+    :postprocess-returns-fn postprocess-returns
+    }))

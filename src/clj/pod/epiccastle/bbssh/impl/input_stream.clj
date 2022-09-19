@@ -1,10 +1,13 @@
 (ns pod.epiccastle.bbssh.impl.input-stream
   (:refer-clojure :exclude [read])
   (:require [bbssh.impl.references :as references]
+            [pod.epiccastle.bbssh.impl.callbacks :as callbacks]
+            [pod.epiccastle.bbssh.impl.cleaner :as cleaner]
             [bbssh.impl.utils :as utils])
   (:import [java.io
             PipedInputStream PipedOutputStream
-            ByteArrayInputStream ByteArrayOutputStream]
+            ByteArrayInputStream ByteArrayOutputStream
+            InputStream]
            [java.util Arrays]))
 
 ;; pod.epiccastle.bbssh.impl.* are invoked on pod side.
@@ -68,3 +71,45 @@
   (references/add-instance
    (ByteArrayInputStream.
     ^bytes (utils/decode-base64 string))))
+
+(defn ^:async new-pod-proxy
+  [reply-fn]
+  (let [result
+        (references/add-instance
+         (proxy [InputStream] []
+           (available []
+             (callbacks/call-method reply-fn :available []))
+           (close []
+             (callbacks/call-method reply-fn :close []))
+           (mark [readlimit]
+             (callbacks/call-method reply-fn :mark [readlimit]))
+           (markSupported []
+             (callbacks/call-method reply-fn :mark-supported []))
+           (read
+             ([]
+              (callbacks/call-method reply-fn :read []))
+             ([^bytes bytes]
+              (let [[bytes-read base64]
+                    (callbacks/call-method
+                     reply-fn :read
+                     [(count bytes)])
+                    buffer (some-> base64 utils/decode-base64)]
+                (when buffer
+                  (System/arraycopy buffer 0 bytes 0 bytes-read))
+                bytes-read))
+             ([^bytes bytes offset length]
+              (let [[bytes-read base64]
+                    (callbacks/call-method
+                     reply-fn :read
+                     [length])
+                    buffer (some-> base64 utils/decode-base64)]
+                (when buffer
+                  (System/arraycopy buffer 0 bytes offset bytes-read))
+                bytes-read)))
+           (reset []
+             (callbacks/call-method reply-fn :reset []))
+           (skip [n]
+             (callbacks/call-method reply-fn :skip [n]))))]
+    (cleaner/register-delete-fn result #(reply-fn [:done] ["done"]))
+    (reply-fn [:result result])
+    nil))

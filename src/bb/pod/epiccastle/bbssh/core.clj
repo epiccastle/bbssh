@@ -352,10 +352,12 @@
 
   "
   [session command
-   & [{:keys [agent-forwarding pty in
+   & [{:keys [agent-forwarding pty
+              in in-enc
               pipe-buffer-size
               ]
-       :or {pipe-buffer-size 8192}
+       :or {pipe-buffer-size 8192
+            in-enc "utf-8"}
        :as options}]]
   (let [channel (session/open-channel session "exec")]
     (channel-exec/set-command channel command)

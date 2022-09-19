@@ -1,19 +1,21 @@
 (ns bb-test.test-password-exec
-  (:require [pod.epiccastle.bbssh.agent :as agent]
+  (:require [pod.epiccastle.bbssh.core :as bbssh]
+            [pod.epiccastle.bbssh.agent :as agent]
             [pod.epiccastle.bbssh.session :as session]
             [pod.epiccastle.bbssh.channel-exec :as channel-exec]
             [pod.epiccastle.bbssh.input-stream :as input-stream]
             [pod.epiccastle.bbssh.output-stream :as output-stream]
             [bb-test.docker :as docker]
             [clojure.test :refer [is deftest]]
-            [clojure.string :as string]))
+            [clojure.string :as string]
+            [clojure.java.io :as io]))
 
 (defn streams-for-out []
   (let [os (output-stream/new)
         is (input-stream/new os 1024)]
     [os is]))
 
-(deftest password-exec
+(deftest password-exec-low-level
   (docker/cleanup)
   (docker/build {:root-password "root-access-please"})
   (docker/start {:ssh-port 9876})
@@ -49,5 +51,84 @@
                          (String. "UTF-8")
                          )]
           (is (string/starts-with? result "uid=0(root) gid=0(root)"))))))
+  (docker/cleanup))
+
+(deftest exec-in-nil
+  (docker/cleanup)
+  (docker/build {:root-password "root-access-please"})
+  (docker/start {:ssh-port 9876})
+  (let [opts {:username "root"
+              :password "root-access-please"
+              :port 9876
+              :strict-host-key-checking false}
+        session (bbssh/ssh "localhost" opts)]
+
+    ;; :in nil
+    (let [{:keys [channel out err in]}
+          (bbssh/exec session "cat" {:in nil})]
+      (is (= 0 (.available out)))
+      (is (channel-exec/is-closed channel))
+      (is (= 0 (channel-exec/get-exit-status channel))))
+
+    ;; :in string
+    (let [{:keys [channel out err in]}
+          (bbssh/exec session "cat" {:in "string\ninput\n"})]
+      (is (= "string\ninput\n"
+             (with-out-str (io/copy out *out*))))
+      (is (channel-exec/is-closed channel))
+      (is (= 0 (channel-exec/get-exit-status channel))))
+
+    ;; :in string different encoding
+    (let [{:keys [channel out err in]}
+          (bbssh/exec session "cat" {:in "🚢"
+                                     :in-enc "utf-16"})]
+      (is (= "🚢"
+             (with-out-str
+               (io/copy out *out* :encoding "utf-16"))))
+      (is (channel-exec/is-closed channel))
+      (is (= 0 (channel-exec/get-exit-status channel))))
+
+    ;; :in byte-array
+    (let [{:keys [channel out err in]}
+          (bbssh/exec session "cat" {:in (.getBytes "string\ninput\n")})]
+      (is (= "string\ninput\n"
+             (with-out-str (io/copy out *out*))))
+      (is (channel-exec/is-closed channel))
+      (is (= 0 (channel-exec/get-exit-status channel))))
+
+    ;; :in byte-array different encoding
+    (let [{:keys [channel out err in]}
+          (bbssh/exec session "cat" {:in (.getBytes "🚢" "utf-16")})]
+      (is (= "🚢"
+             (with-out-str (io/copy out *out* :encoding "utf-16"))))
+      (is (channel-exec/is-closed channel))
+      (is (= 0 (channel-exec/get-exit-status channel))))
+
+    ;; :in InputStream
+    (let [{:keys [channel out err in]}
+          (bbssh/exec
+           session "cat"
+           {:in
+            (java.io.ByteArrayInputStream.
+             (byte-array (range 128)))})]
+      (let [buff (byte-array 256)]
+        (is (= 128 (.read out buff 0 256)))
+        (is (-> (java.util.Arrays/copyOfRange buff 0 128)
+                seq
+                (= (range 128)))))
+      (is (channel-exec/is-closed channel))
+      (is (= 0 (channel-exec/get-exit-status channel))))
+
+
+
+
+    )
+  (docker/cleanup))
+
+#_
+(deftest exec-in-nil
+  (docker/cleanup)
+  (docker/build {:root-password "root-access-please"})
+  (docker/start {:ssh-port 9876})
 
   (docker/cleanup))

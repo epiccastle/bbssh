@@ -39,7 +39,7 @@
    (output-stream/write
     (cleaner/split-key stream)
     (utils/encode-base64
-     (java.util.Arrays/copyOfRange byte-array offset length))
+     (java.util.Arrays/copyOfRange byte-array offset (+ offset length)))
     length)))
 
 (defn connect

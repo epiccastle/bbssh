@@ -32,7 +32,7 @@
   (.close
    ^PipedInputStream (references/get-instance stream)))
 
-(defn read
+(defn ^:blocking read
   ([stream]
    (.read
     ^PipedInputStream (references/get-instance stream)))

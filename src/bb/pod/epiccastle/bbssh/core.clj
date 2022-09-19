@@ -429,14 +429,29 @@
                    (channel-exec/set-input-stream channel))
               in))]
       (channel-exec/set-output-stream channel out-stream)
+      #_(channel-exec/set-output-stream
+         channel
+         (output-stream/new-proxy
+          {:close (fn [] (prn 'close))
+           :flush (fn [] (prn 'flush))
+           :write (fn [ba] (prn 'write (String. ba)))}))
+
       (channel-exec/set-error-stream channel err-stream)
-      (channel-exec/set-input-stream channel in-stream false)
+      #_(channel-exec/set-error-stream
+         channel
+         (output-stream/new-proxy
+          {:close (fn [] (prn 'closeerr))
+           :flush (fn [] (prn 'flusherr))
+           :write (fn [ba] (prn 'writeerr (String. ba)))}))
+
+
+
+
+
       (channel-exec/connect channel)
 
       {:channel channel
        :out (input-stream/make-proxy out-input-stream)
        :err (input-stream/make-proxy err-input-stream)
-       :in (if in-string?
-             in-stream
-             (output-stream/make-proxy in-output-stream))}
+       :in in-stream}
       )))

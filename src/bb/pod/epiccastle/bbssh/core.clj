@@ -334,8 +334,16 @@
     for this command.
   - `:pty` If set to `true` allocate a pseudo terminal for this
     command execution.
-  - `:stdin` Specify the data to be passed to stdin of the process. Can
-    be a string, a byte array, or an InputStream instance.
+  - `:in` Specify the data to be passed to stdin of the process. Can
+    be nil, a string, a local byte array, a local InputStream instance (which
+    will be .read from), a pod input-stream reference, or the keyword `:stream`.
+    If the keyword `:stream` is specified, a PipedInputStream/PipedOutputStream
+    instance pair will be created and the PipedOutputStream will be returned
+    in the `:in` key of the result (for you to .write or clojure.java.io/copy
+    to).
+  - `:out` Specify how you want the output...
+  - `:in-enc` If `:in` is a string then optionally set the input encoding
+    with this. Defaults to \"utf-8\".
   - `:format` Specify the format the stdout and stderr should be returned
     as. `:stream` will return stream objects, `:bytes` will return
     byte arrays and `:string` will return strings. Default is `:string`

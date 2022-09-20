@@ -71,3 +71,30 @@
    (byte-array-output-stream/write-to
     (cleaner/split-key stream)
     (cleaner/split-key out))))
+
+(defn make-proxy
+  "Make a babashka java.io.ByteArrayOutputStream that calls the pod
+  heap output-stream `stream`."
+  [stream]
+  (proxy [java.io.ByteArrayOutputStream] []
+    (close []
+      (close stream))
+    (reset []
+      (reset stream))
+    (size []
+      (size stream))
+    (toByteArray []
+      (to-byte-array stream))
+    (toString
+      ([]
+       (to-string stream))
+      ([encoding]
+       (to-string stream encoding)))
+    (write
+      ([bytes offset len]
+       (write stream bytes offset length))
+      ([byte]
+       (write stream byte)))
+    (writeTo [out]
+      (throw (ex-info "writeTo not implemented."
+                      {:type ::not-implemented})))))

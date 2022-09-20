@@ -55,14 +55,6 @@
   (output-stream/flush
    (cleaner/split-key stream)))
 
-(defn byte-array-output-stream
-  ([]
-   (cleaner/register
-    (output-stream/byte-array-output-stream)))
-  ([size]
-   (cleaner/register
-    (output-stream/byte-array-output-stream size))))
-
 (defn make-proxy
   "Make a babashka java.io.PipedOutputStream that calls the pod heap
   output-stream `stream`."

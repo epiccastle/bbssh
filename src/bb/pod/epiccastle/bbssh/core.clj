@@ -9,6 +9,7 @@
             [pod.epiccastle.bbssh.channel-exec :as channel-exec]
             [pod.epiccastle.bbssh.input-stream :as input-stream]
             [pod.epiccastle.bbssh.output-stream :as output-stream]
+            [pod.epiccastle.bbssh.byte-array-output-stream :as byte-array-output-stream]
             [clojure.string :as string]))
 
 (def ^:private special-config-var-names
@@ -362,6 +363,8 @@
   [session command
    & [{:keys [agent-forwarding pty
               in in-enc
+              out out-enc
+              err err-enc
               pipe-buffer-size
               ]
        :or {pipe-buffer-size 8192
@@ -373,8 +376,7 @@
       (channel-exec/set-pty channel (boolean pty)))
     (when agent-forwarding
       (channel-exec/set-agent-forwarding channel (boolean agent-forwarding)))
-    (let [out-stream (output-stream/new)
-          out-input-stream (input-stream/new out-stream pipe-buffer-size)
+    (let [
           err-stream (output-stream/new)
           err-input-stream (input-stream/new err-stream pipe-buffer-size)
           ;; in-string? (string? in)
@@ -435,8 +437,41 @@
                      :reset #(.reset in)
                      :skip #(.skip in %)})
                    (channel-exec/set-input-stream channel))
-              in))]
-      (channel-exec/set-output-stream channel out-stream)
+              in))
+
+          out-stream
+          (cond
+            (= :string out)
+            nil
+
+            (= :bytes out)
+            (let [out-stream (byte-array-output-stream/new)]
+              (channel-exec/set-output-stream channel out-stream)
+              (byte-array-output-stream/make-proxy out-stream))
+
+            (or (nil? out) (= :stream out))
+            (let [out-stream (output-stream/new)
+                  out-input-stream (input-stream/new out-stream pipe-buffer-size)]
+              (channel-exec/set-output-stream channel out-stream)
+              (input-stream/make-proxy out-input-stream))
+
+            (keyword? out) ;; output-stream pod reference
+            (do
+              (channel-exec/set-output-stream channel out)
+              out)
+
+            :else ;; bb OutputStream instance
+            (let [out-stream (output-stream/new-pod-proxy
+                              {:close #(.close out)
+                               :flush #(.flush out)
+                               :write (fn [bytes]
+                                        (.write out bytes))})]
+              (channel-exec/set-output-stream channel out-stream)
+              out-stream)
+            )
+
+          ]
+      #_(channel-exec/set-output-stream channel out-stream)
       #_(channel-exec/set-output-stream
          channel
          (output-stream/new-proxy
@@ -459,7 +494,7 @@
       (channel-exec/connect channel)
 
       {:channel channel
-       :out (input-stream/make-proxy out-input-stream)
+       :out out-stream
        :err (input-stream/make-proxy err-input-stream)
        :in in-stream}
       )))

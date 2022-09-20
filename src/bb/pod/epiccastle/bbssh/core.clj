@@ -442,7 +442,9 @@
           out-stream
           (cond
             (= :string out)
-            nil
+            (let [out-stream (byte-array-output-stream/new)]
+              (channel-exec/set-output-stream channel out-stream)
+              (byte-array-output-stream/make-proxy out-stream))
 
             (= :bytes out)
             (let [out-stream (byte-array-output-stream/new)]

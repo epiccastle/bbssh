@@ -6,7 +6,7 @@
             [bbssh.impl.utils :as utils])
   (:import [java.io
             PipedOutputStream PipedInputStream
-            OutputStream]))
+            OutputStream ByteArrayOutputStream]))
 
 ;; pod.epiccastle.bbssh.impl.* are invoked on pod side.
 
@@ -45,6 +45,14 @@
 (defn flush [stream]
   (.flush
    ^PipedOutputStream (references/get-instance stream)))
+
+(defn byte-array-output-stream
+  ([]
+   (references/add-instance
+    (ByteArrayOutputStream.)))
+  ([size]
+   (references/add-instance
+    (ByteArrayOutputStream. size))))
 
 (defn ^:async new-pod-proxy
   [reply-fn]

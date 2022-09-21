@@ -155,6 +155,32 @@
 
   (docker/cleanup))
 
+(deftest test-wait
+  (docker/cleanup)
+  (docker/build {:root-password "root-access-please"})
+  (docker/start {:ssh-port 9876})
+
+  (let [opts {:username "root"
+              :password "root-access-please"
+              :port 9876
+              :strict-host-key-checking false}
+        session (bbssh/ssh "localhost" opts)]
+    (let [{:keys [channel] :as process}
+          (bbssh/exec session "sleep 0.5" {:in nil})]
+      (is (nil? (bbssh/wait process 0)))
+      (is (nil? (bbssh/wait process -1)))
+      (is (nil? (bbssh/wait process 100)))
+      (is (channel-exec/is-connected channel))
+      (is (= 0 (bbssh/wait process 10000)))
+      (is (not (channel-exec/is-connected channel))))
+
+    (let [process (bbssh/exec session "sleep 0.5" {:in nil})]
+      (is (= 0 (bbssh/wait process))))
+
+    (let [process (bbssh/exec session "sleep 0.5; exit 10" {:in nil})]
+      (is (= 10 (bbssh/wait process)))))
+
+  (docker/cleanup))
 #_
 (deftest exec-in-nil
   (docker/cleanup)

@@ -486,7 +486,9 @@
             (= :bytes out)
             (let [out-stream (byte-array-output-stream/new)]
               (channel-exec/set-output-stream channel out-stream)
-              out-stream)
+              (future
+                (wait channel)
+                (byte-array-output-stream/to-byte-array out-stream)))
 
             (or (nil? out) (= :stream out))
             (let [out-stream (output-stream/new)

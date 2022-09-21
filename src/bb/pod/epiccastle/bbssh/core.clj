@@ -481,7 +481,7 @@
               (channel-exec/set-output-stream channel out-stream)
               (future
                 (wait channel)
-                (byte-array-output-stream/to-string out-stream)))
+                (byte-array-output-stream/to-string out-stream out-enc)))
 
             (= :bytes out)
             (let [out-stream (byte-array-output-stream/new)]
@@ -515,7 +515,7 @@
               (channel-exec/set-error-stream channel err-stream)
               (future
                 (wait channel)
-                (byte-array-output-stream/to-string err-stream)))
+                (byte-array-output-stream/to-string err-stream err-enc)))
 
             (= :bytes err)
             (let [err-stream (byte-array-output-stream/new)]

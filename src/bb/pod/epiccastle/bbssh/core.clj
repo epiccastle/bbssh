@@ -461,34 +461,44 @@
                                :write (fn [bytes]
                                         (.write out bytes))})]
               (channel-exec/set-output-stream channel out-stream)
-              out-stream)
-            )
+              out-stream))
 
-          ]
-      #_(channel-exec/set-output-stream channel out-stream)
-      #_(channel-exec/set-output-stream
-         channel
-         (output-stream/new-proxy
-          {:close (fn [] (prn 'close))
-           :flush (fn [] (prn 'flush))
-           :write (fn [ba] (prn 'write (String. ba)))}))
+          err-stream
+          (cond
+            (= :string err)
+            (let [err-stream (byte-array-output-stream/new)]
+              (channel-exec/set-error-stream channel err-stream)
+              (byte-array-output-stream/make-proxy err-stream))
 
-      (channel-exec/set-error-stream channel err-stream)
-      #_(channel-exec/set-error-stream
-         channel
-         (output-stream/new-proxy
-          {:close (fn [] (prn 'closeerr))
-           :flush (fn [] (prn 'flusherr))
-           :write (fn [ba] (prn 'writeerr (String. ba)))}))
+            (= :bytes err)
+            (let [err-stream (byte-array-output-stream/new)]
+              (channel-exec/set-error-stream channel err-stream)
+              (byte-array-output-stream/make-proxy err-stream))
 
+            (or (nil? err) (= :stream err))
+            (let [err-stream (output-stream/new)
+                  err-input-stream (input-stream/new err-stream pipe-buffer-size)]
+              (channel-exec/set-error-stream channel err-stream)
+              (input-stream/make-proxy err-input-stream))
 
+            (keyword? err) ;; output-stream pod reference
+            (do
+              (channel-exec/set-error-stream channel err)
+              err)
 
-
+            :else ;; bb OutputStream instance
+            (let [err-stream (output-stream/new-pod-proxy
+                              {:close #(.close err)
+                               :flush #(.flush err)
+                               :write (fn [bytes]
+                                        (.write err bytes))})]
+              (channel-exec/set-error-stream channel err-stream)
+              err-stream))]
 
       (channel-exec/connect channel)
 
       {:channel channel
        :out out-stream
-       :err (input-stream/make-proxy err-input-stream)
+       :err err-stream
        :in in-stream}
       )))

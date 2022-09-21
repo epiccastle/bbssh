@@ -167,18 +167,18 @@
         session (bbssh/ssh "localhost" opts)]
     (let [{:keys [channel] :as process}
           (bbssh/exec session "sleep 0.5" {:in nil})]
-      (is (nil? (bbssh/wait channel 0)))
-      (is (nil? (bbssh/wait channel -1)))
-      (is (nil? (bbssh/wait channel 100)))
+      (is (nil? (channel-exec/wait channel 0)))
+      (is (nil? (channel-exec/wait channel -1)))
+      (is (nil? (channel-exec/wait channel 100)))
       (is (channel-exec/is-connected channel))
-      (is (= 0 (bbssh/wait channel 10000)))
+      (is (= 0 (channel-exec/wait channel 10000)))
       (is (not (channel-exec/is-connected channel))))
 
     (let [{:keys [channel]} (bbssh/exec session "sleep 0.5" {:in nil})]
-      (is (= 0 (bbssh/wait channel))))
+      (is (= 0 (channel-exec/wait channel))))
 
     (let [{:keys [channel]} (bbssh/exec session "sleep 0.5; exit 10" {:in nil})]
-      (is (= 10 (bbssh/wait channel)))))
+      (is (= 10 (channel-exec/wait channel)))))
 
   (docker/cleanup))
 

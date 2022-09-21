@@ -211,7 +211,19 @@
       (is (not (channel-exec/is-connected channel)))
       (is (= 10 exit))
       (is (= "foo\n" out))
-      (is (= "bar\n" err))))
+      (is (= "bar\n" err)))
+    (let [{:keys [channel exit out err] :as process}
+          @(bbssh/exec session
+                       "sleep 0.5; echo foo; echo bar 1>&2; exit 10"
+                       {:in nil
+                        :out :bytes
+                        :err :bytes})]
+      (is (not (channel-exec/is-connected channel)))
+      (is (= 10 exit))
+      (is (bytes? out))
+      (is (= (seq out) '(102 111 111 10)))
+      (is (bytes? err))
+      (is (= (seq err) '(98 97 114 10)))))
 
   (docker/cleanup))
 

@@ -522,7 +522,9 @@
             (= :bytes err)
             (let [err-stream (byte-array-output-stream/new)]
               (channel-exec/set-error-stream channel err-stream)
-              err-stream)
+              (future
+                (wait channel)
+                (byte-array-output-stream/to-byte-array err-stream)))
 
             (or (nil? err) (= :stream err))
             (let [err-stream (output-stream/new)

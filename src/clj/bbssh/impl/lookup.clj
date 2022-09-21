@@ -6,6 +6,7 @@
             [pod.epiccastle.bbssh.impl.channel-exec]
             [pod.epiccastle.bbssh.impl.input-stream]
             [pod.epiccastle.bbssh.impl.output-stream]
+            [pod.epiccastle.bbssh.impl.byte-array-input-stream]
             [pod.epiccastle.bbssh.impl.byte-array-output-stream]
             [pod.epiccastle.bbssh.impl.user-info]
             [pod.epiccastle.bbssh.impl.identity]
@@ -35,6 +36,7 @@
                pod.epiccastle.bbssh.impl.channel-exec
                pod.epiccastle.bbssh.impl.input-stream
                pod.epiccastle.bbssh.impl.output-stream
+               pod.epiccastle.bbssh.impl.byte-array-input-stream
                pod.epiccastle.bbssh.impl.byte-array-output-stream
                pod.epiccastle.bbssh.impl.user-info
                pod.epiccastle.bbssh.impl.identity

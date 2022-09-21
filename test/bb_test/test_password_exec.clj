@@ -181,6 +181,40 @@
       (is (= 10 (bbssh/wait process)))))
 
   (docker/cleanup))
+
+(deftest test-deref
+  (docker/cleanup)
+  (docker/build {:root-password "root-access-please"})
+  (docker/start {:ssh-port 9876})
+
+  (let [opts {:username "root"
+              :password "root-access-please"
+              :port 9876
+              :strict-host-key-checking false}
+        session (bbssh/ssh "localhost" opts)]
+    (let [{:keys [channel exit] :as process}
+          (-> (bbssh/exec session "sleep 0.5" {:in nil})
+              deref)]
+      (is (not (channel-exec/is-connected channel)))
+      (is (= 0 exit)))
+    (let [{:keys [channel exit] :as process}
+          (-> (bbssh/exec session "sleep 0.5; exit 10" {:in nil})
+              deref)]
+      (is (not (channel-exec/is-connected channel)))
+      (is (= 10 exit)))
+    (let [{:keys [channel exit out] :as process}
+          @(bbssh/exec session "sleep 0.5; echo foo; exit 10"
+                       {:in nil
+                        :out :string})]
+      (is (not (channel-exec/is-connected channel)))
+      (is (= 10 exit))
+      (is (= "foo" out))))
+
+  (docker/cleanup))
+
+
+
+
 #_
 (deftest exec-in-nil
   (docker/cleanup)

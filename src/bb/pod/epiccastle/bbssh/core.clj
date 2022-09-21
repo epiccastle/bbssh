@@ -369,7 +369,9 @@
               pipe-buffer-size
               ]
        :or {pipe-buffer-size 8192
-            in-enc "utf-8"}
+            in-enc "utf-8"
+            out-enc "utf-8"
+            err-enc "utf-8"}
        :as options}]]
   (let [channel (session/open-channel session "exec")]
     (channel-exec/set-command channel command)

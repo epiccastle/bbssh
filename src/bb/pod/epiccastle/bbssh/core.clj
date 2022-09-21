@@ -378,15 +378,6 @@
     (when agent-forwarding
       (channel-exec/set-agent-forwarding channel (boolean agent-forwarding)))
     (let [
-          err-stream (output-stream/new)
-          err-input-stream (input-stream/new err-stream pipe-buffer-size)
-          ;; in-string? (string? in)
-          ;; in-stream (if (string? in)
-          ;;             (input-stream/byte-array-input-stream in)
-          ;;             (input-stream/new pipe-buffer-size))
-          ;; in-output-stream (when-not in-string?
-          ;;                    (output-stream/new in-stream))
-
           in-stream
           (cond
             (nil? in)

@@ -62,16 +62,6 @@
    ^PipedInputStream (references/get-instance stream)
    ^PipedOutputStream (references/get-instance source)))
 
-(defn byte-array-input-stream-from-string [^String string & [^String encoding]]
-  (references/add-instance
-   (ByteArrayInputStream.
-    ^bytes (.getBytes string (or encoding "utf-8")))))
-
-(defn byte-array-input-stream-from-bytes [^String string]
-  (references/add-instance
-   (ByteArrayInputStream.
-    ^bytes (utils/decode-base64 string))))
-
 (defn ^:async new-pod-proxy
   [reply-fn]
   (let [result

@@ -360,7 +360,7 @@
             status
             (recur)))))))
 
-(defrecord Process
+(defrecord SshProcess
     [channel exit in out err prev cmd]
     clojure.lang.IDeref
     (deref [this]
@@ -548,7 +548,7 @@
 
       (channel-exec/connect channel)
 
-      (->Process
+      (->SshProcess
        channel
        nil ;; exit
        in-stream

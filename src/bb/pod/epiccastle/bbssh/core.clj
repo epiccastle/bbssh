@@ -470,12 +470,12 @@
             (= :string out)
             (let [out-stream (byte-array-output-stream/new)]
               (channel-exec/set-output-stream channel out-stream)
-              (byte-array-output-stream/make-proxy out-stream))
+              out-stream)
 
             (= :bytes out)
             (let [out-stream (byte-array-output-stream/new)]
               (channel-exec/set-output-stream channel out-stream)
-              (byte-array-output-stream/make-proxy out-stream))
+              out-stream)
 
             (or (nil? out) (= :stream out))
             (let [out-stream (output-stream/new)
@@ -502,12 +502,12 @@
             (= :string err)
             (let [err-stream (byte-array-output-stream/new)]
               (channel-exec/set-error-stream channel err-stream)
-              (byte-array-output-stream/make-proxy err-stream))
+              err-stream)
 
             (= :bytes err)
             (let [err-stream (byte-array-output-stream/new)]
               (channel-exec/set-error-stream channel err-stream)
-              (byte-array-output-stream/make-proxy err-stream))
+              err-stream)
 
             (or (nil? err) (= :stream err))
             (let [err-stream (output-stream/new)

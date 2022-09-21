@@ -333,7 +333,7 @@
   returns the exit code. Optionally pass a timeout value in
   milliseconds. If the timeout is reached and the process has not
   finished then returns `nil`."
-  [{:keys [channel]} & [timeout]]
+  [channel & [timeout]]
   (let [status (channel-exec/get-exit-status channel)]
     (cond
       (<= 0 status)
@@ -365,7 +365,7 @@
     clojure.lang.IDeref
     (deref [this]
       (assoc this
-             :exit (wait this)
+             :exit (wait channel)
              :out (if (future? out) @out out)
              :err (if (future? err) @err err))))
 
@@ -479,7 +479,9 @@
             (= :string out)
             (let [out-stream (byte-array-output-stream/new)]
               (channel-exec/set-output-stream channel out-stream)
-              out-stream)
+              (future
+                (wait channel)
+                (byte-array-output-stream/to-string out-stream)))
 
             (= :bytes out)
             (let [out-stream (byte-array-output-stream/new)]
@@ -511,7 +513,9 @@
             (= :string err)
             (let [err-stream (byte-array-output-stream/new)]
               (channel-exec/set-error-stream channel err-stream)
-              err-stream)
+              (future
+                (wait channel)
+                (byte-array-output-stream/to-string err-stream)))
 
             (= :bytes err)
             (let [err-stream (byte-array-output-stream/new)]

@@ -167,18 +167,18 @@
         session (bbssh/ssh "localhost" opts)]
     (let [{:keys [channel] :as process}
           (bbssh/exec session "sleep 0.5" {:in nil})]
-      (is (nil? (bbssh/wait process 0)))
-      (is (nil? (bbssh/wait process -1)))
-      (is (nil? (bbssh/wait process 100)))
+      (is (nil? (bbssh/wait channel 0)))
+      (is (nil? (bbssh/wait channel -1)))
+      (is (nil? (bbssh/wait channel 100)))
       (is (channel-exec/is-connected channel))
-      (is (= 0 (bbssh/wait process 10000)))
+      (is (= 0 (bbssh/wait channel 10000)))
       (is (not (channel-exec/is-connected channel))))
 
-    (let [process (bbssh/exec session "sleep 0.5" {:in nil})]
-      (is (= 0 (bbssh/wait process))))
+    (let [{:keys [channel]} (bbssh/exec session "sleep 0.5" {:in nil})]
+      (is (= 0 (bbssh/wait channel))))
 
-    (let [process (bbssh/exec session "sleep 0.5; exit 10" {:in nil})]
-      (is (= 10 (bbssh/wait process)))))
+    (let [{:keys [channel]} (bbssh/exec session "sleep 0.5; exit 10" {:in nil})]
+      (is (= 10 (bbssh/wait channel)))))
 
   (docker/cleanup))
 
@@ -202,13 +202,16 @@
               deref)]
       (is (not (channel-exec/is-connected channel)))
       (is (= 10 exit)))
-    (let [{:keys [channel exit out] :as process}
-          @(bbssh/exec session "sleep 0.5; echo foo; exit 10"
+    (let [{:keys [channel exit out err] :as process}
+          @(bbssh/exec session
+                       "sleep 0.5; echo foo; echo bar 1>&2; exit 10"
                        {:in nil
-                        :out :string})]
+                        :out :string
+                        :err :string})]
       (is (not (channel-exec/is-connected channel)))
       (is (= 10 exit))
-      (is (= "foo" out))))
+      (is (= "foo\n" out))
+      (is (= "bar\n" err))))
 
   (docker/cleanup))
 

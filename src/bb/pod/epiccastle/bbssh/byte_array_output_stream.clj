@@ -92,7 +92,7 @@
        (to-string stream encoding)))
     (write
       ([bytes offset len]
-       (write stream bytes offset length))
+       (write stream bytes offset len))
       ([byte]
        (write stream byte)))
     (writeTo [out]

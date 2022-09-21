@@ -377,30 +377,74 @@
     for this command.
   - `:pty` If set to `true` allocate a pseudo terminal for this
     command execution.
-  - `:in` Specify the data to be passed to stdin of the process. Can
-    be `nil`, a string, a local byte array, a local InputStream instance (which
-    will be .read from), a pod input-stream reference, or the keyword `:stream`.
-    If the keyword `:stream` is specified, a PipedInputStream/PipedOutputStream
-    instance pair will be created and the PipedOutputStream will be returned
-    in the `:in` key of the result (for you to .write or clojure.java.io/copy
-    to).
-  - `:in-enc` If `:in` is a string then optionally set the input encoding with this. Defaults to \"utf-8\".
-  - `:out` Specify how you want the output to be handled. Use keyword
-    :string to
-    store a string when the process is complete. Use keyword :bytes
-    to store a byte array when the output is complete. Pass a local
-    OutputStream instance (which will be used to .write to) or a pod
-    output-stream reference (which will be used to output-stream/write
-    to). If passed a value of `:stream` is passed or the value is
-    ommitted, a PipedOutputStream/PipedInputStream instance pair
-    is created and the PipedInputStream will be returned in the `:out`
-    key of the result (for you to .read or clojure.java.io/copy from).
-  - `:format` Specify the format the stdout and stderr should be returned
-    as. `:stream` will return stream objects, `:bytes` will return
-    byte arrays and `:string` will return strings. Default is `:string`
-  - `:encoding` When `:format` is set to `:string` this option controls
-    the encoding used to generate the string. Default is `\"utf-8\".
-
+  - `:in` Specify the data to be passed to stdin of the process.
+    Can be:
+      - `nil`: *(default)* Pass nothing into stdin of the process and
+        immediately close the input pipe.
+      - a string: Pass this string into the stdin of the process (using
+        encoding `:in-enc`) and then close the input pipe.
+      - a byte array: Pass this data into the stdin of the process
+        and then close the input pipe.
+      - babashka InputStream instance: Use this instance to provide
+        streaming data to the stdin of the process (the `.read` method
+        will be repeatedly called to provide data)
+      - bbssh input-stream reference:   Use this instance to provide
+        streaming data to the stdin of the process (the
+        `input-stream/read` function will be repeatedly called to
+        provide data)
+      - `:stream`: A PipedOutputStream/PipedInputStream
+        instance pair is created and the PipedOutputStream will be
+        returned in the `:in` key of the result (for you to `.write`
+        or `clojure.java.io/copy` to).
+  - `:in-enc` If `:in` is `:string` then optionally set the input encoding with this. Defaults to \"utf-8\".
+  - `:out` Specify how you want the output to be returned. The values
+    can be:
+      - `:string`: the returned `:out` value will be a future that
+        will deref to a string of data. The future deref will block
+        until the process is complete and the processes output is
+        finished.
+      - `:bytes`: the returned `:out` value will be a future that
+        will deref to a byte array of data. The future deref will
+        block until the process is complete and the processes output
+        is finished.
+      - babashka OutputStream instance: The OutputStream will have
+        its `.write` method called as data becomes available from the
+        process.
+      - bbssh output-stream reference: The pod side output-stream
+        will be written to with `output-stream/write` as data becomes
+        available from the process.
+      - `:stream` *(default)*: A PipedOutputStream/PipedInputStream
+        instance pair is created and the PipedInputStream will be
+        returned in the `:out` key of the result (for you to `.read`
+        or `clojure.java.io/copy` from).
+  - `:out-enc` If `:out` is `:string` then optionally set the output
+    encoding with this. Defaults to \"utf-8\".
+  - `:err` Specify how you want the output to be returned. The values
+    can be:
+      - `:string`: the returned `:err` value will be a future that
+        will deref to a string of data. The future deref will block
+        until the process is complete and the processes output is
+        finished.
+      - `:bytes`: the returned `:err` value will be a future that
+        will deref to a byte array of data. The future deref will
+        block until the process is complete and the processes output
+        is finished.
+      - babashka OutputStream instance: The OutputStream will have
+        its `.write` method called as data becomes available from the
+        process.
+      - bbssh output-stream reference: The pod side output-stream
+        will be written to with `output-stream/write` as data becomes
+        available from the process.
+      - `:stream` *(default)*: A PipedOutputStream/PipedInputStream
+        instance pair is created and the PipedInputStream will be
+        returned in the `:err` key of the result (for you to `.read`
+        or `clojure.java.io/copy` from).
+  - `:err-enc` If `:err` is `:string` then optionally set the output
+    encoding with this. Defaults to \"utf-8\".
+  - `:pipe-buffer-size` when `:in`, `:out` or `:err` are set to
+    `:stream`, this value can be passed an integer to set the pipe
+    buffer size. Larger values create more chunked output but increase
+    through-put. Default is 8192.
   "
   [session command
    & [{:keys [agent-forwarding pty

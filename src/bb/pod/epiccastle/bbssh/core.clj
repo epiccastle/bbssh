@@ -339,8 +339,17 @@
 
 (defn exec
   "Execute a `command` on the remote host over the ssh `session`.
+
+  > __Note:__ If `session` is detected as a map like structure, it
+  is assumed to be a `babashka.process` Process. This enables
+  threading ssh processes in with local `babashka.process` processes.
+  In such a situation you need to pass the session reference in via
+  the `:session` key in `options`.
+
   `options` should be a hashmap with the following keys:
 
+  - `:session` Override the value passed into the first argument.
+    Use this as the ssh session instead.
   - `:agent-forwarding` If set to `true` enables ssh authentication agent
     for this command.
   - `:pty` If set to `true` allocate a pseudo terminal for this
@@ -414,19 +423,20 @@
     buffer size. Larger values create more chunked output but increase
     through-put. Default is 8192.
   "
-  [session command
+  [session-or-process command
    & [{:keys [agent-forwarding pty
               in in-enc
               out out-enc
               err err-enc
               pipe-buffer-size
+              session
               ]
        :or {pipe-buffer-size 8192
             in-enc "utf-8"
             out-enc "utf-8"
             err-enc "utf-8"}
        :as options}]]
-  (let [channel (session/open-channel session "exec")]
+  (let [channel (session/open-channel (or session session-or-process) "exec")]
     (channel-exec/set-command channel command)
     (when pty
       (channel-exec/set-pty channel (boolean pty)))

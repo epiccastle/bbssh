@@ -10,6 +10,7 @@
             [pod.epiccastle.bbssh.input-stream :as input-stream]
             [pod.epiccastle.bbssh.output-stream :as output-stream]
             [pod.epiccastle.bbssh.byte-array-output-stream :as byte-array-output-stream]
+            [pod.epiccastle.bbssh.byte-array-input-stream :as byte-array-input-stream]
             [clojure.string :as string]))
 
 (def ^:private special-config-var-names
@@ -390,17 +391,17 @@
           (cond
             (nil? in)
             (do
-              (->> (input-stream/byte-array-input-stream "")
+              (->> (byte-array-input-stream/new "")
                    (channel-exec/set-input-stream channel))
               nil)
 
             (string? in)
-            (let [in-stream (input-stream/byte-array-input-stream in in-enc)]
+            (let [in-stream (byte-array-input-stream/new in in-enc)]
               (channel-exec/set-input-stream channel in-stream)
               in-stream)
 
             (bytes? in)
-            (let [in-stream (input-stream/byte-array-input-stream in)]
+            (let [in-stream (byte-array-input-stream/new in)]
               (channel-exec/set-input-stream channel in-stream)
               in-stream)
 

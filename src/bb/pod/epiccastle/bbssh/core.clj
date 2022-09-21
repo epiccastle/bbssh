@@ -360,6 +360,15 @@
             status
             (recur)))))))
 
+(defrecord Process
+    [channel exit in out err prev cmd]
+    clojure.lang.IDeref
+    (deref [this]
+      (assoc this
+             :exit (wait this)
+             :out (if (future? out) @out out)
+             :err (if (future? err) @err err))))
+
 (defn exec
   "Execute a `command` on the remote host over the ssh `session`.
   `options` should be a hashmap with the following keys:
@@ -531,40 +540,11 @@
 
       (channel-exec/connect channel)
 
-      {:channel channel
-       :out out-stream
-       :err err-stream
-       :in in-stream}
-      )))
-
-(defn wait
-  "waits until a ssh exec remote process has finished executing and then
-  returns the exit code. Optionally pass a timeout value in
-  milliseconds. If the timeout is reached and the process has not
-  finished then returns `nil`."
-  [{:keys [channel]} & [timeout]]
-  (let [status (channel-exec/get-exit-status channel)]
-    (cond
-      (<= 0 status)
-      status
-
-      (and timeout (<= timeout 0))
-      nil
-
-      timeout
-      (let [deadline (+ (System/nanoTime) (* timeout 1000000))]
-        (loop [remaining (- deadline (System/nanoTime))]
-          (when (pos? remaining)
-            (Thread/sleep (min (inc (/ remaining 1000000)) 100))
-            (let [status (channel-exec/get-exit-status channel)]
-              (if (<= 0 status)
-                status
-                (recur (- deadline (System/nanoTime))))))))
-
-      :else ;; no timeout, block forever
-      (loop []
-        (Thread/sleep 100)
-        (let [status (channel-exec/get-exit-status channel)]
-          (if (<= 0 status)
-            status
-            (recur)))))))
+      (->Process
+       channel
+       nil ;; exit
+       in-stream
+       out-stream
+       err-stream
+       nil ;;prev
+       command))))

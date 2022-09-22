@@ -436,13 +436,14 @@
             out-enc "utf-8"
             err-enc "utf-8"}
        :as options}]]
-  (let [channel (session/open-channel (or session session-or-process) "exec")]
+  (let [process? (map? session-or-process)
+        channel (session/open-channel (or session session-or-process) "exec")]
     (channel-exec/set-command channel command)
     (when pty
       (channel-exec/set-pty channel (boolean pty)))
     (when agent-forwarding
       (channel-exec/set-agent-forwarding channel (boolean agent-forwarding)))
-    (let [
+    (let [in (if process? (:out session-or-process) in)
           in-stream
           (cond
             (nil? in)
@@ -576,5 +577,5 @@
        in-stream
        out-stream
        err-stream
-       nil ;;prev
+       (when process? session-or-process) ;;prev
        command))))

@@ -41,6 +41,13 @@
   ([stream]
    (input-stream/read
     (cleaner/split-key stream)))
+  ([stream bytes]
+   (let [[bytes-read base64] (input-stream/read
+                              (cleaner/split-key stream)
+                              (count bytes))]
+     (when (pos? bytes-read)
+       (System/arraycopy (utils/decode-base64 base64) 0 bytes 0 bytes-read))
+     bytes-read))
   ([stream bytes offset length]
    (let [[bytes-read base64] (input-stream/read
                               (cleaner/split-key stream)
@@ -73,6 +80,8 @@
     (read
       ([]
        (read stream))
+      ([bytes]
+       (read stream bytes))
       ([bytes offset length]
        (read stream bytes offset length)))
     (available []

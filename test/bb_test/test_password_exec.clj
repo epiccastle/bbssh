@@ -5,6 +5,7 @@
             [pod.epiccastle.bbssh.channel-exec :as channel-exec]
             [pod.epiccastle.bbssh.input-stream :as input-stream]
             [pod.epiccastle.bbssh.output-stream :as output-stream]
+            [babashka.process :as process]
             [bb-test.docker :as docker]
             [clojure.test :refer [is deftest]]
             [clojure.string :as string]
@@ -224,6 +225,31 @@
       (is (= (seq out) '(102 111 111 10)))
       (is (bytes? err))
       (is (= (seq err) '(98 97 114 10)))))
+
+  (docker/cleanup))
+
+(deftest test-process-pipe
+  (docker/cleanup)
+  (docker/build {:root-password "root-access-please"})
+  (docker/start {:ssh-port 9876})
+
+  (let [opts {:username "root"
+              :password "root-access-please"
+              :port 9876
+              :strict-host-key-checking false}
+        session (bbssh/ssh "localhost" opts)]
+    (let [process
+          (-> (process/process "echo foo")
+              (bbssh/exec "cat 1>&2" {:session session
+                                      :err :string})
+              deref)]
+      (is (= "foo\n" (:err process))))
+    (let [process
+          (-> (bbssh/exec session "echo foo bar baz")
+              (process/process "bash -c 'cat 1>&2'" {:err :string})
+              deref)]
+      (is (= "foo bar baz\n" (:err process)))
+      ))
 
   (docker/cleanup))
 

@@ -422,6 +422,10 @@
     `:stream`, this value can be passed an integer to set the pipe
     buffer size. Larger values create more chunked output but increase
     through-put. Default is 8192.
+  - `:no-connect` when `true` do not connect this channel to the
+    command. Simply set it up and return it. You will need to
+    call `channel-exec/connect` on the channel to actually initiate
+    the process and channel.
   "
   [session-or-process command
    & [{:keys [agent-forwarding pty
@@ -430,6 +434,7 @@
               err err-enc
               pipe-buffer-size
               session
+              no-connect
               ]
        :or {pipe-buffer-size 8192
             in-enc "utf-8"
@@ -569,7 +574,8 @@
               (channel-exec/set-error-stream channel err-stream)
               err-stream))]
 
-      (channel-exec/connect channel)
+      (when-not no-connect
+        (channel-exec/connect channel))
 
       (->SshProcess
        channel

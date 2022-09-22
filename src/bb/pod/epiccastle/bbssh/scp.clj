@@ -119,6 +119,36 @@
     (send-command process "E")
     progress-context))
 
+(defn scp-copy-data
+  [{:keys [in out] :as process}
+   [source info]
+   {:keys [mode buffer-size progress-fn]
+    :or {mode 0644
+         buffer-size (* 256 1024)}
+    :as options}]
+  (when-not (:name info)
+    (throw (ex-info "scp data info must contain :name" {:type ::error})))
+  (let [data (if (string? source)
+                 (.getBytes source (:encoding info "utf-8"))
+                 source)
+        size (or (:size info) (count data))]
+    (send-command
+     process
+     (format "C%04o %d %s"
+             (:mode info mode)
+             size
+             (:name info)))
+    (let [progress-context
+          (if progress-fn
+            (io-copy-with-progress source in
+                                   (assoc options
+                                          :size size
+                                          :encoding (:encoding info "utf-8")))
+            (io/copy source in :buffer-size buffer-size))]
+      (send-ack in)
+      (recv-ack out)
+      progress-context)))
+
 (defn scp-to
   "copy local paths to remote path"
   [local-paths remote-path {:keys [session

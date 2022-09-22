@@ -25,10 +25,10 @@
    ^PipedOutputStream (references/get-instance stream)))
 
 (defn write
-  ([stream byte]
+  ([stream base64]
    (.write
     ^PipedOutputStream (references/get-instance stream)
-    ^int byte))
+    ^bytes (utils/decode-base64 base64)))
   ([stream base64 _length]
    (let [arr (utils/decode-base64 base64)]
      (.write

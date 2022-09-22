@@ -24,17 +24,17 @@
    (cleaner/split-key stream)))
 
 (defn write
-  "`(write stream byte)`
-  Write a single byte (int) to the stream.
+  "`(write stream bytes)`
+  Write a byte-array `bytes` to the stream.
 
   `(write stream byte-array offset length)`
   Write `length` bytes from `byte-array` beginning at `offset`
   to `stream`.
   "
-  ([stream byte]
+  ([stream bytes]
    (output-stream/write
     (cleaner/split-key stream)
-    byte))
+    (utils/encode-base64 bytes)))
   ([stream byte-array offset length]
    (output-stream/write
     (cleaner/split-key stream)
@@ -63,8 +63,8 @@
     (close []
       (close stream))
     (write
-      ([byte]
-       (write stream byte))
+      ([bytes]
+       (write stream bytes))
       ([byte-array offset length]
        (write stream byte-array offset length)))
     (connect [sink]

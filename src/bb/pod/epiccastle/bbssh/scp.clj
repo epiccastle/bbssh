@@ -42,20 +42,22 @@
         chunk (byte-array buffer-size)]
     (loop [offset 0
            progress-context progress-context]
-      (let [bytes-read (.read input-stream chunk)]
-        (if (= -1 bytes-read)
-          (progress-fn progress-context file offset size)
-          (let [offset (+ offset bytes-read)]
-            (io/copy
-             (if (= bytes-read buffer-size)
-               chunk ;; full buffer read
-               (Arrays/copyOfRange chunk 0 bytes-read) ;; partial read
-               )
-             output-stream)
-            (.flush output-stream)
-            (recur
-             offset
-             (progress-fn progress-context file offset size))))))))
+      (if (= 0 size)
+        (progress-fn progress-context file offset size)
+        (let [bytes-read (.read input-stream chunk)]
+          (if (= -1 bytes-read)
+            progress-context
+            (let [offset (+ offset bytes-read)]
+              (io/copy
+               (if (= bytes-read buffer-size)
+                 chunk ;; full buffer read
+                 (Arrays/copyOfRange chunk 0 bytes-read) ;; partial read
+                 )
+               output-stream)
+              (.flush output-stream)
+              (recur
+               offset
+               (progress-fn progress-context file offset size)))))))))
 
 (defn scp-copy-file
   [{:keys [in out] :as process}

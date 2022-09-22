@@ -4,7 +4,8 @@
             [pod.epiccastle.bbssh.core :as bbssh]
             [clojure.string :as string]
             [clojure.java.io :as io])
-  (:import [java.util Arrays]))
+  (:import [java.util Arrays]
+           [java.io File]))
 
 (defn- recv-ack [stream]
   (let [code (.read stream)]
@@ -32,18 +33,25 @@
   (recv-ack out))
 
 (defn io-copy-with-progress
-  [file output-stream
-   & [{:keys [progress-fn
+  [source output-stream
+   & [{:keys [size
+              encoding
+              progress-fn
               buffer-size
               progress-context]
-       :or {buffer-size (* 256 1024)}}]]
-  (let [size (.length file)
-        input-stream (io/input-stream file)
+       :or {buffer-size (* 256 1024)
+            encoding "utf-8"}}]]
+  (let [is-string? (string? source)
+        is-file? (= File (class source))
+        data (if is-string? (.getBytes source encoding) source)
+        size (or size
+                 (if is-file? (.length source) (count data)))
+        input-stream (io/input-stream data)
         chunk (byte-array buffer-size)]
     (loop [offset 0
            progress-context progress-context]
       (if (= 0 size)
-        (progress-fn progress-context file offset size)
+        (progress-fn progress-context source offset size)
         (let [bytes-read (.read input-stream chunk)]
           (if (= -1 bytes-read)
             progress-context
@@ -57,7 +65,7 @@
               (.flush output-stream)
               (recur
                offset
-               (progress-fn progress-context file offset size)))))))))
+               (progress-fn progress-context source offset size)))))))))
 
 (defn scp-copy-file
   [{:keys [in out] :as process}
@@ -151,11 +159,12 @@
 
 (defn scp-to
   "copy local paths to remote path"
-  [local-paths remote-path {:keys [session
-                                   extra-flags
-                                   recurse]
-                            :or {extra-flags ""}
-                            :as options}
+  [local-sources remote-path {:keys [session
+                                     extra-flags
+                                     recurse
+                                     progress-context]
+                              :or {extra-flags ""}
+                              :as options}
    ]
   (let [remote-command
         (format
@@ -170,15 +179,24 @@
         {:keys [in out err channel] :as process}
         (bbssh/exec session remote-command {:in :stream})]
     (recv-ack out)
-    (doseq [^java.io.File path local-paths]
-      (prn path)
-      (cond
-        (.isDirectory path)
-        (scp-copy-dir process path options)
+    (loop [[source & remain] local-sources
+           progress-context progress-context
+           ]
+      (let [options (assoc options :progress-context progress-context)
+            progress-context
+            (cond
+              (vector? source)
+              (scp-copy-data process source options)
 
-        (.isFile path)
-        (scp-copy-file process path options)))
-    (.close in)
-    (.close out)
-    (.close err)
-    ))
+              (.isDirectory ^File source)
+              (scp-copy-dir process source options)
+
+              (.isFile ^File source)
+              (scp-copy-file process source options))]
+        (if remain
+          (recur remain progress-context)
+          (do
+            (.close in)
+            (.close out)
+            (.close err)
+            progress-context))))))

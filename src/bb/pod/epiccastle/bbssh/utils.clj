@@ -1,6 +1,8 @@
 (ns pod.epiccastle.bbssh.utils
   (:require [pod.epiccastle.bbssh.impl.callbacks :as callbacks]
-            [pod.epiccastle.bbssh.cleaner :as cleaner]))
+            [pod.epiccastle.bbssh.cleaner :as cleaner]
+            [pod.epiccastle.bbssh.impl.utils :as utils]
+            [clojure.string :as string]))
 
 (def decoder (java.util.Base64/getDecoder))
 
@@ -74,3 +76,21 @@
        :error (fn [err]
                 (prn 'error err))}})
     (cleaner/register @p)))
+
+(defn escape-double-quotes [path]
+  (string/replace path "\"" "\\\""))
+
+(defn double-quote [string]
+  (str "\"" string "\""))
+
+(defn quote-path [path]
+  (double-quote (escape-double-quotes path)))
+
+(defn last-access-time [^java.io.File file]
+  (utils/last-access-time (.getCanonicalPath file)))
+
+(defn last-modified-time [^java.io.File file]
+  (utils/last-modified-time (.getCanonicalPath file)))
+
+(defn file-mode [^java.io.File file]
+  (utils/file-mode (.getCanonicalPath file)))

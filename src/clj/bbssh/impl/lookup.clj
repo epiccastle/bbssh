@@ -14,6 +14,7 @@
             [pod.epiccastle.bbssh.impl.callbacks]
             [pod.epiccastle.bbssh.impl.key-pair]
             [pod.epiccastle.bbssh.impl.host-key]
+            [pod.epiccastle.bbssh.impl.utils]
             [pod.epiccastle.bbssh.impl.known-hosts]
             [pod.epiccastle.bbssh.impl.host-key-repository]))
 
@@ -44,23 +45,7 @@
                pod.epiccastle.bbssh.impl.callbacks
                pod.epiccastle.bbssh.impl.key-pair
                pod.epiccastle.bbssh.impl.host-key
+               pod.epiccastle.bbssh.impl.utils
                pod.epiccastle.bbssh.impl.known-hosts
                pod.epiccastle.bbssh.impl.host-key-repository
-               ])
-  #_{
-   'pod.epiccastle.bbssh.impl.agent/new
-   pod.epiccastle.bbssh.impl.agent/new
-
-   'pod.epiccastle.bbssh.impl.agent/get-session
-   pod.epiccastle.bbssh.impl.agent/get-session
-
-   'pod.epiccastle.bbssh.impl.session/new
-   pod.epiccastle.bbssh.impl.session/new
-
-   'pod.epiccastle.bbssh.impl.cleaner/del-reference
-   pod.epiccastle.bbssh.impl.cleaner/del-reference
-
-   'pod.epiccastle.bbssh.impl.cleaner/get-references
-   pod.epiccastle.bbssh.impl.cleaner/get-references
-
-   })
+               ]))

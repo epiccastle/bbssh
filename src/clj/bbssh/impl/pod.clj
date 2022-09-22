@@ -148,6 +148,7 @@
                          pod.epiccastle.bbssh.impl.key-pair
                          pod.epiccastle.bbssh.impl.host-key
                          pod.epiccastle.bbssh.impl.known-hosts
+                         pod.epiccastle.bbssh.impl.utils
                          pod.epiccastle.bbssh.impl.host-key-repository
                          pod.epiccastle.bbssh.impl.core
                          ])
@@ -172,6 +173,7 @@
                          pod.epiccastle.bbssh.known-hosts
                          pod.epiccastle.bbssh.host-key-repository
                          pod.epiccastle.bbssh.core
+                         pod.epiccastle.bbssh.scp
                          ]))
 
                       "id" (read-string id)})

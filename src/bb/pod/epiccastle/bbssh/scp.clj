@@ -72,11 +72,52 @@
            (if preserve (utils/file-mode file) mode)
            (.length file)
            (.getName file)))
-  (if progress-fn
-    (io-copy-with-progress file in options)
-    (io/copy file in :buffer-size buffer-size))
-  (send-ack in)
-  (recv-ack out))
+  (let [progress-context
+        (if progress-fn
+          (io-copy-with-progress file in options)
+          (io/copy file in :buffer-size buffer-size))]
+    (send-ack in)
+    (recv-ack out)
+    progress-context))
+
+(defn scp-copy-dir
+  [{:keys [in out] :as process}
+   dir
+   {:keys [preserve dir-mode progress-fn progress-context]
+    :or {dir-mode 0755}
+    :as options}]
+  (send-command
+   process
+   (format "D%04o 0 %s"
+           (if preserve (utils/file-mode dir) dir-mode)
+           (.getName dir)))
+  (let [progress-context
+        (loop [[file & remain] (.listFiles dir)
+               progress-context progress-context]
+          (if file
+            (cond
+              (.isFile file)
+              (recur
+               remain
+               (scp-copy-file process file
+                              (assoc options
+                                     :progress-context
+                                     progress-context)))
+
+              (.isDirectory file)
+              (recur
+               remain
+               (scp-copy-dir process file
+                             (assoc options
+                                    :progress-context
+                                    progress-context)))
+
+              :else
+              (recur remain progress-context))
+
+            progress-context))]
+    (send-command process "E")
+    progress-context))
 
 (defn scp-to
   "copy local paths to remote path"
@@ -102,8 +143,8 @@
     (doseq [^java.io.File path local-paths]
       (prn path)
       (cond
-        #_(.isDirectory path)
-        #_(scp-copy-dir process path options)
+        (.isDirectory path)
+        (scp-copy-dir process path options)
 
         (.isFile path)
         (scp-copy-file process path options)))

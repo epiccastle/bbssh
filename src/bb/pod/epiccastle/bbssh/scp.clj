@@ -10,14 +10,14 @@
 (defn- recv-ack [stream]
   (let [code (.read stream)]
     (when-not (zero? code)
-      ;; TODO: error should be read over stderr. we have bundled
-      ;; stderr on stdout. Not elegant.
+      ;; read scp error message
       (let [msg (loop [c (.read stream)
                        s ""]
                   (if (#{10 13 -1 0} c)
                     s
                     (recur (.read stream) (str s (char c)))))]
-        (throw (ex-info "scp error" {:code code
+        (throw (ex-info "scp error" {:type ::scp-error
+                                     :code code
                                      :msg msg}))))))
 (defn- send-ack
   "Send acknowledgement to the specified output stream"

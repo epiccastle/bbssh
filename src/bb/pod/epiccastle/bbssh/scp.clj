@@ -67,6 +67,40 @@
                offset
                (progress-fn progress-context source offset size)))))))))
 
+(defn io-copy-num-bytes
+  [source output-stream
+   length
+   {:keys [buffer-size
+           progress-context
+           progress-fn]
+    :or {buffer-size (* 256 1024)}}]
+  (let [buffer (byte-array buffer-size)]
+    (loop [read-offset 0
+           progress-context progress-context]
+      (if (zero? length)
+        (if progress-fn
+          (progress-fn progress-context source read-offset length)
+          progress-context)
+        (let [bytes-read
+              (.read source
+                     buffer
+                     0
+                     (min (- length read-offset) buffer-size))]
+          (if (= -1 bytes-read)
+            progress-context
+            (do
+              (.write output-stream buffer 0 bytes-read)
+              (let [read-offset (+ read-offset bytes-read)
+                    progress-context
+                    (if progress-fn
+                      (progress-fn progress-context source read-offset length)
+                      progress-context)]
+                (if (< read-offset length)
+                  (recur read-offset
+                         progress-context)
+                  progress-context)))))))))
+
+
 (defn scp-copy-file
   [{:keys [in out] :as process}
    file

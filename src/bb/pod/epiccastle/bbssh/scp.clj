@@ -249,3 +249,14 @@
         (if (= \newline (char last-byte))
           (String. buffer 0 (+ offset bytes-read))
           (recur (+ offset bytes-read)))))))
+
+(defn scp-stream-to-file
+  ""
+  [{:keys [out in] :as process} file mode length
+   {:keys [progress-fn
+           buffer-size]
+    :or {buffer-size 8192}
+    :as options}]
+  (with-open [file-stream (io/output-stream file)]
+    (io-copy-num-bytes out file-stream length options)))
+

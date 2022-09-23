@@ -243,7 +243,7 @@
   [local-sources remote-path
    {:keys [session
            extra-flags
-           recurse
+           recurse?
            preserve-times?
            preserve-mode?
            progress-context
@@ -263,7 +263,7 @@
          (string/join " "
                       ["scp"
                        extra-flags
-                       (when recurse "-r")
+                       (when recurse? "-r")
                        (when preserve-times? "-p")
                        "-t" ;; to
                        (utils/quote-path remote-path)
@@ -417,7 +417,7 @@
   "copy remote paths to local paths"
   [remote-path local-file {:keys [session
                                   extra-flags
-                                  recurse
+                                  recurse?
                                   preserve-mode?
                                   preserve-times?
                                   scp-command-fn]
@@ -432,7 +432,7 @@
          (string/join " "
                       ["scp"
                        extra-flags
-                       (when recurse "-r")
+                       (when recurse? "-r")
                        (when preserve-times? "-p")
                        "-f" ;; from
                        (utils/quote-path remote-path)

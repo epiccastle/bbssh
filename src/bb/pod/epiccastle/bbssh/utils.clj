@@ -2,7 +2,10 @@
   (:require [pod.epiccastle.bbssh.impl.callbacks :as callbacks]
             [pod.epiccastle.bbssh.cleaner :as cleaner]
             [pod.epiccastle.bbssh.impl.utils :as utils]
-            [clojure.string :as string]))
+            [babashka.fs :as fs]
+            [clojure.string :as string]
+            )
+  (:import [java.nio.file.attribute PosixFilePermission]))
 
 (def decoder (java.util.Base64/getDecoder))
 
@@ -94,3 +97,39 @@
 
 (defn file-mode [^java.io.File file]
   (utils/file-mode (.getCanonicalPath file)))
+
+(def permission->mode
+  {PosixFilePermission/OWNER_READ     0400
+   PosixFilePermission/OWNER_WRITE    0200
+   PosixFilePermission/OWNER_EXECUTE  0100
+   PosixFilePermission/GROUP_READ     0040
+   PosixFilePermission/GROUP_WRITE    0020
+   PosixFilePermission/GROUP_EXECUTE  0010
+   PosixFilePermission/OTHERS_READ    0004
+   PosixFilePermission/OTHERS_WRITE   0002
+   PosixFilePermission/OTHERS_EXECUTE 0001})
+
+(defn permission-set->mode [permission-set]
+  (->> permission-set
+       (reduce (fn [acc perm] (bit-or acc (permission->mode perm)))
+               0)))
+
+(def mode->permission
+  (->> permission->mode
+       (map reverse)
+       (map vec)
+       (into {})))
+
+(defn mode->permission-set [mode]
+  (->> mode->permission
+       (map (fn [[perm-mode perm-value]]
+              (when (pos? (bit-and mode perm-mode))
+                perm-value)))
+       (filter identity)
+       (into #{})))
+
+(defn create-file [file mode]
+  (fs/create-file
+   file
+   {:posix-file-permissions
+    (mode->permission-set mode)}))

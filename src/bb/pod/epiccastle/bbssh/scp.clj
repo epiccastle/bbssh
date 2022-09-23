@@ -260,3 +260,112 @@
   (with-open [file-stream (io/output-stream file)]
     (io-copy-num-bytes out file-stream length options)))
 
+(defn scp-from-receive
+  "Sink scp commands to file"
+  [{:keys [out in] :as process}
+   file {:keys [progress-fn
+                progress-context]
+         :as options}]
+  ;;(prn file)
+  (let [dir? (and (.exists file) (.isDirectory file))]
+    (loop [command (scp-read-until-newline process)
+           file file
+           times nil
+           depth 0
+           context progress-context]
+      (send-ack in)
+      (prn "...." file ">" depth "[" times "]")
+      (prn command)
+      (case (first command)
+        \C ;; create file
+        (let [[mode length filename] (-> command
+                                         string/trim
+                                         (subs 1)
+                                         (string/split #" " 3))
+              mode (clojure.edn/read-string mode) ;; octal
+              length (clojure.edn/read-string length)
+              new-file (if dir? (File. file filename) file)]
+          (when (.exists new-file)
+            (.delete new-file))
+          (utils/create-file file mode)
+          (let [progress-context
+                (scp-stream-to-file process file mode length options)]
+            (recv-ack out)
+            (send-ack in)
+            progress-context
+            ))
+        )
+      ;;(Thread/sleep 1000)
+      #_(case (first command)
+          \C (do
+               (debug "\\C")
+               (let [[mode length filename] (scp-parse-copy cmd)
+                     nfile (if (and (.exists file) (.isDirectory file))
+                             (File. file filename)
+                             file)]
+                 (when (.exists nfile)
+                   (.delete nfile))
+                 (nio/create-file nfile mode)
+                 (let [new-context
+                       (update (scp-sink-file send recv nfile mode length options context)
+                               :fileset-file-start + length)]
+                   (when times
+                     (nio/set-last-modified-and-access-time nfile (first times) (second times)))
+                   (if (pos? depth)
+                     (recur (scp-receive-command send recv) file nil depth new-context)
+
+                     ;; no more files. return
+                     new-context
+                     ))))
+          \T (do
+               (debug "\\T")
+               (recur (scp-receive-command send recv) file (scp-parse-times cmd) depth context))
+          \D (do
+               (debug "\\D")
+               (let [[mode _ ^String filename] (scp-parse-copy cmd)
+                     dir (File. file filename)]
+                 (when (and (.exists dir) (not (.isDirectory dir)))
+                   (.delete dir))
+                 (when (not (.exists dir))
+                   (.mkdir dir))
+                 (recur (scp-receive-command send recv) dir nil (inc depth) context)))
+          \E (do
+               (debug "\\E")
+               (let [new-depth (dec depth)]
+                 (when (pos? new-depth)
+                   (recur (scp-receive-command send recv) (io/file (.getParent file)) nil new-depth context))))
+
+          (when cmd
+            (when (= 1 (int (first cmd)))
+              ;; TODO: what to do with the error message?
+              (let [[error next-cmd] (string/split (subs cmd 1) #"\n")]
+                (println "WARNING:" error)
+                (recur next-cmd file nil depth context))))))))
+
+(defn scp-from
+  "copy remote paths to local paths"
+  [remote-path local-file {:keys [session
+                                  extra-flags
+                                  recurse
+                                  progress-context]
+                           :or {extra-flags ""}
+                           :as options}
+   ]
+  (let [remote-command
+        (format
+         "scp %s"
+         (string/join " "
+                      [extra-flags
+                       (when recurse "-r")
+                       "-f" ;; from
+                       (utils/quote-path remote-path)
+                       ]))
+
+        {:keys [in out err channel] :as process}
+        (bbssh/exec session remote-command {:in :stream})]
+    (send-ack in)
+    (let [progress-context (scp-from-receive process local-file options)]
+      (.close in)
+      (.close out)
+      (.close err)
+      progress-context)))

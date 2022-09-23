@@ -76,7 +76,7 @@
            progress-context progress-context]
       (if (= 0 size)
         (progress-fn progress-context
-                     {:src source
+                     {:source source
                       :offset offset
                       :size size})
         (let [bytes-read (.read input-stream chunk)]
@@ -93,7 +93,7 @@
               (recur
                offset
                (progress-fn progress-context
-                            {:src source
+                            {:source source
                              :offset offset
                              :size size})))))))))
 
@@ -257,7 +257,77 @@
       progress-context)))
 
 (defn scp-to
-  "copy local paths to remote path"
+  "Using the scp protocol, copy a file, files or data from
+  `local-sources` on the local machine to `remote-path` path on the
+  remote machine. `local-sources` should be a sequence of one or more
+  sources. Each source can be a `java.io.File` (either a file or a
+  directory) or a vector of `[data info-hash]` for raw data transfers.
+  `remote-path` should be a string specifying the remote destination
+  path or a `java.io.File` object (relative to the remote users home
+  directory). Passed in `options` can contain the following keys and
+  values:
+
+  - `:session` contains the connected ssh session reference.
+  - `:recurse?` when `true` perform a recursive copy. Defaults
+    to `false`.
+  - `:preserve-mode?` when `true` the file modes (permissions)
+    of the destination files are set to the state of the source
+    files. When `false` files are set to the specified `:mode`
+    while directories are set to the specified `:dir-mode`.
+    Defaults to `true`.
+  - `:mode` when `:preserve-mode?` is `false` this value defines
+    the permissions flags for destination files. Should be set
+    using an octal value literal prefixed with a zero (eg `0000`
+    for no flags or `0777` for all flags). Defaults to `0755`.
+  - `:dir-mode` when `:preserve-mode?` is `false` this value
+    defines the permissions flags for destination directories.
+    Should be set using an octal value literal prefixed with a
+    zero (eg `0000` for no flags or `0777` for all flags).
+    Defaults to `0644`.
+  - `:preserve-times?` when `true` the access time and the last
+    modified time of the destination files are set to those of
+    the source files. When `false` the files will contain their
+    default creation time stamp values. Defaults to `true`.
+  - `:progress-fn` can be passed a function of arity 2 that will
+    be repeatedly called during the copy process to provide
+    status updates. Each buffer that is copied results in a call.
+    For more information see below.
+  - `:progress-context` can be used to set the initial progress
+    context value which will be passed to the first invocation
+    of the `:progress-fn` callback. Defaults to `nil`.
+  - `:buffer-size` sets the size of the copy buffer. Larger
+    values should provide more throughput but will result in
+    less fine grained progress updates. Default is 256 kilobytes.
+  - `:scp-command-fn` sets an optional function to preprocess the
+    remote scp command line invocation. The function will be
+    passed the string of the command to invoke to launch the scp
+    remote process and should return a new string to use as the
+    command.
+
+  The callback `:progress-fn` will be called with 2 arguments.  The
+  first argument is the current `:progress-context` value.  The second
+  argument is a hashmap with the keys `:dest`, `:offset` and
+  `:size`. `:source` will be a `java.io.File` object representing the
+  source file in the local filesystem of the current copy. `:size`
+  will be the final size the file will be in bytes when the copy is
+  complete. `:offset` will be how much of the file copy has so far
+  been performed in bytes. The progress-fn should return a new value
+  for the progress-context.  This will subsequently be passed as the
+  first argument to the next call of progress-fn.
+
+  To get a better understanding of how these functions will be
+  called try the following settings in options:
+
+  ```clojure
+  {
+    :progress-context 0
+    :progress-fn (fn [progress-context status]
+                   (prn progress-context status)
+                   (inc progress-context))
+  }
+  ```
+
+  "
   [local-sources remote-path
    {:keys [session
            extra-flags
@@ -334,15 +404,12 @@
          :or {preserve-mode? true
               preserve-times? true}
          :as options}]
-  ;;(prn file)
   (loop [command (scp-read-until-newline process)
          file file
          times nil
          depth 0
          progress-context progress-context]
     (send-ack process)
-    (prn "...." file ">" depth "[" times "]")
-    (prn command)
     (case (first command)
       \C ;; single file copy
       (let [[mode length filename] (-> command
@@ -355,7 +422,6 @@
                               (.isDirectory file))
                        (File. file filename)
                        file)]
-        (prn 'file file 'new-file new-file)
         (when (.exists new-file)
           (.delete new-file))
         (utils/create-file new-file
@@ -433,7 +499,75 @@
          progress-context)))))
 
 (defn scp-from
-  "copy remote paths to local paths"
+  "Using the scp protocol, copy a file or files from `remote-path` on
+  the remote machine to `local-file` path on the local
+  machine. `remote-path` should be a string specifying the remote
+  server file or directory path (relative to the remote user's home
+  directory).  `local-file` can be a string specifying the local
+  destination path or a `java.io.File` object. Passed in `options` can
+  contain the following keys and values:
+
+  - `:session` contains the connected ssh session reference.
+  - `:recurse?` when `true` perform a recursive copy. Defaults
+    to `false`.
+  - `:preserve-mode?` when `true` the file modes (permissions)
+    of the destination files are set to the state of the source
+    files. When `false` files are set to the specified `:mode`
+    while directories are set to the specified `:dir-mode`.
+    Defaults to `true`.
+  - `:mode` when `:preserve-mode?` is `false` this value defines
+    the permissions flags for destination files. Should be set
+    using an octal value literal prefixed with a zero (eg `0000`
+    for no flags or `0777` for all flags). Defaults to `0755`.
+  - `:dir-mode` when `:preserve-mode?` is `false` this value
+    defines the permissions flags for destination directories.
+    Should be set using an octal value literal prefixed with a
+    zero (eg `0000` for no flags or `0777` for all flags).
+    Defaults to `0644`.
+  - `:preserve-times?` when `true` the access time and the last
+    modified time of the destination files are set to those of
+    the source files. When `false` the files will contain their
+    default creation time stamp values. Defaults to `true`.
+  - `:progress-fn` can be passed a function of arity 2 that will
+    be repeatedly called during the copy process to provide
+    status updates. Each buffer that is copied results in a call.
+    For more information see below.
+  - `:progress-context` can be used to set the initial progress
+    context value which will be passed to the first invocation
+    of the `:progress-fn` callback. Defaults to `nil`.
+  - `:buffer-size` sets the size of the copy buffer. Larger
+    values should provide more throughput but will result in
+    less fine grained progress updates. Default is 256 kilobytes.
+  - `:scp-command-fn` sets an optional function to preprocess the
+    remote scp command line invocation. The function will be
+    passed the string of the command to invoke to launch the scp
+    remote process and should return a new string to use as the
+    command.
+
+  The callback `:progress-fn` will be called with 2 arguments.  The
+  first argument is the current `:progress-context` value.  The second
+  argument is a hashmap with the keys `:dest`, `:offset` and
+  `:size`. `:dest` will be a `java.io.File` object representing the
+  destination file in the local filesystem of the current
+  copy. `:size` will be the final size the file will be in bytes when
+  the copy is complete. `:offset` will be how much of the file copy
+  has so far been performed in bytes. The progress-fn should return a
+  new value for the progress-context.  This will subsequently be
+  passed as the first argument to the next call of progress-fn.
+
+  To get a better understanding of how these functions will be
+  called try the following settings in options:
+
+  ```clojure
+  {
+    :progress-context 0
+    :progress-fn (fn [progress-context status]
+                   (prn progress-context status)
+                   (inc progress-context))
+  }
+  ```
+
+  "
   [remote-path local-file {:keys [session
                                   extra-flags
                                   recurse?

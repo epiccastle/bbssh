@@ -130,11 +130,11 @@
 (defn- scp-copy-file
   [{:keys [in out] :as process}
    file
-   {:keys [preserve-times preserve-mode mode buffer-size progress-fn]
+   {:keys [preserve-times? preserve-mode? mode buffer-size progress-fn]
     :or {mode 0644
          buffer-size default-buffer-size}
     :as options}]
-  (when preserve-times
+  (when preserve-times?
     (send-command
      process
      (format "T%d 0 %d 0"
@@ -143,7 +143,7 @@
   (send-command
    process
    (format "C%04o %d %s"
-           (if preserve-mode (utils/file-mode file) mode)
+           (if preserve-mode? (utils/file-mode file) mode)
            (.length file)
            (.getName file)))
   (let [progress-context
@@ -157,10 +157,10 @@
 (defn- scp-copy-dir
   [{:keys [in out] :as process}
    dir
-   {:keys [preserve-times preserve-mode dir-mode progress-fn progress-context]
+   {:keys [preserve-times? preserve-mode? dir-mode progress-fn progress-context]
     :or {dir-mode 0755}
     :as options}]
-  (when preserve-times
+  (when preserve-times?
     (send-command
      process
      (format "T%d 0 %d 0"
@@ -169,7 +169,7 @@
   (send-command
    process
    (format "D%04o 0 %s"
-           (if preserve-mode (utils/file-mode dir) dir-mode)
+           (if preserve-mode? (utils/file-mode dir) dir-mode)
            (.getName dir)))
   (let [progress-context
         (loop [[file & remain] (.listFiles dir)
@@ -202,7 +202,7 @@
 (defn- scp-copy-data
   [{:keys [in out] :as process}
    [source info]
-   {:keys [preserve-times mode buffer-size progress-fn]
+   {:keys [preserve-times? mode buffer-size progress-fn]
     :or {mode 0644
          buffer-size default-buffer-size}
     :as options}]
@@ -213,7 +213,7 @@
                (.getBytes source (:encoding info "utf-8"))
                source)
         size (or (:size info) (count data))]
-    (when (and preserve-times
+    (when (and preserve-times?
                (:mtime info)
                (:atime info))
       (send-command
@@ -240,19 +240,23 @@
 
 (defn scp-to
   "copy local paths to remote path"
-  [local-sources remote-path {:keys [session
-                                     extra-flags
-                                     recurse
-                                     preserve-times
-                                     progress-context
-                                     scp-command-fn]
-                              :or {extra-flags ""
-                                   scp-command-fn
-                                   (fn [cmd]
-                                     (str "sh -c 'umask 0000;"
-                                          cmd
-                                          "'"))}
-                              :as options}
+  [local-sources remote-path
+   {:keys [session
+           extra-flags
+           recurse
+           preserve-times?
+           preserve-mode?
+           progress-context
+           scp-command-fn]
+    :or {extra-flags ""
+         preserve-times? true
+         preserve-mode? true
+         scp-command-fn
+         (fn [cmd]
+           (str "sh -c 'umask 0000;"
+                cmd
+                "'"))}
+    :as options}
    ]
   (let [remote-command
         (scp-command-fn
@@ -260,7 +264,7 @@
                       ["scp"
                        extra-flags
                        (when recurse "-r")
-                       (when preserve-times "-p")
+                       (when preserve-times? "-p")
                        "-t" ;; to
                        (utils/quote-path remote-path)
                        ]))
@@ -308,7 +312,8 @@
   [{:keys [out in] :as process}
    file {:keys [progress-fn
                 progress-context
-                preserve-time]
+                preserve-time
+                preserve-mode?]
          :as options}]
   ;;(prn file)
   (loop [command (scp-read-until-newline process)
@@ -334,7 +339,10 @@
         (prn 'file file 'new-file new-file)
         (when (.exists new-file)
           (.delete new-file))
-        (utils/create-file new-file mode)
+        (utils/create-file new-file
+                           (if preserve-mode?
+                             mode
+                             (:mode options)))
         (let [progress-context
               (scp-stream-to-file process new-file mode length
                                   (assoc options
@@ -363,7 +371,10 @@
         (when (and (.exists dir) (not (.isDirectory dir)))
           (.delete dir))
         (when (not (.exists dir))
-          (utils/create-dirs dir mode))
+          (utils/create-dirs dir
+                             (if preserve-mode?
+                               mode
+                               (:dir-mode options))))
         (when (and times preserve-time)
           (utils/update-file-times dir times))
 
@@ -407,9 +418,12 @@
   [remote-path local-file {:keys [session
                                   extra-flags
                                   recurse
-                                  preserve-times
+                                  preserve-mode?
+                                  preserve-times?
                                   scp-command-fn]
                            :or {extra-flags ""
+                                preserve-mode? true
+                                preserve-times? true
                                 scp-command-fn identity}
                            :as options}
    ]
@@ -419,7 +433,7 @@
                       ["scp"
                        extra-flags
                        (when recurse "-r")
-                       (when preserve-times "-p")
+                       (when preserve-times? "-p")
                        "-f" ;; from
                        (utils/quote-path remote-path)
                        ]))

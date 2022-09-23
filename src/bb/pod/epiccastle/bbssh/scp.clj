@@ -75,7 +75,11 @@
     (loop [offset 0
            progress-context progress-context]
       (if (= 0 size)
-        (progress-fn progress-context source offset size)
+        (progress-fn progress-context
+                     {:src source
+                      :dest output-stream
+                      :offset offset
+                      :size size})
         (let [bytes-read (.read input-stream chunk)]
           (if (= -1 bytes-read)
             progress-context
@@ -89,40 +93,53 @@
               (.flush output-stream)
               (recur
                offset
-               (progress-fn progress-context source offset size)))))))))
+               (progress-fn progress-context
+                            {:src source
+                             :dest output-stream
+                             :offset offset
+                             :size size})))))))))
 
 (defn- io-copy-num-bytes
-  [source output-stream
+  [source dest
    length
    {:keys [buffer-size
            progress-context
            progress-fn]
     :or {buffer-size default-buffer-size}}]
-  (let [buffer (byte-array buffer-size)]
-    (loop [read-offset 0
-           progress-context progress-context]
-      (if (zero? length)
-        (if progress-fn
-          (progress-fn progress-context source read-offset length)
-          progress-context)
-        (let [bytes-read
-              (.read source
-                     buffer
-                     0
-                     (min (- length read-offset) buffer-size))]
-          (if (= -1 bytes-read)
-            progress-context
-            (do
-              (.write output-stream buffer 0 bytes-read)
-              (let [read-offset (+ read-offset bytes-read)
-                    progress-context
-                    (if progress-fn
-                      (progress-fn progress-context source read-offset length)
-                      progress-context)]
-                (if (< read-offset length)
-                  (recur read-offset
-                         progress-context)
-                  progress-context)))))))))
+  (with-open [output-stream (io/output-stream dest)]
+    (let [buffer (byte-array buffer-size)]
+      (loop [read-offset 0
+             progress-context progress-context]
+        (if (zero? length)
+          (if progress-fn
+            (progress-fn progress-context
+                         {:src source
+                          :dest dest
+                          :offset read-offset
+                          :size length})
+            progress-context)
+          (let [bytes-read
+                (.read source
+                       buffer
+                       0
+                       (min (- length read-offset) buffer-size))]
+            (if (= -1 bytes-read)
+              progress-context
+              (do
+                (.write output-stream buffer 0 bytes-read)
+                (let [read-offset (+ read-offset bytes-read)
+                      progress-context
+                      (if progress-fn
+                        (progress-fn progress-context
+                                     {:src source
+                                      :dest dest
+                                      :offset read-offset
+                                      :size length})
+                        progress-context)]
+                  (if (< read-offset length)
+                    (recur read-offset
+                           progress-context)
+                    progress-context))))))))))
 
 ;;
 ;; scp from local to remote
@@ -309,8 +326,7 @@
            buffer-size]
     :or {buffer-size default-buffer-size}
     :as options}]
-  (with-open [file-stream (io/output-stream file)]
-    (io-copy-num-bytes out file-stream length options)))
+  (io-copy-num-bytes out file length options))
 
 (defn- scp-from-receive
   "scp commands copying from remote to local"

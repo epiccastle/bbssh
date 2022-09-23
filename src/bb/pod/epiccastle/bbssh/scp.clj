@@ -339,41 +339,13 @@
          progress-context)
         progress-context)
 
-      )
-    ;;(Thread/sleep 1000)
-    #_(case (first command)
-        \C (do
-             (debug "\\C")
-             (let [[mode length filename] (scp-parse-copy cmd)
-                   nfile (if (and (.exists file) (.isDirectory file))
-                           (File. file filename)
-                           file)]
-               (when (.exists nfile)
-                 (.delete nfile))
-               (nio/create-file nfile mode)
-               (let [new-context
-                     (update (scp-sink-file send recv nfile mode length options context)
-                             :fileset-file-start + length)]
-                 (when times
-                   (nio/set-last-modified-and-access-time nfile (first times) (second times)))
-                 (if (pos? depth)
-                   (recur (scp-receive-command send recv) file nil depth new-context)
-
-                   ;; no more files. return
-                   new-context
-                   ))))
-        \T (do
-             (debug "\\T")
-             (recur (scp-receive-command send recv) file (scp-parse-times cmd) depth context))
-
-
-
-        (when cmd
-          (when (= 1 (int (first cmd)))
-            ;; TODO: what to do with the error message?
-            (let [[error next-cmd] (string/split (subs cmd 1) #"\n")]
-              (println "WARNING:" error)
-              (recur next-cmd file nil depth context)))))))
+      \T ;; timestamps
+      (recur
+       (scp-read-until-newline process)
+       file
+       nil
+       (dec depth)
+       progress-context))))
 
 (defn scp-from
   "copy remote paths to local paths"

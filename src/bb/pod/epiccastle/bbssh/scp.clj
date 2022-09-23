@@ -235,3 +235,17 @@
             (.close out)
             (.close err)
             progress-context))))))
+
+(defn- scp-read-until-newline
+  "Read from the remote process until a newline character.
+  Assumes that the incoming data stops after the newline
+  to wait for an ack."
+  [{:keys [out]}]
+  (let [buffer-size 1024
+        buffer (byte-array buffer-size)]
+    (loop [offset 0]
+      (let [bytes-read (.read out buffer offset (- buffer-size offset))
+            last-byte (aget buffer (dec (+ offset bytes-read)))]
+        (if (= \newline (char last-byte))
+          (String. buffer 0 (+ offset bytes-read))
+          (recur (+ offset bytes-read)))))))

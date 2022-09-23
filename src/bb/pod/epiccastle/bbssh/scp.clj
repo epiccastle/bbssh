@@ -11,6 +11,9 @@
 
 (def default-buffer-size (* 256 1024))
 
+;;
+;; send and receive commands
+;;
 (defn- recv-ack [{:keys [out]}]
   (let [code (.read out)]
     (when-not (zero? code)
@@ -36,7 +39,24 @@
   (.flush in)
   (recv-ack process))
 
-(defn io-copy-with-progress
+(defn- scp-read-until-newline
+  "Read from the remote process until a newline character.
+  Assumes that the incoming data stops after the newline
+  to wait for an ack."
+  [{:keys [out]}]
+  (let [buffer-size 4096
+        buffer (byte-array buffer-size)]
+    (loop [offset 0]
+      (let [bytes-read (.read out buffer offset (- buffer-size offset))
+            last-byte (aget buffer (dec (+ offset bytes-read)))]
+        (if (= \newline (char last-byte))
+          (String. buffer 0 (+ offset bytes-read))
+          (recur (+ offset bytes-read)))))))
+
+;;
+;; copy streams
+;;
+(defn- io-copy-with-progress
   [source output-stream
    & [{:keys [size
               encoding
@@ -71,7 +91,7 @@
                offset
                (progress-fn progress-context source offset size)))))))))
 
-(defn io-copy-num-bytes
+(defn- io-copy-num-bytes
   [source output-stream
    length
    {:keys [buffer-size
@@ -104,8 +124,10 @@
                          progress-context)
                   progress-context)))))))))
 
-
-(defn scp-copy-file
+;;
+;; scp from local to remote
+;;
+(defn- scp-copy-file
   [{:keys [in out] :as process}
    file
    {:keys [preserve-times preserve-mode mode buffer-size progress-fn]
@@ -132,7 +154,7 @@
     (recv-ack process)
     progress-context))
 
-(defn scp-copy-dir
+(defn- scp-copy-dir
   [{:keys [in out] :as process}
    dir
    {:keys [preserve-times preserve-mode dir-mode progress-fn progress-context]
@@ -177,7 +199,7 @@
     (send-command process "E")
     progress-context))
 
-(defn scp-copy-data
+(defn- scp-copy-data
   [{:keys [in out] :as process}
    [source info]
    {:keys [preserve-times mode buffer-size progress-fn]
@@ -222,15 +244,21 @@
                                      extra-flags
                                      recurse
                                      preserve-times
-                                     progress-context]
-                              :or {extra-flags ""}
+                                     progress-context
+                                     scp-command-fn]
+                              :or {extra-flags ""
+                                   scp-command-fn
+                                   (fn [cmd]
+                                     (str "sh -c 'umask 0000;"
+                                          cmd
+                                          "'"))}
                               :as options}
    ]
   (let [remote-command
-        (format
-         "sh -c 'umask 0000; scp %s'"
+        (scp-command-fn
          (string/join " "
-                      [extra-flags
+                      ["scp"
+                       extra-flags
                        (when recurse "-r")
                        (when preserve-times "-p")
                        "-t" ;; to
@@ -262,21 +290,10 @@
             (.close err)
             progress-context))))))
 
-(defn- scp-read-until-newline
-  "Read from the remote process until a newline character.
-  Assumes that the incoming data stops after the newline
-  to wait for an ack."
-  [{:keys [out]}]
-  (let [buffer-size 4096
-        buffer (byte-array buffer-size)]
-    (loop [offset 0]
-      (let [bytes-read (.read out buffer offset (- buffer-size offset))
-            last-byte (aget buffer (dec (+ offset bytes-read)))]
-        (if (= \newline (char last-byte))
-          (String. buffer 0 (+ offset bytes-read))
-          (recur (+ offset bytes-read)))))))
-
-(defn scp-stream-to-file
+;;
+;; scp from remote to local
+;;
+(defn- scp-stream-to-file
   ""
   [{:keys [out in] :as process} file mode length
    {:keys [progress-fn
@@ -286,8 +303,8 @@
   (with-open [file-stream (io/output-stream file)]
     (io-copy-num-bytes out file-stream length options)))
 
-(defn scp-from-receive
-  "Sink scp commands to file"
+(defn- scp-from-receive
+  "scp commands copying from remote to local"
   [{:keys [out in] :as process}
    file {:keys [progress-fn
                 progress-context
@@ -390,15 +407,17 @@
   [remote-path local-file {:keys [session
                                   extra-flags
                                   recurse
-                                  preserve-times]
-                           :or {extra-flags ""}
+                                  preserve-times
+                                  scp-command-fn]
+                           :or {extra-flags ""
+                                scp-command-fn identity}
                            :as options}
    ]
   (let [remote-command
-        (format
-         "scp %s"
+        (scp-command-fn
          (string/join " "
-                      [extra-flags
+                      ["scp"
+                       extra-flags
                        (when recurse "-r")
                        (when preserve-times "-p")
                        "-f" ;; from

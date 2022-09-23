@@ -1,7 +1,6 @@
 (ns pod.epiccastle.bbssh.utils
   (:require [pod.epiccastle.bbssh.impl.callbacks :as callbacks]
             [pod.epiccastle.bbssh.cleaner :as cleaner]
-            [pod.epiccastle.bbssh.impl.utils :as utils]
             [babashka.fs :as fs]
             [clojure.string :as string]
             )
@@ -95,8 +94,8 @@
 ;; (defn last-modified-time [^java.io.File file]
 ;;   (utils/last-modified-time (.getCanonicalPath file)))
 
-(defn file-mode [^java.io.File file]
-  (utils/file-mode (.getCanonicalPath file)))
+;; (defn file-mode [^java.io.File file]
+;;   (utils/file-mode (.getCanonicalPath file)))
 
 (def permission->mode
   {PosixFilePermission/OWNER_READ     0400
@@ -153,3 +152,7 @@
   (-> (fs/get-attribute file "basic:lastAccessTime")
       .toInstant
       .getEpochSecond))
+
+(defn file-mode [file]
+  (permission-set->mode
+   (fs/posix-file-permissions file)))

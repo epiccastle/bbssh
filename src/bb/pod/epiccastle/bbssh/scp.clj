@@ -77,7 +77,6 @@
       (if (= 0 size)
         (progress-fn progress-context
                      {:src source
-                      :dest output-stream
                       :offset offset
                       :size size})
         (let [bytes-read (.read input-stream chunk)]
@@ -95,7 +94,6 @@
                offset
                (progress-fn progress-context
                             {:src source
-                             :dest output-stream
                              :offset offset
                              :size size})))))))))
 
@@ -113,8 +111,7 @@
         (if (zero? length)
           (if progress-fn
             (progress-fn progress-context
-                         {:src source
-                          :dest dest
+                         {:dest dest
                           :offset read-offset
                           :size length})
             progress-context)
@@ -131,8 +128,7 @@
                       progress-context
                       (if progress-fn
                         (progress-fn progress-context
-                                     {:src source
-                                      :dest dest
+                                     {:dest dest
                                       :offset read-offset
                                       :size length})
                         progress-context)]

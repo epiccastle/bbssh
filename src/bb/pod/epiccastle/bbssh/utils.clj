@@ -5,7 +5,7 @@
             [babashka.fs :as fs]
             [clojure.string :as string]
             )
-  (:import [java.nio.file.attribute PosixFilePermission]))
+  (:import [java.nio.file.attribute PosixFilePermission FileTime]))
 
 (def decoder (java.util.Base64/getDecoder))
 
@@ -89,11 +89,11 @@
 (defn quote-path [path]
   (double-quote (escape-double-quotes path)))
 
-(defn last-access-time [^java.io.File file]
-  (utils/last-access-time (.getCanonicalPath file)))
+;; (defn last-access-time [^java.io.File file]
+;;   (utils/last-access-time (.getCanonicalPath file)))
 
-(defn last-modified-time [^java.io.File file]
-  (utils/last-modified-time (.getCanonicalPath file)))
+;; (defn last-modified-time [^java.io.File file]
+;;   (utils/last-modified-time (.getCanonicalPath file)))
 
 (defn file-mode [^java.io.File file]
   (utils/file-mode (.getCanonicalPath file)))
@@ -139,3 +139,17 @@
    file
    {:posix-file-permissions
     (mode->permission-set mode)}))
+
+(defn update-file-times [file [mtime atime]]
+  (fs/set-attribute file "basic:lastAccessTime" (FileTime/from atime))
+  (fs/set-last-modified-time file mtime))
+
+(defn last-modified-time [file]
+  (-> (fs/last-modified-time file)
+      .toInstant
+      .getEpochSecond))
+
+(defn last-access-time [file]
+  (-> (fs/get-attribute file "basic:lastAccessTime")
+      .toInstant
+      .getEpochSecond))

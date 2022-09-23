@@ -6,7 +6,8 @@
             [clojure.java.io :as io]
             [clojure.edn :as edn])
   (:import [java.util Arrays]
-           [java.io File]))
+           [java.io File]
+           [java.time Instant]))
 
 (def default-buffer-size (* 256 1024))
 
@@ -107,14 +108,20 @@
 (defn scp-copy-file
   [{:keys [in out] :as process}
    file
-   {:keys [preserve mode buffer-size progress-fn]
+   {:keys [preserve-times preserve-mode mode buffer-size progress-fn]
     :or {mode 0644
          buffer-size default-buffer-size}
     :as options}]
+  (when preserve-times
+    (send-command
+     process
+     (format "T%d 0 %d 0"
+             (utils/last-modified-time file)
+             (utils/last-access-time file))))
   (send-command
    process
    (format "C%04o %d %s"
-           (if preserve (utils/file-mode file) mode)
+           (if preserve-mode (utils/file-mode file) mode)
            (.length file)
            (.getName file)))
   (let [progress-context
@@ -128,13 +135,19 @@
 (defn scp-copy-dir
   [{:keys [in out] :as process}
    dir
-   {:keys [preserve dir-mode progress-fn progress-context]
+   {:keys [preserve-times preserve-mode dir-mode progress-fn progress-context]
     :or {dir-mode 0755}
     :as options}]
+  (when preserve-times
+    (send-command
+     process
+     (format "T%d 0 %d 0"
+             (utils/last-modified-time dir)
+             (utils/last-access-time dir))))
   (send-command
    process
    (format "D%04o 0 %s"
-           (if preserve (utils/file-mode dir) dir-mode)
+           (if preserve-mode (utils/file-mode dir) dir-mode)
            (.getName dir)))
   (let [progress-context
         (loop [[file & remain] (.listFiles dir)
@@ -167,7 +180,7 @@
 (defn scp-copy-data
   [{:keys [in out] :as process}
    [source info]
-   {:keys [mode buffer-size progress-fn]
+   {:keys [preserve-times mode buffer-size progress-fn]
     :or {mode 0644
          buffer-size default-buffer-size}
     :as options}]
@@ -175,9 +188,17 @@
     (throw (ex-info "scp data info must contain :name"
                     {:type ::name-error})))
   (let [data (if (string? source)
-                 (.getBytes source (:encoding info "utf-8"))
-                 source)
+               (.getBytes source (:encoding info "utf-8"))
+               source)
         size (or (:size info) (count data))]
+    (when (and preserve-times
+               (:mtime info)
+               (:atime info))
+      (send-command
+       process
+       (format "T%d 0 %d 0"
+               (:mtime info)
+               (:atime info))))
     (send-command
      process
      (format "C%04o %d %s"
@@ -200,6 +221,7 @@
   [local-sources remote-path {:keys [session
                                      extra-flags
                                      recurse
+                                     preserve-times
                                      progress-context]
                               :or {extra-flags ""}
                               :as options}
@@ -210,6 +232,7 @@
          (string/join " "
                       [extra-flags
                        (when recurse "-r")
+                       (when preserve-times "-p")
                        "-t" ;; to
                        (utils/quote-path remote-path)
                        ]))
@@ -267,7 +290,8 @@
   "Sink scp commands to file"
   [{:keys [out in] :as process}
    file {:keys [progress-fn
-                progress-context]
+                progress-context
+                preserve-time]
          :as options}]
   ;;(prn file)
   (loop [command (scp-read-until-newline process)
@@ -301,6 +325,8 @@
                                          progress-context))]
           (recv-ack process)
           (send-ack process)
+          (when (and times preserve-time)
+            (utils/update-file-times new-file times))
           (if (pos? depth)
             (recur
              (scp-read-until-newline process)
@@ -321,6 +347,8 @@
           (.delete dir))
         (when (not (.exists dir))
           (utils/create-dirs dir mode))
+        (when (and times preserve-time)
+          (utils/update-file-times dir times))
 
         (recur
          (scp-read-until-newline process)
@@ -340,18 +368,29 @@
         progress-context)
 
       \T ;; timestamps
-      (recur
-       (scp-read-until-newline process)
-       file
-       nil
-       (dec depth)
-       progress-context))))
+      (let [[mtime _ atime _] (-> command
+                                  string/trim
+                                  (subs 1)
+                                  (string/split #" " 4))
+            mtime (-> mtime
+                      edn/read-string
+                      Instant/ofEpochSecond)
+            atime (-> atime
+                      edn/read-string
+                      Instant/ofEpochSecond)]
+        (recur
+         (scp-read-until-newline process)
+         file
+         [mtime atime]
+         (dec depth)
+         progress-context)))))
 
 (defn scp-from
   "copy remote paths to local paths"
   [remote-path local-file {:keys [session
                                   extra-flags
-                                  recurse]
+                                  recurse
+                                  preserve-times]
                            :or {extra-flags ""}
                            :as options}
    ]
@@ -361,6 +400,7 @@
          (string/join " "
                       [extra-flags
                        (when recurse "-r")
+                       (when preserve-times "-p")
                        "-f" ;; from
                        (utils/quote-path remote-path)
                        ]))

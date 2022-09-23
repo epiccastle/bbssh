@@ -330,14 +330,12 @@
   "
   [local-sources remote-path
    {:keys [session
-           extra-flags
            recurse?
            preserve-times?
            preserve-mode?
            progress-context
            scp-command-fn]
-    :or {extra-flags ""
-         preserve-times? true
+    :or {preserve-times? true
          preserve-mode? true
          scp-command-fn
          (fn [cmd]
@@ -350,7 +348,6 @@
         (scp-command-fn
          (string/join " "
                       ["scp"
-                       extra-flags
                        (when recurse? "-r")
                        (when preserve-times? "-p")
                        "-t" ;; to
@@ -569,13 +566,11 @@
 
   "
   [remote-path local-file {:keys [session
-                                  extra-flags
                                   recurse?
                                   preserve-mode?
                                   preserve-times?
                                   scp-command-fn]
-                           :or {extra-flags ""
-                                preserve-mode? true
+                           :or {preserve-mode? true
                                 preserve-times? true
                                 scp-command-fn identity}
                            :as options}
@@ -584,7 +579,6 @@
         (scp-command-fn
          (string/join " "
                       ["scp"
-                       extra-flags
                        (when recurse? "-r")
                        (when preserve-times? "-p")
                        "-f" ;; from

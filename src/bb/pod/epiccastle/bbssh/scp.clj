@@ -7,6 +7,8 @@
   (:import [java.util Arrays]
            [java.io File]))
 
+(def default-buffer-size (* 256 1024))
+
 (defn- recv-ack [{:keys [out]}]
   (let [code (.read out)]
     (when-not (zero? code)
@@ -39,7 +41,7 @@
               progress-fn
               buffer-size
               progress-context]
-       :or {buffer-size (* 256 1024)
+       :or {buffer-size default-buffer-size
             encoding "utf-8"}}]]
   (let [is-string? (string? source)
         is-file? (= File (class source))
@@ -73,7 +75,7 @@
    {:keys [buffer-size
            progress-context
            progress-fn]
-    :or {buffer-size (* 256 1024)}}]
+    :or {buffer-size default-buffer-size}}]
   (let [buffer (byte-array buffer-size)]
     (loop [read-offset 0
            progress-context progress-context]
@@ -106,7 +108,7 @@
    file
    {:keys [preserve mode buffer-size progress-fn]
     :or {mode 0644
-         buffer-size (* 256 1024)}
+         buffer-size default-buffer-size}
     :as options}]
   (send-command
    process
@@ -166,7 +168,7 @@
    [source info]
    {:keys [mode buffer-size progress-fn]
     :or {mode 0644
-         buffer-size (* 256 1024)}
+         buffer-size default-buffer-size}
     :as options}]
   (when-not (:name info)
     (throw (ex-info "scp data info must contain :name"
@@ -241,7 +243,7 @@
   Assumes that the incoming data stops after the newline
   to wait for an ack."
   [{:keys [out]}]
-  (let [buffer-size 1024
+  (let [buffer-size 4096
         buffer (byte-array buffer-size)]
     (loop [offset 0]
       (let [bytes-read (.read out buffer offset (- buffer-size offset))
@@ -255,7 +257,7 @@
   [{:keys [out in] :as process} file mode length
    {:keys [progress-fn
            buffer-size]
-    :or {buffer-size 8192}
+    :or {buffer-size default-buffer-size}
     :as options}]
   (with-open [file-stream (io/output-stream file)]
     (io-copy-num-bytes out file-stream length options)))

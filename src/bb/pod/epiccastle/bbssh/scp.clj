@@ -448,7 +448,7 @@
         {:keys [in out err channel] :as process}
         (bbssh/exec session remote-command {:in :stream})]
     (send-ack process)
-    (let [progress-context (scp-from-receive process local-file options)]
+    (let [progress-context (scp-from-receive process (io/as-file local-file) options)]
       (.close in)
       (.close out)
       (.close err)

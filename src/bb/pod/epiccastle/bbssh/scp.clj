@@ -7,30 +7,30 @@
   (:import [java.util Arrays]
            [java.io File]))
 
-(defn- recv-ack [stream]
-  (let [code (.read stream)]
+(defn- recv-ack [{:keys [out]}]
+  (let [code (.read out)]
     (when-not (zero? code)
       ;; read scp error message
-      (let [msg (loop [c (.read stream)
+      (let [msg (loop [c (.read out)
                        s ""]
                   (if (#{10 13 -1 0} c)
                     s
-                    (recur (.read stream) (str s (char c)))))]
+                    (recur (.read out) (str s (char c)))))]
         (throw (ex-info "scp error" {:type ::scp-error
                                      :code code
                                      :msg msg}))))))
 (defn- send-ack
   "Send acknowledgement to the specified output stream"
-  [stream]
-  (.write stream (byte-array [0]))
-  (.flush stream))
+  [{:keys [in]}]
+  (.write in (byte-array [0]))
+  (.flush in))
 
 (defn- send-command
   "Send command to the specified output stream"
-  [{:keys [in out]} cmd-string]
+  [{:keys [in] :as process} cmd-string]
   (.write in (.getBytes (str cmd-string "\n")))
   (.flush in)
-  (recv-ack out))
+  (recv-ack process))
 
 (defn io-copy-with-progress
   [source output-stream
@@ -118,8 +118,8 @@
         (if progress-fn
           (io-copy-with-progress file in options)
           (io/copy file in :buffer-size buffer-size))]
-    (send-ack in)
-    (recv-ack out)
+    (send-ack process)
+    (recv-ack process)
     progress-context))
 
 (defn scp-copy-dir
@@ -188,8 +188,8 @@
                                           :size size
                                           :encoding (:encoding info "utf-8")))
             (io/copy source in :buffer-size buffer-size))]
-      (send-ack in)
-      (recv-ack out)
+      (send-ack process)
+      (recv-ack process)
       progress-context)))
 
 (defn scp-to
@@ -213,7 +213,7 @@
 
         {:keys [in out err channel] :as process}
         (bbssh/exec session remote-command {:in :stream})]
-    (recv-ack out)
+    (recv-ack process)
     (loop [[source & remain] local-sources
            progress-context progress-context
            ]
@@ -273,7 +273,7 @@
            times nil
            depth 0
            context progress-context]
-      (send-ack in)
+      (send-ack process)
       (prn "...." file ">" depth "[" times "]")
       (prn command)
       (case (first command)
@@ -290,8 +290,8 @@
           (utils/create-file file mode)
           (let [progress-context
                 (scp-stream-to-file process file mode length options)]
-            (recv-ack out)
-            (send-ack in)
+            (recv-ack process)
+            (send-ack process)
             progress-context
             ))
         )
@@ -346,8 +346,7 @@
   "copy remote paths to local paths"
   [remote-path local-file {:keys [session
                                   extra-flags
-                                  recurse
-                                  progress-context]
+                                  recurse]
                            :or {extra-flags ""}
                            :as options}
    ]
@@ -363,7 +362,7 @@
 
         {:keys [in out err channel] :as process}
         (bbssh/exec session remote-command {:in :stream})]
-    (send-ack in)
+    (send-ack process)
     (let [progress-context (scp-from-receive process local-file options)]
       (.close in)
       (.close out)

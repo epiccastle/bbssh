@@ -9,7 +9,7 @@
            [java.io File]
            [java.time Instant]))
 
-(def default-buffer-size (* 256 1024))
+(def ^:private default-buffer-size (* 256 1024))
 
 ;;
 ;; send and receive commands

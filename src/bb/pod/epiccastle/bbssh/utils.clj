@@ -133,3 +133,9 @@
    file
    {:posix-file-permissions
     (mode->permission-set mode)}))
+
+(defn create-dirs [file mode]
+  (fs/create-dirs
+   file
+   {:posix-file-permissions
+    (mode->permission-set mode)}))

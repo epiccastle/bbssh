@@ -101,3 +101,44 @@
                 0777)))
   (process/sh "rm -f .test/bbssh-test-file")
   (process/sh "rm -rf .test"))
+
+(deftest test-create-directory
+  (process/sh "rm -rf .test")
+  (process/sh "mkdir .test")
+  (utils/create-dirs (io/file ".test/bbssh-test-dir") 0755)
+  (is (-> (process/sh "ls -al .test/bbssh-test-dir")
+           :out
+           string/split-lines
+           second
+           (string/starts-with? "drwxr-xr-x")))
+
+  (process/sh "rm -rf .test/bbssh-test-dir")
+  (utils/create-dirs (io/file ".test/bbssh-test-dir") 0700)
+  (is (-> (process/sh "ls -al .test/bbssh-test-dir")
+           :out
+           string/split-lines
+           second
+           (string/starts-with? "drwx------")))
+
+  (process/sh "rm -rf .test/bbssh-test-dir")
+  (utils/create-dirs (io/file ".test/bbssh-test-dir") 0701)
+  (is (-> (process/sh "ls -al .test/bbssh-test-dir")
+           :out
+           string/split-lines
+           second
+           (string/starts-with? "drwx-----x")))
+
+  (process/sh "rm -rf .test/bbssh-test-dir")
+  (utils/create-dirs (io/file ".test/bbssh-test-dir/deeper") 0700)
+  (is (-> (process/sh "ls -al .test/bbssh-test-dir")
+           :out
+           string/split-lines
+           second
+           (string/starts-with? "drwx------")))
+  (is (-> (process/sh "ls -al .test/bbssh-test-dir/deeper")
+           :out
+           string/split-lines
+           second
+           (string/starts-with? "drwx------")))
+  (process/sh "rm -rf .test")
+  )

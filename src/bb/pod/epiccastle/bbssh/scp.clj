@@ -417,7 +417,7 @@
          (scp-read-until-newline process)
          file
          [mtime atime]
-         (dec depth)
+         depth
          progress-context)))))
 
 (defn scp-from

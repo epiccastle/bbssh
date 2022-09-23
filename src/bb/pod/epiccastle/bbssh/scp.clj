@@ -169,7 +169,8 @@
          buffer-size (* 256 1024)}
     :as options}]
   (when-not (:name info)
-    (throw (ex-info "scp data info must contain :name" {:type ::error})))
+    (throw (ex-info "scp data info must contain :name"
+                    {:type ::name-error})))
   (let [data (if (string? source)
                  (.getBytes source (:encoding info "utf-8"))
                  source)

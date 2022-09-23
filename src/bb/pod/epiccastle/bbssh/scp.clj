@@ -132,6 +132,8 @@
    file
    {:keys [preserve-times? preserve-mode? mode buffer-size progress-fn]
     :or {mode 0644
+         preserve-times? true
+         preserve-mode? true
          buffer-size default-buffer-size}
     :as options}]
   (when preserve-times?
@@ -158,7 +160,9 @@
   [{:keys [in out] :as process}
    dir
    {:keys [preserve-times? preserve-mode? dir-mode progress-fn progress-context]
-    :or {dir-mode 0755}
+    :or {dir-mode 0755
+         preserve-times? true
+         preserve-mode? true}
     :as options}]
   (when preserve-times?
     (send-command
@@ -204,6 +208,7 @@
    [source info]
    {:keys [preserve-times? mode buffer-size progress-fn]
     :or {mode 0644
+         preserve-times? true
          buffer-size default-buffer-size}
     :as options}]
   (when-not (:name info)
@@ -312,8 +317,10 @@
   [{:keys [out in] :as process}
    file {:keys [progress-fn
                 progress-context
-                preserve-time
+                preserve-times?
                 preserve-mode?]
+         :or {preserve-mode? true
+              preserve-times? true}
          :as options}]
   ;;(prn file)
   (loop [command (scp-read-until-newline process)
@@ -350,7 +357,7 @@
                                          progress-context))]
           (recv-ack process)
           (send-ack process)
-          (when (and times preserve-time)
+          (when (and times preserve-times?)
             (utils/update-file-times new-file times))
           (if (pos? depth)
             (recur
@@ -375,7 +382,7 @@
                              (if preserve-mode?
                                mode
                                (:dir-mode options))))
-        (when (and times preserve-time)
+        (when (and times preserve-times?)
           (utils/update-file-times dir times))
 
         (recur

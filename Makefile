@@ -71,7 +71,7 @@ native-image: bbssh
 # Babashka related targets
 #
 test:
-	umask 0000; bb -cp test test/bb_test/core.clj
+	umask 0000; bb -m bb-test.core
 
 test-bb:
 	BABASHKA_CLASSPATH=test umask 0000 && java -jar $(BABASHKA_SRC)/target/babashka-0.9.162-SNAPSHOT-standalone.jar test/bb_test/core.clj

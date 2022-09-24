@@ -16,7 +16,7 @@
         is (input-stream/new os 1024)]
     [os is]))
 
-(deftest password-exec-low-level
+(deftest test-password-exec-low-level
   (docker/cleanup)
   (docker/build {:root-password "root-access-please"})
   (docker/start {:ssh-port 9876})
@@ -127,8 +127,7 @@
           (bbssh/exec
            session "cat"
            {:in in-stream})]
-      (doseq [n (range 128)]
-        (output-stream/write in-output-stream n))
+      (output-stream/write in-output-stream (byte-array (range 128)))
       (output-stream/close in-output-stream)
       (let [buff (byte-array 256)]
         (is (= 128 (.read out buff 0 256)))
@@ -143,8 +142,7 @@
           (bbssh/exec
            session "cat"
            {:in :stream})]
-      (doseq [n (range 128)]
-        (.write in n))
+      (.write in (byte-array (range 128)))
       (.close in)
       (let [buff (byte-array 256)]
         (is (= 128 (.read out buff 0 256)))
@@ -248,8 +246,7 @@
           (-> (bbssh/exec session "echo foo bar baz")
               (process/process "bash -c 'cat 1>&2'" {:err :string})
               deref)]
-      (is (= "foo bar baz\n" (:err process)))
-      ))
+      (is (= "foo bar baz\n" (:err process)))))
 
   (docker/cleanup))
 

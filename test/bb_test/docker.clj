@@ -57,3 +57,8 @@
             contents
             remote-dest)])
   )
+
+(defn md5 [path]
+  (-> (exec (format "md5sum '%s'" path))
+      (string/split #" ")
+      first))

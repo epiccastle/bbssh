@@ -1,24 +1,24 @@
 (ns bbssh.impl.pod
   (:refer-clojure :exclude [read-string read])
   (:require [bbssh.impl.lookup :as lookup]
-            [pod.epiccastle.bbssh.impl.core]
-            [pod.epiccastle.bbssh.impl.cleaner]
-            [pod.epiccastle.bbssh.impl.agent]
-            [pod.epiccastle.bbssh.impl.session]
-            [pod.epiccastle.bbssh.impl.channel-exec]
-            [pod.epiccastle.bbssh.impl.input-stream]
-            [pod.epiccastle.bbssh.impl.output-stream]
-            [pod.epiccastle.bbssh.impl.byte-array-input-stream]
-            [pod.epiccastle.bbssh.impl.byte-array-output-stream]
-            [pod.epiccastle.bbssh.impl.user-info]
-            [pod.epiccastle.bbssh.impl.identity]
-            [pod.epiccastle.bbssh.impl.identity-repository]
-            [pod.epiccastle.bbssh.impl.callbacks]
-            [pod.epiccastle.bbssh.impl.key-pair]
-            [pod.epiccastle.bbssh.impl.host-key]
-            [pod.epiccastle.bbssh.impl.known-hosts]
-            [pod.epiccastle.bbssh.impl.host-key-repository]
-            [pod.epiccastle.bbssh.impl.terminal]
+            [pod.epiccastle.bbssh.pod.core]
+            [pod.epiccastle.bbssh.pod.cleaner]
+            [pod.epiccastle.bbssh.pod.agent]
+            [pod.epiccastle.bbssh.pod.session]
+            [pod.epiccastle.bbssh.pod.channel-exec]
+            [pod.epiccastle.bbssh.pod.input-stream]
+            [pod.epiccastle.bbssh.pod.output-stream]
+            [pod.epiccastle.bbssh.pod.byte-array-input-stream]
+            [pod.epiccastle.bbssh.pod.byte-array-output-stream]
+            [pod.epiccastle.bbssh.pod.user-info]
+            [pod.epiccastle.bbssh.pod.identity]
+            [pod.epiccastle.bbssh.pod.identity-repository]
+            [pod.epiccastle.bbssh.pod.callbacks]
+            [pod.epiccastle.bbssh.pod.key-pair]
+            [pod.epiccastle.bbssh.pod.host-key]
+            [pod.epiccastle.bbssh.pod.known-hosts]
+            [pod.epiccastle.bbssh.pod.host-key-repository]
+            [pod.epiccastle.bbssh.pod.terminal]
             [bencode.core :refer [read-bencode write-bencode]]
             [clojure.edn :as edn]
             [clojure.string :as string]
@@ -132,24 +132,24 @@
                          "vars" []}]
                        ;; pod side namespace
                        (ns-public-describes
-                        [pod.epiccastle.bbssh.impl.terminal
-                         pod.epiccastle.bbssh.impl.cleaner
-                         pod.epiccastle.bbssh.impl.agent
-                         pod.epiccastle.bbssh.impl.session
-                         pod.epiccastle.bbssh.impl.channel-exec
-                         pod.epiccastle.bbssh.impl.input-stream
-                         pod.epiccastle.bbssh.impl.output-stream
-                         pod.epiccastle.bbssh.impl.byte-array-input-stream
-                         pod.epiccastle.bbssh.impl.byte-array-output-stream
-                         pod.epiccastle.bbssh.impl.user-info
-                         pod.epiccastle.bbssh.impl.identity
-                         pod.epiccastle.bbssh.impl.identity-repository
-                         pod.epiccastle.bbssh.impl.callbacks
-                         pod.epiccastle.bbssh.impl.key-pair
-                         pod.epiccastle.bbssh.impl.host-key
-                         pod.epiccastle.bbssh.impl.known-hosts
-                         pod.epiccastle.bbssh.impl.host-key-repository
-                         pod.epiccastle.bbssh.impl.core
+                        [pod.epiccastle.bbssh.pod.terminal
+                         pod.epiccastle.bbssh.pod.cleaner
+                         pod.epiccastle.bbssh.pod.agent
+                         pod.epiccastle.bbssh.pod.session
+                         pod.epiccastle.bbssh.pod.channel-exec
+                         pod.epiccastle.bbssh.pod.input-stream
+                         pod.epiccastle.bbssh.pod.output-stream
+                         pod.epiccastle.bbssh.pod.byte-array-input-stream
+                         pod.epiccastle.bbssh.pod.byte-array-output-stream
+                         pod.epiccastle.bbssh.pod.user-info
+                         pod.epiccastle.bbssh.pod.identity
+                         pod.epiccastle.bbssh.pod.identity-repository
+                         pod.epiccastle.bbssh.pod.callbacks
+                         pod.epiccastle.bbssh.pod.key-pair
+                         pod.epiccastle.bbssh.pod.host-key
+                         pod.epiccastle.bbssh.pod.known-hosts
+                         pod.epiccastle.bbssh.pod.host-key-repository
+                         pod.epiccastle.bbssh.pod.core
                          ])
 
                        ;; bb side code

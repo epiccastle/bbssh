@@ -48,6 +48,6 @@
   "
   [callbacks]
   (utils/new-invoker
-   {:call-sym 'pod.epiccastle.bbssh.impl.user-info/new
+   {:call-sym 'pod.epiccastle.bbssh.pod.user-info/new
     :args []
     :callbacks callbacks}))

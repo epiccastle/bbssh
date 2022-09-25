@@ -1,5 +1,5 @@
 (ns pod.epiccastle.bbssh.channel-exec
-  (:require [pod.epiccastle.bbssh.impl.channel-exec :as channel-exec]
+  (:require [pod.epiccastle.bbssh.pod.channel-exec :as channel-exec]
             [pod.epiccastle.bbssh.cleaner :as cleaner]
             [pod.epiccastle.bbssh.utils :as utils]))
 

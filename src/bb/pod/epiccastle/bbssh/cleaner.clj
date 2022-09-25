@@ -18,7 +18,7 @@
   Before sending this keyword as a reference to the pod `invoke`, use
   `split-key` to translate it to the reference vector used by the pod.
   "
-  (:require [pod.epiccastle.bbssh.impl.cleaner :as cleaner])
+  (:require [pod.epiccastle.bbssh.pod.cleaner :as cleaner])
   (:import [java.lang.ref Cleaner]))
 
 (def

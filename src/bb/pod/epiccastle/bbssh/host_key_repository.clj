@@ -1,6 +1,6 @@
 (ns pod.epiccastle.bbssh.host-key-repository
   (:refer-clojure :exclude [remove])
-  (:require [pod.epiccastle.bbssh.impl.host-key-repository :as host-key-repository]
+  (:require [pod.epiccastle.bbssh.pod.host-key-repository :as host-key-repository]
             [pod.epiccastle.bbssh.cleaner :as cleaner]
             [pod.epiccastle.bbssh.utils :as utils]))
 
@@ -89,7 +89,7 @@
   "
   [callbacks]
   (utils/new-invoker
-   {:call-sym 'pod.epiccastle.bbssh.impl.host-key-repository/new
+   {:call-sym 'pod.epiccastle.bbssh.pod.host-key-repository/new
     :args []
     :callbacks callbacks
     :preprocess-args-fn preprocess-args

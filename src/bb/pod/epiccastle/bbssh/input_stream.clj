@@ -1,6 +1,6 @@
 (ns pod.epiccastle.bbssh.input-stream
   (:refer-clojure :exclude [read])
-  (:require [pod.epiccastle.bbssh.impl.input-stream :as input-stream]
+  (:require [pod.epiccastle.bbssh.pod.input-stream :as input-stream]
             [pod.epiccastle.bbssh.cleaner :as cleaner]
             [pod.epiccastle.bbssh.utils :as utils]))
 
@@ -100,7 +100,7 @@
 (defn new-pod-proxy
   [callbacks]
   (utils/new-invoker
-   {:call-sym 'pod.epiccastle.bbssh.impl.input-stream/new-pod-proxy
+   {:call-sym 'pod.epiccastle.bbssh.pod.input-stream/new-pod-proxy
     :args []
     :callbacks callbacks
     :postprocess-returns-fn postprocess-returns

@@ -1,5 +1,5 @@
 (ns pod.epiccastle.bbssh.agent
-  (:require [pod.epiccastle.bbssh.impl.agent :as agent]
+  (:require [pod.epiccastle.bbssh.pod.agent :as agent]
             [pod.epiccastle.bbssh.utils :as utils]
             [pod.epiccastle.bbssh.cleaner :as cleaner]))
 

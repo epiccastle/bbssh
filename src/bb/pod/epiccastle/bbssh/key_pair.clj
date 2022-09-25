@@ -4,7 +4,7 @@
   a function for signing arbitrary data with the private key.
   "
   (:refer-clojure :exclude [load])
-  (:require [pod.epiccastle.bbssh.impl.key-pair :as key-pair]
+  (:require [pod.epiccastle.bbssh.pod.key-pair :as key-pair]
             [pod.epiccastle.bbssh.cleaner :as cleaner]
             [pod.epiccastle.bbssh.utils :as utils]))
 

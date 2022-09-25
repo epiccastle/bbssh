@@ -1,5 +1,5 @@
 (ns pod.epiccastle.bbssh.terminal
-  (:require [pod.epiccastle.bbssh.impl.terminal :as terminal]))
+  (:require [pod.epiccastle.bbssh.pod.terminal :as terminal]))
 
 (defn is-terminal?
   "Returns true is stdout is connected to a terminal"

@@ -74,7 +74,7 @@
   "
   [callbacks]
   (utils/new-invoker
-   {:call-sym 'pod.epiccastle.bbssh.impl.identity/new
+   {:call-sym 'pod.epiccastle.bbssh.pod.identity/new
     :args []
     :callbacks callbacks
     :preprocess-args-fn preprocess-args

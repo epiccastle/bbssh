@@ -1,5 +1,5 @@
 (ns pod.epiccastle.bbssh.host-key
-  (:require [pod.epiccastle.bbssh.impl.host-key :as host-key]
+  (:require [pod.epiccastle.bbssh.pod.host-key :as host-key]
             [pod.epiccastle.bbssh.cleaner :as cleaner]
             [pod.epiccastle.bbssh.utils :as utils])
  )

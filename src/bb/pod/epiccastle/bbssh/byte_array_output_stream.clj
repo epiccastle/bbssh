@@ -1,6 +1,6 @@
 (ns pod.epiccastle.bbssh.byte-array-output-stream
   (:refer-clojure :exclude [flush])
-  (:require [pod.epiccastle.bbssh.impl.byte-array-output-stream :as byte-array-output-stream]
+  (:require [pod.epiccastle.bbssh.pod.byte-array-output-stream :as byte-array-output-stream]
             [pod.epiccastle.bbssh.cleaner :as cleaner]
             [pod.epiccastle.bbssh.utils :as utils]))
 

@@ -14,16 +14,24 @@
 ;;
 ;; send and receive commands
 ;;
+(defn error-type [code]
+  (get {1 ::scp-error
+        2 ::scp-fatal-error
+        -1 ::scp-disconnect}
+       code
+       ::scp-unknown-error))
+
 (defn- recv-ack [{:keys [out]}]
   (let [code (.read out)]
     (when-not (zero? code)
       ;; read scp error message
       (let [msg (loop [c (.read out)
-                       s ""]
+                       out ""]
                   (if (#{10 13 -1 0} c)
-                    s
-                    (recur (.read out) (str s (char c)))))]
-        (throw (ex-info "scp error" {:type ::scp-error
+                    out
+                    (recur (.read out) (str out (char c)))))
+            type (error-type code)]
+        (throw (ex-info "scp error" {:type type
                                      :code code
                                      :msg msg}))))))
 (defn- send-ack
@@ -406,6 +414,13 @@
          times nil
          depth 0
          progress-context progress-context]
+    (let [code (int (first command))]
+      (when (<= code 2)
+        (throw (ex-info
+                (subs command 1)
+                {:type (error-type code)
+                 :code code
+                 :msg (subs command 1)}))))
     (send-ack process)
     (case (first command)
       \C ;; single file copy

@@ -101,14 +101,24 @@ edfcbda2f87663507ecf63eeb885b956  files/.hidden
     (is
      (=
       (:out (process/sh "bash -c 'cd test && find files/ -exec file {} \\;'"))
-      (:out (process/sh "bash -c 'cd .tmp && find files/ -exec file {} \\;'"))))
-
-
-
-
-
-
-    #_(println (docker/exec "ls -alF /root"))
-    )
+      (:out (process/sh "bash -c 'cd .tmp && find files/ -exec file {} \\;'")))))
 
   (docker/cleanup))
+
+(deftest test-scp-no-recurse-error
+  (docker/cleanup)
+  (docker/build {:root-password "root-access-please"})
+  (docker/start {:ssh-port 9876})
+
+  (let [session (bbssh/ssh "localhost" {:port 9876
+                                        :username "root"
+                                        :password "root-access-please"
+                                        :strict-host-key-checking false})]
+    (process/sh "rm -rf .tmp")
+    (process/sh "mkdir .tmp")
+    (docker/put-dir "test" "files" "/root/")
+    (is (thrown-with-msg? clojure.lang.ExceptionInfo #"not a regular file"
+                 (scp/scp-from "/root/files" ".tmp"
+                               {:session session})))
+    )
+  )

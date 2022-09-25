@@ -2,7 +2,7 @@
   (:require [pod.epiccastle.bbssh.user-info :as user-info]
             [pod.epiccastle.bbssh.agent :as agent]
             [pod.epiccastle.bbssh.session :as session]
-            [pod.epiccastle.bbssh.impl.cleaner :as cleaner]
+            [pod.epiccastle.bbssh.pod.cleaner :as cleaner]
             [bb-test.docker :as docker]
             [clojure.test :refer [is deftest]]
             [clojure.string :as string])

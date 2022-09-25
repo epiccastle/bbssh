@@ -1,4 +1,4 @@
-(ns pod.epiccastle.bbssh.impl.identity-repository
+(ns pod.epiccastle.bbssh.pod.identity-repository
   (:require [bbssh.impl.references :as references]
             [bbssh.impl.utils :as utils]
             [pod.epiccastle.bbssh.impl.callbacks :as callbacks]

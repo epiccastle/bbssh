@@ -1,4 +1,4 @@
-(ns pod.epiccastle.bbssh.impl.session
+(ns pod.epiccastle.bbssh.pod.session
   (:require [bbssh.impl.references :as references]
             [bbssh.impl.utils :as utils])
   (:import [com.jcraft.jsch JSch Session

@@ -1,4 +1,4 @@
-(ns pod.epiccastle.bbssh.impl.channel-exec
+(ns pod.epiccastle.bbssh.pod.channel-exec
   (:require [bbssh.impl.references :as references]
             [bbssh.impl.utils :as utils])
   (:import [com.jcraft.jsch JSch Session UserInfo ChannelExec Channel ChannelSession]

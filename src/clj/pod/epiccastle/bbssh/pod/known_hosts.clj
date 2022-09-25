@@ -1,4 +1,4 @@
-(ns pod.epiccastle.bbssh.impl.known-hosts
+(ns pod.epiccastle.bbssh.pod.known-hosts
   (:require [bbssh.impl.references :as references]
             [bbssh.impl.utils :as utils])
   (:import [com.jcraft.jsch KnownHosts JSch]))

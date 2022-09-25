@@ -1,1 +1,1 @@
-(ns pod.epiccastle.bbssh.impl.core)
+(ns pod.epiccastle.bbssh.pod.core)

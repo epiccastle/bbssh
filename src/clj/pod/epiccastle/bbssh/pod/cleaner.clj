@@ -1,4 +1,4 @@
-(ns pod.epiccastle.bbssh.impl.cleaner
+(ns pod.epiccastle.bbssh.pod.cleaner
   (:require [bbssh.impl.references :as references]
             [clojure.set :as set]))
 

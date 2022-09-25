@@ -1,4 +1,4 @@
-(ns pod.epiccastle.bbssh.impl.byte-array-input-stream
+(ns pod.epiccastle.bbssh.pod.byte-array-input-stream
   (:refer-clojure :exclude [read])
   (:require [bbssh.impl.references :as references]
             [pod.epiccastle.bbssh.impl.callbacks :as callbacks]

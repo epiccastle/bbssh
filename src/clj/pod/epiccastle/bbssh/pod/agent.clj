@@ -1,4 +1,4 @@
-(ns pod.epiccastle.bbssh.impl.agent
+(ns pod.epiccastle.bbssh.pod.agent
   (:require [bbssh.impl.references :as references]
             [bbssh.impl.utils :as utils]
             [clojure.java.io :as io])

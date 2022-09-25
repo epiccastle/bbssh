@@ -13,7 +13,7 @@
             [clojure.java.io :as io]
             [clj-commons.digest :as digest]))
 
-(deftest exec-scp
+(deftest test-scp-to
   (docker/cleanup)
   (docker/build {:root-password "root-access-please"})
   (docker/start {:ssh-port 9876})
@@ -65,8 +65,50 @@ d8e8fca2dc0f896fd7cb4cb0031ba249  files/dir2/test.txt
 67287b8ef38d90cfeef66729c8d32e39  files/dir2/random
 d41d8cd98f00b204e9800998ecf8427e  files/dir1/zero
 edfcbda2f87663507ecf63eeb885b956  files/.hidden
-"
-))
+")))
+
+  (docker/cleanup))
+
+(deftest test-scp-from
+  (docker/cleanup)
+  (docker/build {:root-password "root-access-please"})
+  (docker/start {:ssh-port 9876})
+
+  (let [session (bbssh/ssh "localhost" {:port 9876
+                                        :username "root"
+                                        :password "root-access-please"
+                                        :strict-host-key-checking false})]
+    (docker/cp-to "test/files/dir2/random" "/root/random")
+
+    (scp/scp-from "random" "/tmp/random" {:session session})
+
+    (is (= (digest/md5 (io/as-file "/tmp/random"))
+           (docker/md5 "/root/random")))
+
+
+    (docker/put-dir "test" "files" "/root/")
+    (process/sh "rm -rf .tmp")
+    (process/sh "mkdir .tmp")
+    (scp/scp-from "/root/files" ".tmp"
+                  {:session session
+                   :recurse? true
+                   })
+    (is
+     (=
+      (:out (process/sh "bash -c 'cd test && find files/ -type f -exec md5sum {} \\;'"))
+      (:out (process/sh "bash -c 'cd .tmp && find files/ -type f -exec md5sum {} \\;'"))))
+
+    (is
+     (=
+      (:out (process/sh "bash -c 'cd test && find files/ -exec file {} \\;'"))
+      (:out (process/sh "bash -c 'cd .tmp && find files/ -exec file {} \\;'"))))
+
+
+
+
+
+
+    #_(println (docker/exec "ls -alF /root"))
     )
 
   (docker/cleanup))

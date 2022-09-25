@@ -6,7 +6,7 @@
             HostKeyRepository])
   )
 
-;; pod.epiccastle.bbssh.impl.* are invoked on pod side.
+;; pod.epiccastle.bbssh.pod.* are invoked on pod side.
 
 (set! *warn-on-reflection* true)
 

@@ -2,11 +2,11 @@
   (:refer-clojure :exclude [remove])
   (:require [bbssh.impl.references :as references]
             [bbssh.impl.utils :as utils]
-            [pod.epiccastle.bbssh.impl.callbacks :as callbacks]
-            [pod.epiccastle.bbssh.impl.cleaner :as cleaner])
+            [pod.epiccastle.bbssh.pod.callbacks :as callbacks]
+            [pod.epiccastle.bbssh.pod.cleaner :as cleaner])
   (:import [com.jcraft.jsch HostKeyRepository HostKey UserInfo]))
 
-;; pod.epiccastle.bbssh.impl.* are invoked on pod side.
+;; pod.epiccastle.bbssh.pod.* are invoked on pod side.
 
 (set! *warn-on-reflection* true)
 

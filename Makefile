@@ -80,5 +80,5 @@ codox:
 	-rm -rf codox-processed
 	mkdir codox-processed
 	cp -a src/bb codox-processed
-	sed -e "s/babashka.pods/'babashka.pods/" codox-processed/bb/pod/epiccastle/bbssh/utils.clj -i
+	sed -e "s/babashka.pods/'babashka.pods/" codox-processed/bb/pod/epiccastle/bbssh/impl/utils.clj -i
 	clj -X:codox

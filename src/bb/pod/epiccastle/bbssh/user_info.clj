@@ -1,5 +1,5 @@
 (ns pod.epiccastle.bbssh.user-info
-  (:require [pod.epiccastle.bbssh.utils :as utils]
+  (:require [pod.epiccastle.bbssh.impl.utils :as utils]
             [pod.epiccastle.bbssh.terminal :as terminal]))
 
 (defn new

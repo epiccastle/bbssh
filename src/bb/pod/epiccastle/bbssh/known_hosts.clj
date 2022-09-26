@@ -1,7 +1,7 @@
 (ns pod.epiccastle.bbssh.known-hosts
   (:require [pod.epiccastle.bbssh.pod.known-hosts :as known-hosts]
-            [pod.epiccastle.bbssh.cleaner :as cleaner]
-            [pod.epiccastle.bbssh.utils :as utils])
+            [pod.epiccastle.bbssh.impl.cleaner :as cleaner]
+            [pod.epiccastle.bbssh.impl.utils :as utils])
  )
 
 ;; (defn new

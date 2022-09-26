@@ -1,5 +1,5 @@
 (ns pod.epiccastle.bbssh.identity
-  (:require [pod.epiccastle.bbssh.utils :as utils]))
+  (:require [pod.epiccastle.bbssh.impl.utils :as utils]))
 
 (defn- preprocess-args [method args]
   (case method

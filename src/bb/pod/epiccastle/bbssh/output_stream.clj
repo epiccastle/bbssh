@@ -1,8 +1,8 @@
 (ns pod.epiccastle.bbssh.output-stream
   (:refer-clojure :exclude [flush])
   (:require [pod.epiccastle.bbssh.pod.output-stream :as output-stream]
-            [pod.epiccastle.bbssh.cleaner :as cleaner]
-            [pod.epiccastle.bbssh.utils :as utils]))
+            [pod.epiccastle.bbssh.impl.cleaner :as cleaner]
+            [pod.epiccastle.bbssh.impl.utils :as utils]))
 
 (defn new
   "Create a new PipedOutputStream.

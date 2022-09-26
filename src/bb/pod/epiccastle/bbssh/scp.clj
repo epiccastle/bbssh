@@ -1,6 +1,6 @@
 (ns pod.epiccastle.bbssh.scp
   "Implementation of the scp protocol"
-  (:require [pod.epiccastle.bbssh.utils :as utils]
+  (:require [pod.epiccastle.bbssh.impl.utils :as utils]
             [pod.epiccastle.bbssh.core :as bbssh]
             [clojure.string :as string]
             [clojure.java.io :as io]

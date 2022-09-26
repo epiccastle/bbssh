@@ -1,8 +1,8 @@
 (ns pod.epiccastle.bbssh.byte-array-input-stream
   (:refer-clojure :exclude [flush])
   (:require [pod.epiccastle.bbssh.pod.byte-array-input-stream :as byte-array-input-stream]
-            [pod.epiccastle.bbssh.cleaner :as cleaner]
-            [pod.epiccastle.bbssh.utils :as utils]))
+            [pod.epiccastle.bbssh.impl.cleaner :as cleaner]
+            [pod.epiccastle.bbssh.impl.utils :as utils]))
 
 (defn new
   [string-or-bytes & [encoding]]

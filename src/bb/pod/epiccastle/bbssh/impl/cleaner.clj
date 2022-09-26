@@ -1,4 +1,4 @@
-(ns pod.epiccastle.bbssh.cleaner
+(ns pod.epiccastle.bbssh.impl.cleaner
   "Handle garbage collection of the pod instances.
 
   > __Note:__ This namespace is an implementation detail and is not

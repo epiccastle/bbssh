@@ -1,7 +1,7 @@
 (ns pod.epiccastle.bbssh.agent
   (:require [pod.epiccastle.bbssh.pod.agent :as agent]
-            [pod.epiccastle.bbssh.utils :as utils]
-            [pod.epiccastle.bbssh.cleaner :as cleaner]))
+            [pod.epiccastle.bbssh.impl.utils :as utils]
+            [pod.epiccastle.bbssh.impl.cleaner :as cleaner]))
 
 (defn new
   "Make a new JSch agent. A JSch agent is not an \"ssh agent\".

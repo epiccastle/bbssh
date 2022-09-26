@@ -1,8 +1,8 @@
 (ns pod.epiccastle.bbssh.input-stream
   (:refer-clojure :exclude [read])
   (:require [pod.epiccastle.bbssh.pod.input-stream :as input-stream]
-            [pod.epiccastle.bbssh.cleaner :as cleaner]
-            [pod.epiccastle.bbssh.utils :as utils]))
+            [pod.epiccastle.bbssh.impl.cleaner :as cleaner]
+            [pod.epiccastle.bbssh.impl.utils :as utils]))
 
 (defn new
   "Create a new PipedInputStream on the pod heap. Return

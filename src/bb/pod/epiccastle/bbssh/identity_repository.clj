@@ -1,6 +1,6 @@
 (ns pod.epiccastle.bbssh.identity-repository
-  (:require [pod.epiccastle.bbssh.cleaner :as cleaner]
-            [pod.epiccastle.bbssh.utils :as utils]))
+  (:require [pod.epiccastle.bbssh.impl.cleaner :as cleaner]
+            [pod.epiccastle.bbssh.impl.utils :as utils]))
 
 (defn- preprocess-args [method args]
   (case method

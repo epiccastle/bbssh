@@ -1,6 +1,6 @@
-(ns pod.epiccastle.bbssh.utils
+(ns pod.epiccastle.bbssh.impl.utils
   (:require [pod.epiccastle.bbssh.pod.callbacks :as callbacks]
-            [pod.epiccastle.bbssh.cleaner :as cleaner]
+            [pod.epiccastle.bbssh.impl.cleaner :as cleaner]
             [babashka.fs :as fs]
             [clojure.string :as string]
             )

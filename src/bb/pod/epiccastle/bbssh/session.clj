@@ -1,6 +1,6 @@
 (ns pod.epiccastle.bbssh.session
   (:require [pod.epiccastle.bbssh.pod.session :as session]
-            [pod.epiccastle.bbssh.cleaner :as cleaner]))
+            [pod.epiccastle.bbssh.impl.cleaner :as cleaner]))
 
 (defn set-password
   "Set the password the session will use to authenticate to

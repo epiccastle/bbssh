@@ -2,7 +2,7 @@
   "Basic connection, execution, shell and copying functionality."
   (:require [pod.epiccastle.bbssh.agent :as agent]
             [pod.epiccastle.bbssh.session :as session]
-            [pod.epiccastle.bbssh.utils :as utils]
+            [pod.epiccastle.bbssh.impl.utils :as utils]
             [pod.epiccastle.bbssh.user-info :as user-info]
             [pod.epiccastle.bbssh.host-key-repository :as host-key-repository]
             [pod.epiccastle.bbssh.terminal :as terminal]

@@ -5,8 +5,8 @@
   "
   (:refer-clojure :exclude [load])
   (:require [pod.epiccastle.bbssh.pod.key-pair :as key-pair]
-            [pod.epiccastle.bbssh.cleaner :as cleaner]
-            [pod.epiccastle.bbssh.utils :as utils]))
+            [pod.epiccastle.bbssh.impl.cleaner :as cleaner]
+            [pod.epiccastle.bbssh.impl.utils :as utils]))
 
 (defn generate
   "Generate a public/private SSH key pair.

@@ -1,8 +1,8 @@
 (ns pod.epiccastle.bbssh.host-key-repository
   (:refer-clojure :exclude [remove])
   (:require [pod.epiccastle.bbssh.pod.host-key-repository :as host-key-repository]
-            [pod.epiccastle.bbssh.cleaner :as cleaner]
-            [pod.epiccastle.bbssh.utils :as utils]))
+            [pod.epiccastle.bbssh.impl.cleaner :as cleaner]
+            [pod.epiccastle.bbssh.impl.utils :as utils]))
 
 (defn- preprocess-args [method args]
   (case method

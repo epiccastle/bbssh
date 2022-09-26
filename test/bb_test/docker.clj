@@ -42,12 +42,12 @@
 
 (defn cp-to [local-src remote-dest]
   (run
-    (format "docker copy \"%s\" \"bbssh-test:%s\"" local-src remote-dest)
+    (format "docker cp \"%s\" \"bbssh-test:%s\"" local-src remote-dest)
     "docker cp failed"))
 
 (defn cp-from [remote-src local-dest]
   (run
-    (format "docker copy \"bbssh-test:%s\" \"%s\"" remote-src local-dest)
+    (format "docker cp \"bbssh-test:%s\" \"%s\"" remote-src local-dest)
     "docker cp failed"))
 
 (defn put-file [contents remote-dest]
@@ -55,8 +55,18 @@
    ["docker" "exec" "bbssh-test" "ash" "-c"
     (format "echo '%s' > '%s'"
             contents
-            remote-dest)])
-  )
+            remote-dest)]))
+
+(defn put-dir
+  "transfer a complete local directory to the docker container"
+  [src-dir src-path dest-path]
+  (process/sh "rm /tmp/bbssh-tarball.tgz")
+  (process/sh (format "tar -cvz -C '%s' -f /tmp/bbssh-tarball.tgz '%s'" src-dir src-path))
+  (exec "rm -f /tmp/bbssh-tarball.tgz")
+  (cp-to "/tmp/bbssh-tarball.tgz" "/tmp/bbssh-tarball.tgz")
+  (exec
+   (format "tar -xv -f /tmp/bbssh-tarball.tgz -C '%s'"
+           dest-path)))
 
 (defn md5 [path]
   (-> (exec (format "md5sum '%s'" path))

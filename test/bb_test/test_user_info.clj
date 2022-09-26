@@ -3,8 +3,7 @@
             [pod.epiccastle.bbssh.agent :as agent]
             [pod.epiccastle.bbssh.session :as session]
             [bb-test.docker :as docker]
-            [clojure.test :refer [is deftest]]
-            [clojure.string :as string]))
+            [clojure.test :refer [is deftest]]))
 
 (deftest user-info
   (docker/cleanup)

@@ -1,17 +1,9 @@
 (ns bb-test.test-key-pair
   (:require [pod.epiccastle.bbssh.agent :as agent]
-            [pod.epiccastle.bbssh.session :as session]
-            [pod.epiccastle.bbssh.channel-exec :as channel-exec]
-            [pod.epiccastle.bbssh.input-stream :as input-stream]
-            [pod.epiccastle.bbssh.output-stream :as output-stream]
             [pod.epiccastle.bbssh.key-pair :as key-pair]
-            [pod.epiccastle.bbssh.identity :as identity]
-            [pod.epiccastle.bbssh.identity-repository :as identity-repository]
-            [pod.epiccastle.bbssh.cleaner :as cleaner]
             [bb-test.docker :as docker]
             [bb-test.keys :as keys]
-            [clojure.test :refer [is deftest]]
-            [clojure.string :as string]))
+            [clojure.test :refer [is deftest]]))
 
 (deftest identity-repository
   (docker/cleanup)

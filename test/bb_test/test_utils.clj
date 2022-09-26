@@ -1,13 +1,6 @@
 (ns bb-test.test-utils
-  (:require [pod.epiccastle.bbssh.core :as bbssh]
-            [pod.epiccastle.bbssh.utils :as utils]
-            [pod.epiccastle.bbssh.agent :as agent]
-            [pod.epiccastle.bbssh.session :as session]
-            [pod.epiccastle.bbssh.channel-exec :as channel-exec]
-            [pod.epiccastle.bbssh.input-stream :as input-stream]
-            [pod.epiccastle.bbssh.output-stream :as output-stream]
+  (:require [pod.epiccastle.bbssh.impl.utils :as utils]
             [babashka.process :as process]
-            [bb-test.docker :as docker]
             [clojure.test :refer [is deftest]]
             [clojure.string :as string]
             [clojure.java.io :as io])

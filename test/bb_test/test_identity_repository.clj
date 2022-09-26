@@ -7,8 +7,6 @@
             [pod.epiccastle.bbssh.key-pair :as key-pair]
             [pod.epiccastle.bbssh.identity :as identity]
             [pod.epiccastle.bbssh.identity-repository :as identity-repository]
-            [pod.epiccastle.bbssh.cleaner :as cleaner]
-            [pod.epiccastle.bbssh.utils :as utils]
             [bb-test.docker :as docker]
             [bb-test.keys :as keys]
             [clojure.test :refer [is deftest]]

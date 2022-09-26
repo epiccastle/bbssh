@@ -4,8 +4,7 @@
             [pod.epiccastle.bbssh.session :as session]
             [pod.epiccastle.bbssh.pod.cleaner :as cleaner]
             [bb-test.docker :as docker]
-            [clojure.test :refer [is deftest]]
-            [clojure.string :as string])
+            [clojure.test :refer [is deftest]])
   (:import [java.lang.ref WeakReference]))
 
 (defn connect [{:keys [username hostname port password]}]

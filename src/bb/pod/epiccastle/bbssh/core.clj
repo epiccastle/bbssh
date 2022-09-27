@@ -165,37 +165,6 @@
       (fn [s]
         (println s))})))
 
-(defn- make-default-host-key-repository []
-  (host-key-repository/new
-   {:check (fn [host key]
-             (prn :check host key)
-             :changed)
-
-    :add (fn [host-key user-info]
-           (prn :add host-key user-info)
-           nil)
-
-    :remove (fn
-              ([host type]
-               (prn :remove1 host type)
-               nil)
-              ([host type key]
-               (prn :remove2 host type key)
-               nil))
-
-    :get-known-hosts-repository-id
-    (fn []
-      (prn :get-known-hosts-repository-id)
-      "my-khr")
-
-    :get-host-key (fn
-                    ([]
-                     (prn :get-host-key)
-                     [])
-                    ([host type]
-                     (prn :get-host-key host type)
-                     []))}))
-
 (defn ssh
   "Start an SSH session. If connection is successful, returns the SSH
   session reference. If connection is unsuccessful, raises an

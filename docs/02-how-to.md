@@ -28,7 +28,54 @@ You can hard code the passphrase in the options hash.
     {:username "remoteusername"
      :port 22
      :identity (str (System/getenv "HOME") "/.ssh/id_rsa")
-     :passphrase "the-key-passphrase"})]
+     :passphrase "the-key-passphrase"})
+```
+
+## Turn off strict host key checking
+
+```clojure
+(bbssh/ssh "remotehost"
+    {:strict-host-key-checking false})
+```
+
+## Accept a key and add it to known hosts without complain only on first connection
+
+```clojure
+(bbssh/ssh "remotehost"
+    {:accept-host-key :new})
+```
+
+## Accept a key if it matches a fingerprint
+
+```clojure
+(bbssh/ssh "remotehost"
+    {:accept-host-key "SHA256:/tCQlmGVCXhwqJFq3h5aiEqD1UlUD9Eg5bDwd5yF52k"})
+```
+## Allow connection to a legacy server that only supports RSA/SHA1 signatures
+
+```clojure
+(bbssh/ssh "remotehost"
+    {:connection-options
+        {:server-host-key #(str % ",ssh-rsa")
+         :client-pubkey #(str % ",ssh-rsa")}})
+```
+
+## Connect to a dropbear ssh server
+
+A very old server:
+
+```clojure
+(bbssh/ssh "remotehost"
+    {:connection-options
+        {:kex "diffie-hellman-group1-sha1"})]
+```
+
+Or perhaps:
+
+```clojure
+(bbssh/ssh "remotehost"
+    {:connection-options
+        {:cipher "aes128-cbc"})]
 ```
 
 ## Execute a remote ssh command using authentication forwarding

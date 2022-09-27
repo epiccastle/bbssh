@@ -27,10 +27,10 @@ You can hard code the passphrase in the options hash.
      :passphrase "the-key-passphrase"})]
 ```
 
-## Execute a command using authentication forwarding
+## Execute a remote ssh command using authentication forwarding
 
 ```clojure
-(-> (bbssh/ssh "localhost")
+(-> (bbssh/ssh "remotehost")
     (bbssh/exec "ssh -o StrictHostKeyChecking=no git@github.com"
                 {:err :string
                  :agent-forwarding true})

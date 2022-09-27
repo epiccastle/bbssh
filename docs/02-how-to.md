@@ -1,24 +1,28 @@
 # How To
 
-## Connect to a machine and execute a command
-
-```
-(
-```
+## Connect to a machine with a hard coded password
 
 You can hard code a password in the options hash.
 
 > **Note:** This is not recommended. You may accidentally commit your code to a repository with the password or inadvertantly expose it.
 
 ```
-(let [session (bbssh/ssh "remotehost"
-                         {:username "remoteusername"
-                          :port 22
-                          :password "thepassword"})]
-  ;; use session
-  )
+(pod.epiccastle.bbssh.core/ssh "remotehost"
+    {:username "remoteusername"
+     :port 22
+     :password "the-password"})]
 ```
 
-If the key is encypted and no passphrase is available, the user will be prompted for one on the terminal.
+## Connect to a machine with an encrypted private key and a hard coded passphrase
 
-You may hard code
+You can hard code the passphrase in the options hash.
+
+> **Note:** This is not recommended. You may accidentally commit your code to a repository with the passphrase or inadvertantly expose it.
+
+```
+(pod.epiccastle.bbssh.core/ssh "remotehost"
+    {:username "remoteusername"
+     :port 22
+     :identity (str (System/getenv "HOME") "/.ssh/id_rsa")
+     :passphrase "the-key-passphrase"})]
+```

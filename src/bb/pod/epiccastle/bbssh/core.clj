@@ -287,12 +287,12 @@
   (let [username (or username (System/getProperty "user.name"))
         agent (or agent (agent/new))
         session (agent/get-session agent username hostname port)]
-    (if (not= false known-hosts)
-        (agent/set-known-hosts
-         agent
-         (or known-hosts
-             (str (System/getProperty "user.home")
-                  "/.ssh/known_hosts"))))
+    (when (not= false known-hosts)
+      (agent/set-known-hosts
+       agent
+       (or known-hosts
+           (str (System/getProperty "user.home")
+                "/.ssh/known_hosts"))))
     (when password (session/set-password session password))
     (when identity
       (if passphrase

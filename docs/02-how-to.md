@@ -4,6 +4,19 @@
 (require '[pod.epiccastle.bbssh.core :as bbssh])
 ```
 
+## Debug the ssh connection process
+
+Register an error reporting function with `pod.epiccastle.bbssh.agent/set-debug-fn` before initiating the connection
+
+```clojure
+(agent/set-debug-fn
+ (fn [_level message]
+   (binding [*out* *err*]
+     (println message))))
+```
+
+Then when you connect you should see verbose error messages appear.
+
 ## Connect to a machine with a hard coded password
 
 You can hard code a password in the options hash.

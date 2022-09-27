@@ -175,6 +175,7 @@
                          pod.epiccastle.bbssh.host-key
                          pod.epiccastle.bbssh.known-hosts
                          pod.epiccastle.bbssh.host-key-repository
+                         pod.epiccastle.bbssh.ssh-agent
                          pod.epiccastle.bbssh.core
                          pod.epiccastle.bbssh.scp
                          ]))

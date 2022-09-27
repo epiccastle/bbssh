@@ -36,7 +36,7 @@ After installing try writing the following into `test_bbssh.clj`
       :out))
 ```
 
-Then execute the file with babashka. You will be prompted for your ssh password. Enter it and press enter:
+Then execute the file with babashka. You will be prompted for your ssh password. Enter it and press return:
 
 ```bash-shell
 $ bb test_bbssh.clj

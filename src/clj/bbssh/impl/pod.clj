@@ -19,6 +19,7 @@
             [pod.epiccastle.bbssh.pod.known-hosts]
             [pod.epiccastle.bbssh.pod.host-key-repository]
             [pod.epiccastle.bbssh.pod.terminal]
+            [pod.epiccastle.bbssh.pod.socket]
             [bencode.core :refer [read-bencode write-bencode]]
             [clojure.edn :as edn]
             [clojure.string :as string]
@@ -150,6 +151,7 @@
                          pod.epiccastle.bbssh.pod.known-hosts
                          pod.epiccastle.bbssh.pod.host-key-repository
                          pod.epiccastle.bbssh.pod.core
+                         pod.epiccastle.bbssh.pod.socket
                          ])
 
                        ;; bb side code
@@ -157,6 +159,7 @@
                         [pod.epiccastle.bbssh.terminal
                          pod.epiccastle.bbssh.impl.cleaner
                          pod.epiccastle.bbssh.impl.utils
+                         pod.epiccastle.bbssh.impl.socket
                          pod.epiccastle.bbssh.agent
                          pod.epiccastle.bbssh.session
                          pod.epiccastle.bbssh.channel-exec

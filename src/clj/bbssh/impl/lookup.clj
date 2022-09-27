@@ -15,7 +15,8 @@
             [pod.epiccastle.bbssh.pod.key-pair]
             [pod.epiccastle.bbssh.pod.host-key]
             [pod.epiccastle.bbssh.pod.known-hosts]
-            [pod.epiccastle.bbssh.pod.host-key-repository]))
+            [pod.epiccastle.bbssh.pod.host-key-repository]
+            [pod.epiccastle.bbssh.pod.socket]))
 
 (defmacro ns-lookups [namespaces]
   (into {}
@@ -46,4 +47,5 @@
                pod.epiccastle.bbssh.pod.host-key
                pod.epiccastle.bbssh.pod.known-hosts
                pod.epiccastle.bbssh.pod.host-key-repository
+               pod.epiccastle.bbssh.pod.socket
                ]))

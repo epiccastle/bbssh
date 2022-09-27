@@ -23,7 +23,7 @@
    (-> b4 (bit-and 0xff))))
 
 (defn decode-string
-  "returns (byte-stream remaining-data)"
+  "returns sequence (byte-stream remaining-data)"
   [data]
   (let [[v data] (split-at 4 data)]
     (split-at (unpack-int v) data)))

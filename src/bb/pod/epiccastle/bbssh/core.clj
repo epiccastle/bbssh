@@ -209,9 +209,6 @@
     the private key to use for authentication.
   - `:public-key` Pass in a string (base64) or byte array of
     the public key associated with the private-key
-  - `:agent-forwarding` If using an ssh-agent for authentication then
-    turn on SSH agent authentication forwarding for this session.
-    Default is `false`
   - `:strict-host-key-checking` Control strict host key checking.
     If set to `true`, bbssh will never add host keys to known host
     and will refuse to connect to hosts whose host key has changed.
@@ -274,12 +271,11 @@
   [hostname
    & [{:keys [agent port username password
               identity passphrase private-key public-key
-              agent-forwarding strict-host-key-checking
+              strict-host-key-checking
               known-hosts accept-host-key connection-options
               no-connect identity-repository user-info
               host-key-repository]
        :or {port 22
-            agent-forwarding false
             strict-host-key-checking :ask
             accept-host-key false
             connection-options {}}

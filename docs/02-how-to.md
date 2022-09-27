@@ -1,5 +1,9 @@
 # How To
 
+```clojure
+(require '[pod.epiccastle.bbssh.core :as bbssh])
+```
+
 ## Connect to a machine with a hard coded password
 
 You can hard code a password in the options hash.

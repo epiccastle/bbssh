@@ -26,7 +26,9 @@
                  :sha        "7708e7fd4572459c81f6a6b8e44c96f41cdd92d4"}}}
 
   :codox {:extra-deps {codox/codox {:mvn/version "0.10.8"}
-                       babashka/fs {:mvn/version "0.1.11"}}
+                       babashka/fs {:mvn/version "0.1.11"}
+                       io.epiccastle/codox-theme-epiccastle {:mvn/version "0.1.0-SNAPSHOT"}
+                       }
           :exec-fn codox.main/generate-docs
           :exec-args {:source-paths ["codox-processed/bb"]
                       :metadata {:doc/format :markdown}

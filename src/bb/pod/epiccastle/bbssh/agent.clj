@@ -156,7 +156,6 @@
 
 (defn set-debug-fn
   [debug-fn]
-  (prn 'set-debug-fn debug-fn)
   (babashka.pods/invoke
    "pod.epiccastle.bbssh"
    'pod.epiccastle.bbssh.pod.agent/set-debug-fn

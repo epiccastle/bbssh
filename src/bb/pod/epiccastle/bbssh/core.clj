@@ -294,9 +294,6 @@
          (make-default-user-info options)))
     (when host-key-repository
       (session/set-host-key-repository session host-key-repository))
-
-    #_(session/set-host-key-repository session (make-default-host-key-repository))
-
     (when-not no-connect
       (session/connect session))
     session))

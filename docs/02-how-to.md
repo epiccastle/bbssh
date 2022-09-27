@@ -26,3 +26,17 @@ You can hard code the passphrase in the options hash.
      :identity (str (System/getenv "HOME") "/.ssh/id_rsa")
      :passphrase "the-key-passphrase"})]
 ```
+
+## Execute a command using authentication forwarding
+
+```clojure
+(-> (bbssh/ssh "localhost")
+    (bbssh/exec "ssh -o StrictHostKeyChecking=no git@github.com"
+                {:err :string
+                 :agent-forwarding true})
+    deref
+    :err
+    clojure.string/split-lines
+    second)
+;; => "Hi retrogradeorbit! You've successfully authenticated, but GitHub does not provide shell access.\n"
+```

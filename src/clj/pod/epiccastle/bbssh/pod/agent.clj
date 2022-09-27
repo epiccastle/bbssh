@@ -2,7 +2,7 @@
   (:require [bbssh.impl.references :as references]
             [bbssh.impl.utils :as utils]
             [clojure.java.io :as io])
-  (:import [com.jcraft.jsch JSch
+  (:import [com.jcraft.jsch JSch Logger
             IdentityRepository HostKeyRepository
             ConfigRepository Identity]
            [java.io InputStream])
@@ -159,3 +159,11 @@
    (JSch/setConfig
     ^String key
     ^String value)))
+
+(defn ^:async set-debug-fn [reply-fn]
+  (JSch/setLogger
+   (proxy [Logger] []
+     (isEnabled [_]
+       true)
+     (log [level msg]
+       (reply-fn [level msg])))))

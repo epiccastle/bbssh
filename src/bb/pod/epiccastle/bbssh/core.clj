@@ -170,9 +170,11 @@
    {:check (fn [host key]
              (prn :check host key)
              :changed)
+
     :add (fn [host-key user-info]
            (prn :add host-key user-info)
            nil)
+
     :remove (fn
               ([host type]
                (prn :remove1 host type)
@@ -180,9 +182,12 @@
               ([host type key]
                (prn :remove2 host type key)
                nil))
-    :get-known-hosts-repository-id (fn []
-                                     (prn :get-known-hosts-repository-id)
-                                     "my-khr")
+
+    :get-known-hosts-repository-id
+    (fn []
+      (prn :get-known-hosts-repository-id)
+      "my-khr")
+
     :get-host-key (fn
                     ([]
                      (prn :get-host-key)

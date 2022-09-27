@@ -153,3 +153,17 @@
    (agent/set-config hashmap))
   ([key value]
    (agent/set-config key value)))
+
+(defn set-debug-fn
+  [debug-fn]
+  (prn 'set-debug-fn debug-fn)
+  (babashka.pods/invoke
+   "pod.epiccastle.bbssh"
+   'pod.epiccastle.bbssh.pod.agent/set-debug-fn
+   []
+   {:handlers
+    {:success
+     (fn [[level msg]]
+       (debug-fn level msg))
+     :error (fn [err]
+              (prn 'error err))}}))

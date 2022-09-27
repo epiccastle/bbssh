@@ -111,3 +111,10 @@ In order to test against the native-image compiled version of the pod, use:
 ```
 $ make test BBSSH_TEST_TARGET=native-image
 ```
+
+### Copyright
+
+Copyright (c) Crispin Wellington. All rights reserved.
+
+The use and distribution terms for this software are covered by the
+Eclipse Public License 2.0 which can be found in `LICENSE`.

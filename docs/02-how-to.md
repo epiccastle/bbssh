@@ -48,7 +48,7 @@ You can hard code the passphrase in the options hash.
 ## Allocate a pseudo terminal for the remote shell
 
 ```clojure
-(-> (bbssh/ssh "localhost")
+(-> (bbssh/ssh "remotehost")
     (bbssh/exec "tty"
                 {:out :string
                  :pty true})

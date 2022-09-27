@@ -6,8 +6,8 @@ You can hard code a password in the options hash.
 
 > **Note:** This is not recommended. You may accidentally commit your code to a repository with the password or inadvertantly expose it.
 
-```
-(pod.epiccastle.bbssh.core/ssh "remotehost"
+```clojure
+(bbssh/ssh "remotehost"
     {:username "remoteusername"
      :port 22
      :password "the-password"})]
@@ -19,8 +19,8 @@ You can hard code the passphrase in the options hash.
 
 > **Note:** This is not recommended. You may accidentally commit your code to a repository with the passphrase or inadvertantly expose it.
 
-```
-(pod.epiccastle.bbssh.core/ssh "remotehost"
+```clojure
+(bbssh/ssh "remotehost"
     {:username "remoteusername"
      :port 22
      :identity (str (System/getenv "HOME") "/.ssh/id_rsa")

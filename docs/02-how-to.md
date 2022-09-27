@@ -40,3 +40,15 @@ You can hard code the passphrase in the options hash.
     second)
 ;; => "Hi retrogradeorbit! You've successfully authenticated, but GitHub does not provide shell access.\n"
 ```
+
+## Allocate a pseudo terminal for the remote shell
+
+```clojure
+(-> (bbssh/ssh "localhost")
+    (bbssh/exec "tty"
+                {:out :string
+                 :pty true})
+    deref
+    :out)
+;; => "/dev/pts/72\r\n"
+```

@@ -160,6 +160,7 @@
                          pod.epiccastle.bbssh.impl.cleaner
                          pod.epiccastle.bbssh.impl.utils
                          pod.epiccastle.bbssh.impl.socket
+                         pod.epiccastle.bbssh.impl.pack
                          pod.epiccastle.bbssh.agent
                          pod.epiccastle.bbssh.session
                          pod.epiccastle.bbssh.channel-exec

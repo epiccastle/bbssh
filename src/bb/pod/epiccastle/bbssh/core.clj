@@ -11,6 +11,7 @@
             [pod.epiccastle.bbssh.output-stream :as output-stream]
             [pod.epiccastle.bbssh.byte-array-output-stream :as byte-array-output-stream]
             [pod.epiccastle.bbssh.byte-array-input-stream :as byte-array-input-stream]
+            [pod.epiccastle.bbssh.ssh-agent :as ssh-agent]
             [clojure.string :as string]))
 
 (def ^:private special-config-var-names

@@ -99,8 +99,9 @@ jobs:
             - ~/graalvm-ce-java11-22.0.0.2
           key: linux-{{ checksum "project.clj" }}-{{ checksum ".circleci/config.yml" }}
       - store_artifacts:
-          path: /tmp/release
-          destination: release
+          path: /tmp/
+          destination: tmp
+
   mac:
     macos:
       xcode: "14.0.0"

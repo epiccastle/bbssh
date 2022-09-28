@@ -34,7 +34,7 @@ Here is a simple script that connects over ssh, the runs a command and disconnec
 
 ## API documentation
 
-Once installed go and read the full [documentation](https://epiccastle.io/bbssh)
+The full documentation [can be found here.](https://epiccastle.io/bbssh)
 
 ## Building
 

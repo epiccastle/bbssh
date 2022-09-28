@@ -22,7 +22,7 @@ Successfully installed pod epiccastle/bbssh (0.1.0)
 
 ## Quickstart
 
-After installing try writing the following into `test_bbssh.clj`
+Try writing the following into `test_bbssh.clj`
 
 ```clojure
 (ns test-bbssh

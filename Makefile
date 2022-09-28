@@ -2,7 +2,7 @@ GRAALVM_HOME = $(HOME)/graalvm-ce-java11-22.2.0
 ifeq (,$(findstring java11,$(GRAALVM_HOME)))
 $(error Please use a Java 11 version of Graal)
 endif
-STATIC=true
+STATIC=false
 PATH := $(GRAALVM_HOME)/bin:$(PATH)
 VERSION = $(shell cat resources/BBSSH_VERSION)
 UNAME = $(shell uname)

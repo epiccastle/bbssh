@@ -61,7 +61,7 @@ $ ./bbssh -v
 
 If you would like to install a copy manually, use:
 
-```bash
+```console
 $ curl -O https://raw.githubusercontent.com/epiccastle/bbssh/main/scripts/install
 $ bash install
 ```

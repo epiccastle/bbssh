@@ -244,8 +244,10 @@
       (is (= "foo\n" (:err process))))
     (let [process
           (-> (bbssh/exec session "echo foo bar baz")
-              (process/process "bash -c 'cat 1>&2'" {:err :string})
+              (process/process "bash -c 'cat 1>&2'" {:err :string
+                                                     :out :string})
               deref)]
+      (prn process)
       (is (= "foo bar baz\n" (:err process)))))
 
   (docker/cleanup))

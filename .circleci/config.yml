@@ -53,6 +53,7 @@ jobs:
           name: Run JVM tests
           command: |
             make test
+          no_output_timeout: 5m
       - save_cache:
           paths:
             - ~/.m2

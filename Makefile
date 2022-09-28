@@ -68,7 +68,7 @@ run:
 #
 # Native image related targets
 #
-build/bbssh: resources/libbbssh.so $(CLOJURE_FILES)
+build/bbssh: $(LIB_FILE) $(CLOJURE_FILES)
 ifeq ($(STATIC),true)
 	GRAALVM_HOME=$(GRAALVM_HOME) clojure -M:native-image-static
 else
@@ -88,10 +88,10 @@ package-macos: build/bbssh
 #
 # Babashka related targets
 #
-test:
+test: $(LIB_FILE)
 	umask 0000; bb --config test/bb.edn -m bb-test.core
 
-test-bb:
+test-bb: $(LIB_FILE)
 	BABASHKA_CLASSPATH=test umask 0000 && java -jar $(BABASHKA_SRC)/target/babashka-0.9.162-SNAPSHOT-standalone.jar test/bb_test/core.clj
 
 codox:

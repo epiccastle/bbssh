@@ -76,15 +76,15 @@ else
 	GRAALVM_HOME=$(GRAALVM_HOME) clojure -M:native-image
 endif
 	mkdir -p build
-	mv bbssh build
+	cp bbssh build
 
 native-image: build/bbssh
 
 package-linux: build/bbssh
-	cd build && tar cvfz bbssh-$(ARCH)-linux-$(VERSION).tgz bbssh
+	cd build && tar cvfz bbssh-$(VERSION)-linux-amd64.tgz bbssh
 
 package-macos: build/bbssh
-	cd build && zip bbssh-$(VERSION)-macos-$(ARCH).zip bbssh
+	cd build && zip bbssh-$(VERSION)-macos.zip bbssh
 
 #
 # Babashka related targets

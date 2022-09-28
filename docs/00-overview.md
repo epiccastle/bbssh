@@ -2,6 +2,8 @@
 
 bbssh is a babashka-pod that provides ssh support to babashka code.
 
+Project repository is [here](https://github.com/epiccastle/bbssh)
+
 ## Requirements
 
 Babashka v0.1.194 or higher is required.
@@ -45,3 +47,10 @@ Enter Password for crispin@localhost:
 ```
 
 > **Note:** if you are running an ssh-agent and you have a relevant key you may not be asked for your password. bbssh supports authentication by ssh agent.
+
+## Copyright
+
+Copyright (c) Crispin Wellington. All rights reserved.
+
+The use and distribution terms for this software are covered by the
+Eclipse Public License 2.0 which can be found in `LICENSE`.

@@ -56,7 +56,7 @@ jobs:
     working_directory: ~/repo
     environment:
       LEIN_ROOT: "true"
-      GRAALVM_HOME: /home/circleci/graalvm-ce-java11-22.0.0.2
+      GRAALVM_HOME: /home/circleci/graalvm-ce-java11-22.2.0
     steps:
       - checkout
       - restore_cache:

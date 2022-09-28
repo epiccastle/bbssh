@@ -15,4 +15,4 @@ task:
     java -version
     make package-m1 GRAALVM_HOME=$GRAALVM_HOME STATIC=false
   binaries_artifacts:
-    path: build
+    path: "build/*"

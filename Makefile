@@ -83,7 +83,10 @@ package-linux: build/bbssh
 	cd build && tar cvfz bbssh-$(VERSION)-linux-amd64.tgz bbssh
 
 package-macos: build/bbssh
-	cd build && zip bbssh-$(VERSION)-macos.zip bbssh
+	cd build && zip bbssh-$(VERSION)-macos-amd64.zip bbssh
+
+package-m1: build/bbssh
+	cd build && zip bbssh-$(VERSION)-macos-aarch64.zip bbssh
 
 #
 # Babashka related targets

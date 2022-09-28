@@ -6,7 +6,6 @@ STATIC=false
 PATH := $(GRAALVM_HOME)/bin:$(PATH)
 VERSION = $(shell cat resources/BBSSH_VERSION)
 UNAME = $(shell uname)
-ARCH = $(shell uname -i)
 JNI_DIR=target/jni
 CLASS_FILE=src/c/BbsshUtils.class
 JAR_FILE=target/uberjar/bbssh-$(VERSION)-standalone.jar

@@ -2,6 +2,7 @@ GRAALVM_HOME = $(HOME)/graalvm-ce-java11-22.2.0
 ifeq (,$(findstring java11,$(GRAALVM_HOME)))
 $(error Please use a Java 11 version of Graal)
 endif
+STATIC=true
 PATH := $(GRAALVM_HOME)/bin:$(PATH)
 VERSION = $(shell cat .meta/VERSION)
 UNAME = $(shell uname)
@@ -63,7 +64,12 @@ run:
 # Native image related targets
 #
 bbssh: resources/libbbssh.so $(CLOJURE_FILES)
+ifeq ($(STATIC),true)
+	GRAALVM_HOME=$(GRAALVM_HOME) clj -M:native-image-static
+else
 	GRAALVM_HOME=$(GRAALVM_HOME) clj -M:native-image
+endif
+
 
 native-image: bbssh
 

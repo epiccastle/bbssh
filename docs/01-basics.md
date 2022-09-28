@@ -102,8 +102,8 @@ Bbssh interoperates with [babashka.process](https://github.com/babashka/process)
     (babashka.process/process
         "bash -c \"echo 'our sum: $(cat)'\""
         {:out :string})
-       deref
-       :out)
+    deref
+    :out)
 ;; => "our sum: 4088b54321c3a731eda432ab09fa9f63 -\n"
 ```
 

@@ -51,6 +51,7 @@
          'bb-test.test-identity-repository
          'bb-test.test-host-key
          'bb-test.test-known-hosts)]
+    (prn result)
     (when (or
            (pos? (:fail result))
            (pos? (:error result)))

@@ -1,4 +1,4 @@
-FROM alpine:latest
+FROM alpine:3.16.2
 ARG root_password
 RUN apk update
 RUN apk add openssh-server openssh file

@@ -66,9 +66,9 @@ run:
 #
 bbssh: resources/libbbssh.so $(CLOJURE_FILES)
 ifeq ($(STATIC),true)
-	GRAALVM_HOME=$(GRAALVM_HOME) clj -M:native-image-static
+	GRAALVM_HOME=$(GRAALVM_HOME) clojure -M:native-image-static
 else
-	GRAALVM_HOME=$(GRAALVM_HOME) clj -M:native-image
+	GRAALVM_HOME=$(GRAALVM_HOME) clojure -M:native-image
 endif
 
 

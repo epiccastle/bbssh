@@ -1,0 +1,159 @@
+# Clojure CircleCI 2.1 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-clojure/ for more details
+#
+version: 2.1
+
+jobs:
+  jvm:
+    docker:
+      # specify the version you desire here
+      - image: circleci/clojure:openjdk-11-lein-2.9.0
+    working_directory: ~/repo
+    environment:
+      LEIN_ROOT: "true"
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "project.clj" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
+      - run:
+          name: Install Clojure
+          command: |
+            wget -nc https://download.clojure.org/install/linux-install-1.10.1.447.sh
+            chmod +x linux-install-1.11.1.1165.sh
+            sudo ./linux-install-1.11.1.1165.sh
+      - run:
+          name: Install native dev tools
+          command: |
+            sudo apt-get update
+            sudo apt-get -y install gcc zlib1g-dev make
+      - run:
+          name: Download GraalVM
+          command: |
+            cd ~
+            if ! [ -d graalvm-ce-java11-22.2.0 ]; then
+              curl -O -sL https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-22.2.0/graalvm-ce-java11-linux-amd64-22.2.0.tar.gz
+              tar xzf graalvm-ce-java11-linux-amd64-22.2.0.tar.gz
+            fi
+      - run:
+          name: Run JVM tests
+          command: |
+            make test
+      - save_cache:
+          paths:
+            - ~/.m2
+          key: v1-dependencies-{{ checksum "project.clj" }}
+      - store_artifacts:
+          path: /tmp/release
+          destination: release
+
+  linux:
+    docker:
+      - image: circleci/clojure:openjdk-11-lein-2.9.0
+    working_directory: ~/repo
+    environment:
+      LEIN_ROOT: "true"
+      GRAALVM_HOME: /home/circleci/graalvm-ce-java11-22.0.0.2
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - linux-{{ checksum "project.clj" }}-{{ checksum ".circleci/config.yml" }}
+      - run:
+          name: Install Clojure
+          command: |
+            wget -nc https://download.clojure.org/install/linux-install-1.10.1.447.sh
+            chmod +x linux-install-1.11.1.1165.sh
+            sudo ./linux-install-1.11.1.1165.sh
+      - run:
+          name: Install native dev tools
+          command: |
+            sudo apt-get update
+            sudo apt-get -y install gcc zlib1g-dev make
+      - run:
+          name: Download GraalVM
+          command: |
+            cd ~
+            if ! [ -d graalvm-ce-java11-22.2.0 ]; then
+              curl -O -sL https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-22.2.0/graalvm-ce-java11-linux-amd64-22.2.0.tar.gz
+              tar xzf graalvm-ce-java11-linux-amd64-22.2.0.tar.gz
+            fi
+            graalvm-ce-java11-22.2.0/bin/gu install native-image
+      - run:
+          name: Build binary
+          command: |
+            make native-image GRAALVM_HOME=$GRAALVM_HOME STATIC=true
+          no_output_timeout: 40m
+      - save_cache:
+          paths:
+            - ~/.m2
+            - ~/graalvm-ce-java11-22.0.0.2
+          key: linux-{{ checksum "project.clj" }}-{{ checksum ".circleci/config.yml" }}
+      - store_artifacts:
+          path: /tmp/release
+          destination: release
+  mac:
+    macos:
+      xcode: "12.0.0"
+    environment:
+      GRAALVM_HOME: /Users/distiller/graalvm-ce-java11-22.2.0/Contents/Home
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - mac-{{ checksum "project.clj" }}-{{ checksum ".circleci/config.yml" }}
+      - run:
+          name: Install Clojure
+          command: |
+            .circleci/script/install-clojure /usr/local
+      - run:
+          name: Install Leiningen
+          command: |
+            .circleci/script/install-leiningen
+      - run:
+          name: Download GraalVM
+          command: |
+            cd ~
+            ls -la
+            if ! [ -d graalvm-ce-java11-22.2.0 ]; then
+              curl -O -sL https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-22.2.0/graalvm-ce-java11-darwin-amd64-22.2.0.tar.gz
+              tar xzf graalvm-ce-java11-darwin-amd64-22.2.0.tar.gz
+            fi
+            $GRAALVM_HOME/bin/gu install native-image
+      - run:
+          name: Run JVM tests
+          command: |
+            make test GRAALVM_HOME=$GRAALVM_HOME
+      - run:
+          name: Build binary
+          command: |
+            make GRAALVM_HOME=$GRAALVM_HOME
+          no_output_timeout: 40m
+      - save_cache:
+          paths:
+            - ~/.m2
+            - ~/graalvm-ce-java11-22.2.0
+          key: mac-{{ checksum "project.clj" }}-{{ checksum ".circleci/config.yml" }}
+      - store_artifacts:
+          path: /tmp/release
+          destination: release
+
+workflows:
+  version: 2
+  ci:
+    jobs:
+      - jvm:
+          filters:
+            branches:
+              only: master
+      - mac:
+          filters:
+            branches:
+              only: master
+
+      # build on free circleci account runs out of ram
+      # Error: Image build request failed with exit status 137
+      # - linux

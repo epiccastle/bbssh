@@ -8,8 +8,10 @@ task:
   script: |
     sudo .circleci/script/install-clojure
     curl -O -sL https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-22.2.0/graalvm-ce-java11-darwin-aarch64-22.2.0.tar.gz
-    tar xzf graalvm-ce-java11-darwin-aarch64-22.2.0.tar.gz
+    tar xvzf graalvm-ce-java11-darwin-aarch64-22.2.0.tar.gz
+    ls -alF $HOME
     ls -alF $GRAALVM_HOME
+
     $GRAALVM_HOME/bin/gu install native-image
     export PATH=$GRAALVM_HOME/bin:$PATH
     sudo /usr/sbin/softwareupdate --install-rosetta --agree-to-license

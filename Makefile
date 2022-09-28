@@ -70,7 +70,8 @@ ifeq ($(STATIC),true)
 else
 	GRAALVM_HOME=$(GRAALVM_HOME) clojure -M:native-image
 endif
-
+	mkdir -p build
+	cp bbssh build
 
 native-image: bbssh
 

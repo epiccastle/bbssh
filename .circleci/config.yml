@@ -99,8 +99,8 @@ jobs:
             - ~/graalvm-ce-java11-22.0.0.2
           key: linux-{{ checksum "deps.edn" }}-{{ checksum ".circleci/config.yml" }}
       - store_artifacts:
-          path: /tmp/
-          destination: tmp
+          path: build
+          destination: build
 
   mac:
     macos:

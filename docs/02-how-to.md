@@ -51,7 +51,7 @@ You can hard code the passphrase in the options hash.
     {:strict-host-key-checking false})
 ```
 
-## Accept a key and add it to known hosts without complain only on first connection
+## Accept a key and add it to known hosts without complaint only on first connection
 
 ```clojure
 (bbssh/ssh "remotehost"

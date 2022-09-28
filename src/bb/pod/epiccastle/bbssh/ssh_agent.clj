@@ -1,33 +1,34 @@
 (ns pod.epiccastle.bbssh.ssh-agent
+  "Implements an identity-repository that communicates with your local ssh agent (ssh keychain) over the SSH_AUTH_SOCK unix domain pipe."
   (:require [pod.epiccastle.bbssh.impl.pack :as pack]
             [pod.epiccastle.bbssh.impl.socket :as socket]
             [pod.epiccastle.bbssh.identity :as identity]
             [pod.epiccastle.bbssh.identity-repository :as identity-repository]))
 
-(def codes
+(def ^:private codes
   {:ssh-agent-failure 5
    :request-identities 11
    :identities-answer 12
    :sign-request 13
    :sign-response 14})
 
-(def code->keyword
+(def ^:private code->keyword
   (->> codes
        (map reverse)
        (map vec)
        (into {})))
 
-(defn get-sock-path []
+(defn- get-sock-path []
   (System/getenv "SSH_AUTH_SOCK"))
 
-(defn read-identity
+(defn- read-identity
   "returns [[byte-stream comment] remaining-data]"
   [data]
   (let [[byte-stream data] (pack/decode-string data)
         [comment data] (pack/decode-string data)]
     [[(byte-array byte-stream) (apply str (map char comment))] data]))
 
-(defn decode-identities
+(defn- decode-identities
   "returns vector of identities. Each identity is [byte-seq comment-string]"
   [data]
   (let [[val data] (split-at 4 data)
@@ -42,17 +43,17 @@
           (assert (empty? data) "data should be empty now")
           identities)))))
 
-(defn send-query [sock query-data]
+(defn- send-query [sock query-data]
   (let [query (concat (pack/pack-int (count query-data)) query-data)
         qarr (byte-array query)]
     (socket/write sock qarr)))
 
-(defn read-response [sock]
+(defn- read-response [sock]
   (let [size (pack/unpack-int (socket/read sock 4))]
     (let [data (socket/read sock size)]
       data)))
 
-(defn request-identities [sock]
+(defn- request-identities [sock]
   (->> :request-identities codes pack/pack-byte
        (send-query sock))
   (let [response (read-response sock)]
@@ -67,7 +68,7 @@
       (throw (ex-info "ssh-agent failed" {:type ::unknown-response
                                           :response response})))))
 
-(defn sign-request [sock blob data algorithm]
+(defn- sign-request [sock blob data algorithm]
   (->> (concat
         (pack/pack-byte (codes :sign-request))
         (pack/pack-data blob)

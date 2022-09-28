@@ -61,14 +61,14 @@ $ ./bbssh -v
 
 If you would like to install a copy manually, use:
 
-```shell-session
+```shell
 $ curl -O https://raw.githubusercontent.com/epiccastle/bbssh/main/scripts/install
 $ bash install
 ```
 
 And then refer to the pod:
 
-```
+```clojure
 (pods/load-pod "bbssh" {:transport :socket})
 ```
 

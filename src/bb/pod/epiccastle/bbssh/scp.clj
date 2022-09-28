@@ -14,7 +14,7 @@
 ;;
 ;; send and receive commands
 ;;
-(defn error-type [code]
+(defn- error-type [code]
   (get {1 ::scp-error
         2 ::scp-fatal-error
         -1 ::scp-disconnect}

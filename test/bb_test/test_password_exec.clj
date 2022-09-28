@@ -65,53 +65,52 @@
         session (bbssh/ssh "localhost" opts)]
 
     ;; :in nil
-    (prn nil)
     (let [{:keys [channel out err in]}
           (bbssh/exec session "cat" {:in nil})]
       (is (= 0 (.available out)))
+      (Thread/sleep 100)
       (is (channel-exec/is-closed channel))
       (is (= 0 (channel-exec/get-exit-status channel))))
 
     ;; :in string
-    (prn 'string)
     (let [{:keys [channel out err in]}
           (bbssh/exec session "cat" {:in "string\ninput\n"})]
       (is (= "string\ninput\n"
              (with-out-str (io/copy out *out*))))
+      (Thread/sleep 100)
       (is (channel-exec/is-closed channel))
       (is (= 0 (channel-exec/get-exit-status channel))))
 
     ;; :in string different encoding
-    (prn 'string2)
     (let [{:keys [channel out err in]}
           (bbssh/exec session "cat" {:in "🚢"
                                      :in-enc "utf-16"})]
       (is (= "🚢"
              (with-out-str
                (io/copy out *out* :encoding "utf-16"))))
+      (Thread/sleep 100)
       (is (channel-exec/is-closed channel))
       (is (= 0 (channel-exec/get-exit-status channel))))
 
     ;; :in byte-array
-    (prn 'byte-array)
     (let [{:keys [channel out err in]}
           (bbssh/exec session "cat" {:in (.getBytes "string\ninput\n")})]
       (is (= "string\ninput\n"
              (with-out-str (io/copy out *out*))))
+      (Thread/sleep 100)
       (is (channel-exec/is-closed channel))
       (is (= 0 (channel-exec/get-exit-status channel))))
 
     ;; :in byte-array different encoding
-    (prn 'byte-array2)
     (let [{:keys [channel out err in]}
           (bbssh/exec session "cat" {:in (.getBytes "🚢" "utf-16")})]
       (is (= "🚢"
              (with-out-str (io/copy out *out* :encoding "utf-16"))))
+      (Thread/sleep 100)
       (is (channel-exec/is-closed channel))
       (is (= 0 (channel-exec/get-exit-status channel))))
 
     ;; :in InputStream
-    (prn 'instream)
     (let [{:keys [channel out err in]}
           (bbssh/exec
            session "cat"
@@ -123,11 +122,11 @@
         (is (-> (java.util.Arrays/copyOfRange buff 0 128)
                 seq
                 (= (range 128)))))
+      (Thread/sleep 100)
       (is (channel-exec/is-closed channel))
       (is (= 0 (channel-exec/get-exit-status channel))))
 
     ;; :in pod side input-stream
-    (prn 'pod-in-stream)
     (let [in-output-stream (output-stream/new)
           in-stream (input-stream/new in-output-stream)
           {:keys [channel out err in]}
@@ -141,11 +140,11 @@
         (is (-> (java.util.Arrays/copyOfRange buff 0 128)
                 seq
                 (= (range 128)))))
+      (Thread/sleep 100)
       (is (channel-exec/is-closed channel))
       (is (= 0 (channel-exec/get-exit-status channel))))
 
     ;; :in :stream
-    (prn :stream)
     (let [{:keys [channel out err in]}
           (bbssh/exec
            session "cat"
@@ -157,6 +156,7 @@
         (is (-> (java.util.Arrays/copyOfRange buff 0 128)
                 seq
                 (= (range 128)))))
+      (Thread/sleep 100)
       (is (channel-exec/is-closed channel))
       (is (= 0 (channel-exec/get-exit-status channel)))))
 

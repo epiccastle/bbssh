@@ -91,7 +91,7 @@ jobs:
       - run:
           name: Build binary
           command: |
-            make native-image GRAALVM_HOME=$GRAALVM_HOME STATIC=true
+            make package-linux GRAALVM_HOME=$GRAALVM_HOME STATIC=true
           no_output_timeout: 40m
       - save_cache:
           paths:

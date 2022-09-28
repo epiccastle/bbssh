@@ -8,7 +8,7 @@ This is a work in progress. It is not ready for use.
 
 ## Using
 
-Here is a simple script that connects with a password, the runs a command and disconnects:
+Here is a simple script that connects over ssh, the runs a command and disconnects, returning the standard output:
 
 ```clj
 (ns test-simple.core
@@ -16,41 +16,12 @@ Here is a simple script that connects with a password, the runs a command and di
 
 (pods/load-pod "./bbssh" {:transport :socket})
 
-(require '[pod.epiccastle.bbssh.agent :as agent]
-         '[pod.epiccastle.bbssh.session :as session]
-         '[pod.epiccastle.bbssh.channel-exec :as channel-exec]
-         '[pod.epiccastle.bbssh.input-stream :as input-stream]
-         '[pod.epiccastle.bbssh.output-stream :as output-stream])
+(require '[pod.epiccastle.bbssh.core :as bbssh])
 
-(defn streams-for-out []
-  (let [os (output-stream/new)
-        is (input-stream/new os 1024)]
-    [os is]))
-
-(let [agent (agent/new)
-      session (agent/get-session agent
-                                 (System/getenv "USER") ;; username
-                                 "localhost"            ;; hostname
-                                 22)]                   ;; port
-  (session/set-config session :strict-host-key-checking false)
-  (session/set-password session "my-password") ;; our password
-  (session/connect session)
-
-  (let [channel (session/open-channel session "exec")
-        input (input-stream/new)
-        [out-stream out-in] (streams-for-out)
-        [err-stream err-in] (streams-for-out)]
-    (input-stream/close input)
-    (channel-exec/set-command channel "id") ;; the command to run
-    (channel-exec/set-input-stream channel input false)
-    (channel-exec/set-output-stream channel out-stream)
-    (channel-exec/set-error-stream channel err-stream)
-    (channel-exec/connect channel)
-    (let [buff (byte-array 1024)
-          num (input-stream/read out-in buff 0 1024)]
-      (println
-       (String. (java.util.Arrays/copyOfRange buff 0 num) "UTF-8")))))
-
+(-> (bbssh/ssh "remotehost" {:username "remote-user"})
+    (bbssh/exec "echo 'I am running remotely'" {:out :string})
+    deref
+    :out)
 ```
 
 ## Building
@@ -68,7 +39,7 @@ This will generate the file `bbssh`.
 ### In Clojure
 
 ```
-$ BABASHKA_POD=1 make run
+$ make run
 clj -J-Djava.library.path=resources -m bbssh.core
 ...
 ```
@@ -76,7 +47,7 @@ clj -J-Djava.library.path=resources -m bbssh.core
 ### As Native Image
 
 ```
-$ BABASHKA_POD=1 ./bbssh
+$ ./bbssh -v
 ```
 
 ## Namespace layout

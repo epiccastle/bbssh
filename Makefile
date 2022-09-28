@@ -15,6 +15,7 @@ JAVA_FILE=src/c/BbsshUtils.java
 C_FILE=src/c/BbsshUtils.c
 C_HEADER=$(JNI_DIR)/BbsshUtils.h
 JAVA_HOME=$(GRAALVM_HOME)
+JAVAC=$(JAVA_HOME)/bin/javac
 INCLUDE_DIRS=$(shell find $(JAVA_HOME)/include -type d)
 INCLUDE_ARGS=$(INCLUDE_DIRS:%=-I%) -I$(JNI_DIR)
 CLOJURE_FILES=$(shell find src/clj -name *.clj)
@@ -37,11 +38,11 @@ clean:
 # C library related targets
 #
 $(CLASS_FILE): $(JAVA_FILE)
-	javac $(JAVA_FILE)
+	$(JAVAC) $(JAVA_FILE)
 
 $(C_HEADER): $(CLASS_FILE)
 	mkdir -p $(JNI_DIR)
-	javac -h $(JNI_DIR) $(JAVA_FILE)
+	$(JAVAC) -h $(JNI_DIR) $(JAVA_FILE)
 	@touch $(C_HEADER)
 
 $(SOLIB_FILE): $(C_FILE) $(C_HEADER)

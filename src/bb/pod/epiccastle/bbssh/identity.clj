@@ -1,4 +1,6 @@
 (ns pod.epiccastle.bbssh.identity
+  "Creates and calls the various methods of an Identity that
+  exists on the pod heap."
   (:require [pod.epiccastle.bbssh.impl.utils :as utils]))
 
 (defn- preprocess-args [method args]

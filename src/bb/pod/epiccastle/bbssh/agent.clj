@@ -1,4 +1,6 @@
 (ns pod.epiccastle.bbssh.agent
+  "Creates and calls the various methods of a JSch agent that
+  exists on the pod heap."
   (:require [pod.epiccastle.bbssh.pod.agent :as agent]
             [pod.epiccastle.bbssh.impl.utils :as utils]
             [pod.epiccastle.bbssh.impl.cleaner :as cleaner]))

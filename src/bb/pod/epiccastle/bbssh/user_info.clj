@@ -1,4 +1,6 @@
 (ns pod.epiccastle.bbssh.user-info
+  "Creates and calls the various methods of a UserInfo that
+  exists on the pod heap."
   (:require [pod.epiccastle.bbssh.impl.utils :as utils]
             [pod.epiccastle.bbssh.terminal :as terminal]))
 

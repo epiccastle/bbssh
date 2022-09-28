@@ -1,4 +1,6 @@
 (ns pod.epiccastle.bbssh.channel-exec
+  "Creates and calls the various methods of a ChannelExec that
+  exists on the pod heap."
   (:require [pod.epiccastle.bbssh.pod.channel-exec :as channel-exec]
             [pod.epiccastle.bbssh.impl.cleaner :as cleaner]
             [pod.epiccastle.bbssh.impl.utils :as utils]))

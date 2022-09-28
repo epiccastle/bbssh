@@ -1,4 +1,6 @@
 (ns pod.epiccastle.bbssh.session
+  "Creates and calls the various methods of a Session that
+  exists on the pod heap."
   (:require [pod.epiccastle.bbssh.pod.session :as session]
             [pod.epiccastle.bbssh.impl.cleaner :as cleaner]))
 

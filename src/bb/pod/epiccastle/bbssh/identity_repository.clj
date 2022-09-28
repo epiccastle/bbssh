@@ -1,4 +1,6 @@
 (ns pod.epiccastle.bbssh.identity-repository
+  "Creates and calls the various methods of an IdentityRepository that
+  exists on the pod heap."
   (:require [pod.epiccastle.bbssh.impl.cleaner :as cleaner]
             [pod.epiccastle.bbssh.impl.utils :as utils]))
 

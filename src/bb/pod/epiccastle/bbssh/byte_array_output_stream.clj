@@ -1,4 +1,6 @@
 (ns pod.epiccastle.bbssh.byte-array-output-stream
+  "Creates and calls the various methods of a ByteArrayOutputStream that
+  exists on the pod heap."
   (:refer-clojure :exclude [flush])
   (:require [pod.epiccastle.bbssh.pod.byte-array-output-stream :as byte-array-output-stream]
             [pod.epiccastle.bbssh.impl.cleaner :as cleaner]

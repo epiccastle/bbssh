@@ -1,4 +1,6 @@
 (ns pod.epiccastle.bbssh.host-key-repository
+  "Creates and calls the various methods of a HostKeyRepository that
+  exists on the pod heap."
   (:refer-clojure :exclude [remove])
   (:require [pod.epiccastle.bbssh.pod.host-key-repository :as host-key-repository]
             [pod.epiccastle.bbssh.impl.cleaner :as cleaner]

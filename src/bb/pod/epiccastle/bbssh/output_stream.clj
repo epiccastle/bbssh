@@ -1,4 +1,6 @@
 (ns pod.epiccastle.bbssh.output-stream
+  "Creates and calls the various methods of a PipedOutputStream that
+  exists on the pod heap."
   (:refer-clojure :exclude [flush])
   (:require [pod.epiccastle.bbssh.pod.output-stream :as output-stream]
             [pod.epiccastle.bbssh.impl.cleaner :as cleaner]

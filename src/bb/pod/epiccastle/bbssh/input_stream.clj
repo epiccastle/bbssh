@@ -1,4 +1,6 @@
 (ns pod.epiccastle.bbssh.input-stream
+  "Creates and calls the various methods of a PipedInputStream that
+  exists on the pod heap."
   (:refer-clojure :exclude [read])
   (:require [pod.epiccastle.bbssh.pod.input-stream :as input-stream]
             [pod.epiccastle.bbssh.impl.cleaner :as cleaner]

@@ -1,4 +1,5 @@
 (ns pod.epiccastle.bbssh.terminal
+  "A set of functions related to the terminal and its modes"
   (:require [pod.epiccastle.bbssh.pod.terminal :as terminal]))
 
 (defn is-terminal?

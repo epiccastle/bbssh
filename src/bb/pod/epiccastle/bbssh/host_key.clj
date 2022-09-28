@@ -1,4 +1,6 @@
 (ns pod.epiccastle.bbssh.host-key
+  "Creates and calls the various methods of a HostKey that exists on the
+  pod heap."
   (:require [pod.epiccastle.bbssh.pod.host-key :as host-key]
             [pod.epiccastle.bbssh.impl.cleaner :as cleaner]
             [pod.epiccastle.bbssh.impl.utils :as utils])

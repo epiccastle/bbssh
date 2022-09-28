@@ -11,19 +11,13 @@ A local installation of ssh is **not required**.
 
 ## Installation
 
-The pod artefact is a single static executable. Install this on your
-path and making it executable. Alternatively, use the installation script:
+**The pod should automatically install on first use.**
 
-```bash
-$ curl -O https://raw.githubusercontent.com/epiccastle/bbssh/main/scripts/install
-$ bash install
-```
-
-When installed you should be able to run it from the shell:
-
-```bash
-$ bbssh -v
-bbssh version 0.1.0
+```clojure
+user=> (pods/load-pod 'epiccastle/bbssh "0.1.0")
+Downloading pod epiccastle/bbssh (0.1.0)
+Successfully installed pod epiccastle/bbssh (0.1.0)
+#:pod{:id "pod.epiccastle.bbssh"}
 ```
 
 ## Quickstart
@@ -53,6 +47,29 @@ Enter Password for crispin@localhost:
 ```
 
 > **Note:** if you are running an ssh-agent and you have a relevant key you may not be asked for your password. bbssh supports authentication by ssh agent.
+
+## Manual installation
+
+The pod artefact is a single static executable. Install this on your
+path and making it executable. Alternatively, use the installation script:
+
+```bash
+$ curl -O https://raw.githubusercontent.com/epiccastle/bbssh/main/scripts/install
+$ bash install
+```
+
+When installed you should be able to run it from the shell:
+
+```bash
+$ bbssh -v
+bbssh version 0.1.0
+```
+
+And load it as a pod:
+
+```clojure
+(pods/load-pod "bbssh" {:transport :socket})
+```
 
 ## Copyright
 

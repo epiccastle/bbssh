@@ -22,7 +22,7 @@ When installed you should be able to run it from the shell:
 
 ```bash
 $ bbssh -v
-bbssh version 0.1.1-SNAPSHOT
+bbssh version 0.1.0
 ```
 
 ## Quickstart

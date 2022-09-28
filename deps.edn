@@ -48,7 +48,7 @@
 
   :codox {:extra-deps {codox/codox {:mvn/version "0.10.8"}
                        babashka/fs {:mvn/version "0.1.11"}
-                       io.epiccastle/codox-theme-epiccastle {:mvn/version "0.1.0"}
+                       io.epiccastle/codox-theme-epiccastle {:mvn/version "0.1.0-SNAPSHOT"}
                        }
           :exec-fn codox.main/generate-docs
           :exec-args {:source-paths ["codox-processed/bb"]

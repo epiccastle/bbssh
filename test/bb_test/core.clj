@@ -9,7 +9,7 @@
   (:import [java.lang.ref WeakReference]))
 
 (def class-path
-  (-> "clj -Spath -m bbssh.core"
+  (-> "clojure -Spath -m bbssh.core"
       process/sh
       :out
       string/trim))

@@ -29,7 +29,7 @@
 
 (set! *warn-on-reflection* true)
 
-(def debug? true)
+(def debug? false)
 (def debug-file "/tmp/bbssh-pod-debug.txt")
 
 (defn read-string [^"[B" v]

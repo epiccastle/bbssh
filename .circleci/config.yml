@@ -52,6 +52,8 @@ jobs:
       - run:
           name: Run JVM tests
           command: |
+            set -x
+            clj -Spath -m bbssh.core
             make test
           no_output_timeout: 5m
       - save_cache:

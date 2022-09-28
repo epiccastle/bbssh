@@ -76,9 +76,7 @@ while [ ! -w "$INSTALL_DIR" ]; do
   echo -n "Enter new install path, or press return to sudo to root and install in $INSTALL_DIR: "
   read NEW_INSTALL_DIR
   if [ "$NEW_INSTALL_DIR" == "" ]; then
-    echo "Enter your password to install"
-    sudo "mv -f \"$INSTALL_DIR/bbssh\" \"$INSTALL_DIR/bbssh.old\"; mv -f \"$DOWNLOAD_DIR/bbssh\" \"$INSTALL_DIR/bbssh\"" || echo "bbssh binary left in \"$INSTALL_DIR/bbssh\". Move onto your path to install"
-    echo "done"
+    bash -c "sudo mv -f \"$INSTALL_DIR/bbssh\" \"$INSTALL_DIR/bbssh.old\"; sudo -n mv -f \"$DOWNLOAD_DIR/bbssh\" \"$INSTALL_DIR/bbssh\"" && echo "done" || echo "bbssh binary left in \"$DOWNLOAD_DIR/bbssh\". Copy this file onto your path to install bbssh."
     exit 0
   fi
   INSTALL_DIR="$NEW_INSTALL_DIR"

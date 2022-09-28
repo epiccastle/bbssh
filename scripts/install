@@ -23,8 +23,8 @@ if [ "$OPTS" ]; then
 fi
 
 echo -n "fetching release information... "
-BBSSH_VERSION_RELEASED="$(curl -sL https://raw.githubusercontent.com/epiccastle/bbssh/main/resources/BBSSH_VERSION_RELEASED)"
-echo $BBSSH_VERSION_RELEASED
+BBSSH_RELEASED_VERSION="$(curl -sL https://raw.githubusercontent.com/epiccastle/bbssh/main/resources/BBSSH_RELEASED_VERSION)"
+echo $BBSSH_RELEASED_VERSION
 
 echo -n "detecting os... "
 set +e
@@ -47,8 +47,8 @@ case "$PLATFORM" in
   windows) echo "bbssh does not support windows clients (yet)"; exit 1;;
 esac
 
-DOWNLOAD_FILE="bbssh-${BBSSH_VERSION_RELEASED}-${PLATFORM}-amd64.${COMPRESSION}"
-DOWNLOAD_URL="https://github.com/epiccastle/bbssh/releases/download/v${BBSSH_VERSION_RELEASED}/${DOWNLOAD_FILE}"
+DOWNLOAD_FILE="bbssh-${BBSSH_RELEASED_VERSION}-${PLATFORM}-amd64.${COMPRESSION}"
+DOWNLOAD_URL="https://github.com/epiccastle/bbssh/releases/download/v${BBSSH_RELEASED_VERSION}/${DOWNLOAD_FILE}"
 
 echo -n "downloading archive from $DOWNLOAD_URL... "
 

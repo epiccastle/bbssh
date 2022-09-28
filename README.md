@@ -10,7 +10,7 @@ Babashka pod for SSH support.
 For Linux and MacOS:
 
 ```shell-session
-$ curl -O https://raw.githubusercontent.com/epiccastle/bbssh/master/scripts/install
+$ curl -O https://raw.githubusercontent.com/epiccastle/bbssh/main/scripts/install
 $ bash install
 ```
 

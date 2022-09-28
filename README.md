@@ -13,7 +13,7 @@ Babashka pod for SSH support.
 
 Here is a simple script that connects over ssh, the runs a command and disconnects, returning the standard output:
 
-```clj
+```clojure
 (ns test-simple.core
   (:require [babashka.pods :as pods]))
 
@@ -35,7 +35,7 @@ The full documentation [can be found here.](https://epiccastle.io/bbssh)
 
 The bbssh pod is distributed as a static binary. Build it with:
 
-```
+```console
 $ make
 ```
 
@@ -45,7 +45,7 @@ This will generate the file `bbssh`.
 
 ### In clojure
 
-```
+```console
 $ make run
 clj -J-Djava.library.path=resources -m bbssh.core
 ...
@@ -53,7 +53,7 @@ clj -J-Djava.library.path=resources -m bbssh.core
 
 ### As native image
 
-```
+```console
 $ ./bbssh -v
 ```
 
@@ -61,9 +61,9 @@ $ ./bbssh -v
 
 If you would like to install a copy manually, use:
 
-```shell-script
-curl -O https://raw.githubusercontent.com/epiccastle/bbssh/main/scripts/install
-bash install
+```console
+$ curl -O https://raw.githubusercontent.com/epiccastle/bbssh/main/scripts/install
+$ bash install
 ```
 
 And then refer to the pod:

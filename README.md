@@ -3,6 +3,7 @@ Babashka pod for SSH support.
 
 [![CircleCI](https://circleci.com/gh/epiccastle/bbssh/tree/main.svg?style=shield)](https://circleci.com/gh/epiccastle/bbssh/tree/main)
 [![Babashka](https://raw.githubusercontent.com/babashka/babashka/master/logo/badge.svg)](https://github.com/babashka/babashka)
+[![docs](https://img.shields.io/badge/website-docs-blue)](https://epiccastle.io/bbssh)
 
 This is a work in progress. It is not ready for use.
 
@@ -23,6 +24,8 @@ Here is a simple script that connects over ssh, the runs a command and disconnec
     deref
     :out)
 ```
+
+Then go and read the full [documentation](https://epiccastle.io/bbssh)
 
 ## Building
 

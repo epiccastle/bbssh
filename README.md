@@ -32,7 +32,9 @@ Here is a simple script that connects over ssh, the runs a command and disconnec
     :out)
 ```
 
-Then go and read the full [documentation](https://epiccastle.io/bbssh)
+## API documentation
+
+Once installed go and read the full [documentation](https://epiccastle.io/bbssh)
 
 ## Building
 

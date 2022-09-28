@@ -16,7 +16,7 @@
       slurp
       string/trim))
 
-(defn -main [& args]
+(defn main [& args]
   (let [{:keys [options]} (cli/parse-opts args [["-v" "--version"]])]
     (if (:version options)
       (println "bbssh version" version)
@@ -29,3 +29,12 @@
         (lib/init!)
         (clojure.lang.RT/loadLibrary "bbssh")
         (pod/main)))))
+
+(defn -main [& args]
+  (let [v (volatile! nil)
+        f (fn []
+             (vreset! v (apply main args)))]
+    (doto (Thread. nil f "main")
+      (.start)
+      (.join))
+    @v))

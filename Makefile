@@ -2,6 +2,8 @@ GRAALVM_HOME = $(HOME)/graalvm-ce-java11-22.2.0
 ifeq (,$(findstring java11,$(GRAALVM_HOME)))
 $(error Please use a Java 11 version of Graal)
 endif
+STATIC=true
+MUSL=false
 PATH := $(GRAALVM_HOME)/bin:$(PATH)
 VERSION = $(shell cat .meta/VERSION)
 UNAME = $(shell uname)
@@ -63,7 +65,13 @@ run:
 # Native image related targets
 #
 bbssh: resources/libbbssh.so $(CLOJURE_FILES)
+ifeq ($(MUSL),true)
+	PATH=toolchain/x86_64-linux-musl-native/bin:$(PATH) GRAALVM_HOME=$(GRAALVM_HOME) clj -M:native-image-musl
+else ifeq ($(STATIC),true)
+	GRAALVM_HOME=$(GRAALVM_HOME) clj -M:native-image-static
+else
 	GRAALVM_HOME=$(GRAALVM_HOME) clj -M:native-image
+endif
 
 native-image: bbssh
 
@@ -83,3 +91,41 @@ codox:
 	sed -e "s/babashka.pods/'babashka.pods/" codox-processed/bb/pod/epiccastle/bbssh/impl/utils.clj -i
 	sed -e "s/babashka.pods/'babashka.pods/" codox-processed/bb/pod/epiccastle/bbssh/agent.clj -i
 	clj -X:codox
+
+#
+# musl toolchain
+#
+MUSL_PREBUILT_TOOLCHAIN_VERSION=10.2.1
+ZLIB_VERSION=1.2.12
+ARCH=x86_64
+CURRENT_DIR=$(shell pwd)
+
+toolchain/$(ARCH)-linux-musl-native/bin/gcc:
+	-mkdir toolchain
+	curl -L -o toolchain/$(ARCH)-linux-musl-native.tgz https://more.musl.cc/$(MUSL_PREBUILT_TOOLCHAIN_VERSION)/$(ARCH)-linux-musl/$(ARCH)-linux-musl-native.tgz
+	cd toolchain && tar xvfz $(ARCH)-linux-musl-native.tgz
+
+musl: toolchain/$(ARCH)-linux-musl-native/bin/gcc
+
+build/zlib/zlib-$(ZLIB_VERSION).tar.gz:
+	-mkdir -p build/zlib
+	curl -L -o build/zlib/zlib-$(ZLIB_VERSION).tar.gz https://zlib.net/zlib-$(ZLIB_VERSION).tar.gz
+
+build/zlib/zlib-$(ZLIB_VERSION)/src: build/zlib/zlib-$(ZLIB_VERSION).tar.gz
+	-mkdir -p build/zlib/zlib-$(ZLIB_VERSION)
+	tar -xvzf build/zlib/zlib-$(ZLIB_VERSION).tar.gz -C build/zlib/zlib-$(ZLIB_VERSION) --strip-components 1
+	touch build/zlib/zlib-$(ZLIB_VERSION)/src
+
+toolchain/$(ARCH)-linux-musl-native/lib/libz.a: build/zlib/zlib-$(ZLIB_VERSION)/src
+	-mkdir toolchain
+	cd build/zlib/zlib-$(ZLIB_VERSION) && \
+	./configure --static --prefix=$(CURRENT_DIR)/toolchain/$(ARCH)-linux-musl-native && \
+	make PATH=$(CURRENT_DIR)/toolchain/$(ARCH)-linux-musl-native/bin:$$PATH CC=$(ARCH)-linux-musl-gcc && \
+	make install
+
+libz: toolchain/$(ARCH)-linux-musl-native/lib/libz.a
+
+toolchain: musl libz
+
+toolchain-clean:
+	rm -rf build toolchain

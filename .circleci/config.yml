@@ -33,8 +33,7 @@ jobs:
           name: Install native dev tools
           command: |
             sudo apt-get update
-            sudo apt-get -y install gcc zlib1g-dev make rlwrap build-essential
-            apt-cache search docker
+            sudo apt-get -y install gcc zlib1g-dev make build-essential docker-ce
       - run:
           name: Download GraalVM
           command: |
@@ -84,7 +83,7 @@ jobs:
           name: Install native dev tools
           command: |
             sudo apt-get update
-            sudo apt-get -y install gcc zlib1g-dev make rlwrap build-essential
+            sudo apt-get -y install gcc zlib1g-dev make build-essential
       - run:
           name: Download GraalVM
           command: |

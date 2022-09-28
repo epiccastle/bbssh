@@ -21,11 +21,11 @@ INCLUDE_DIRS=$(shell find $(JAVA_HOME)/include -type d)
 INCLUDE_ARGS=$(INCLUDE_DIRS:%=-I%) -I$(JNI_DIR)
 CLOJURE_FILES=$(shell find src/clj -name *.clj)
 ifeq ($(UNAME),Linux)
-	LIB_FILE=$(SOLIB_FILE)
+	LIB_FILE=resources/libbbssh.so
 else ifeq ($(UNAME),FreeBSD)
-	LIB_FILE=$(SOLIB_FILE)
+	LIB_FILE=resources/libbbssh.so
 else ifeq ($(UNAME),Darwin)
-	LIB_FILE=$(DYLIB_FILE)
+	LIB_FILE=resources/libbbssh.dylib
 endif
 
 .PHONY: clean run uberjar uberjar-run uberjar-ls native-image test
@@ -52,9 +52,13 @@ $(SOLIB_FILE): $(C_FILE) $(C_HEADER)
 $(DYLIB_FILE):  $(C_FILE) $(C_HEADER)
 	$(CC) $(INCLUDE_ARGS) -dynamiclib -undefined suppress -flat_namespace $(C_FILE) -o $(DYLIB_FILE) -fPIC
 
-resources/libbbssh.so: $(LIB_FILE)
+resources/libbbssh.so: $(SOLIB_FILE)
 	mkdir -p resources
 	cp $(SOLIB_FILE) resources
+
+resources/libbbssh.dylib: $(DYLIB_FILE)
+	mkdir -p resources
+	cp $(DYLIB_FILE) resources
 
 #
 # Clojure related targets

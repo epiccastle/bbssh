@@ -7,12 +7,7 @@ Babashka pod for SSH support.
 
 ## Installing
 
-For Linux and MacOS:
-
-```shell-session
-$ curl -O https://raw.githubusercontent.com/epiccastle/bbssh/main/scripts/install
-$ bash install
-```
+**The pod should automatically install on first use.**
 
 ## Using
 
@@ -48,7 +43,7 @@ This will generate the file `bbssh`.
 
 ## Running
 
-### In Clojure
+### In clojure
 
 ```
 $ make run
@@ -56,10 +51,25 @@ clj -J-Djava.library.path=resources -m bbssh.core
 ...
 ```
 
-### As Native Image
+### As native image
 
 ```
 $ ./bbssh -v
+```
+
+## System wide installation
+
+If you would like to install a copy manually, use:
+
+```shell-session
+$ curl -O https://raw.githubusercontent.com/epiccastle/bbssh/main/scripts/install
+$ bash install
+```
+
+And then refer to the pod:
+
+```
+(pods/load-pod "bbssh" {:transport :socket})
 ```
 
 ## Namespace layout

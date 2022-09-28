@@ -23,7 +23,7 @@ if [ "$OPTS" ]; then
 fi
 
 echo -n "fetching release information... "
-BBSSH_VERSION_RELEASED="$(curl -sL https://raw.githubusercontent.com/epiccastle/bbssh/master/resources/BBSSH_VERSION_RELEASED)"
+BBSSH_VERSION_RELEASED="$(curl -sL https://raw.githubusercontent.com/epiccastle/bbssh/main/resources/BBSSH_VERSION_RELEASED)"
 echo $BBSSH_VERSION_RELEASED
 
 echo -n "detecting os... "

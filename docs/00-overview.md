@@ -7,6 +7,7 @@ Project repository is [here](https://github.com/epiccastle/bbssh)
 ## Requirements
 
 Babashka v0.10.194 or higher is required for full functionality.
+A local installation of ssh is **not required**.
 
 ## Installation
 

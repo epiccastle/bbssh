@@ -5,7 +5,14 @@ Babashka pod for SSH support.
 [![Babashka](https://raw.githubusercontent.com/babashka/babashka/master/logo/badge.svg)](https://github.com/babashka/babashka)
 [![docs](https://img.shields.io/badge/website-docs-blue)](https://epiccastle.io/bbssh)
 
-This is a work in progress. It is not ready for use.
+## Installing
+
+For Linux and MacOS:
+
+```shell-session
+$ curl -O https://raw.githubusercontent.com/epiccastle/bbssh/master/scripts/install
+$ bash install
+```
 
 ## Using
 

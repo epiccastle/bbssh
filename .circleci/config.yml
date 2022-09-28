@@ -151,14 +151,14 @@ workflows:
   version: 2
   ci:
     jobs:
-      - jvm:
-          filters:
-            branches:
-              only: main
-      - mac:
-          filters:
-            branches:
-              only: main
+      # - jvm:
+      #     filters:
+      #       branches:
+      #         only: main
+      # - mac:
+      #     filters:
+      #       branches:
+      #         only: main
 
       # build on free circleci account runs out of ram
       # Error: Image build request failed with exit status 137

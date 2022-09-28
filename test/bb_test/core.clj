@@ -40,14 +40,16 @@
          '[bb-test.test-known-hosts])
 
 (defn -main [& args]
-  (test/run-tests
-   'bb-test.test-utils
-   'bb-test.test-scp
-   'bb-test.test-password-exec
-   'bb-test.test-user-info
-   'bb-test.test-garbage-collection
-   'bb-test.test-key-pair
-   'bb-test.test-identity-repository
-   'bb-test.test-host-key
-   'bb-test.test-known-hosts
-   ))
+  (let [result
+        (test/run-tests
+         'bb-test.test-scp
+         'bb-test.test-utils
+         'bb-test.test-password-exec
+         'bb-test.test-user-info
+         'bb-test.test-garbage-collection
+         'bb-test.test-key-pair
+         'bb-test.test-identity-repository
+         'bb-test.test-host-key
+         'bb-test.test-known-hosts)]
+    (prn result)
+    (prn (:fail result) (:error result))))

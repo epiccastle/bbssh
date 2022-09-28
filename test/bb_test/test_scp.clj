@@ -189,11 +189,11 @@ files/dir1/dir3: directory
 files/.hidden: Unicode text, UTF-8 text
 "))
 
-    (is (= (docker/exec "sh -c 'cd /root/bbssh-test && find files -exec md5sum {} \\;'")
+    (is (= (docker/exec "sh -c 'cd /root/bbssh-test && find files -exec md5sum {} \\; | sort'")
            "0f343b0931126a20f133d67c2b018a3b  files/dir2/zeroes
-d8e8fca2dc0f896fd7cb4cb0031ba249  files/dir2/test.txt
 67287b8ef38d90cfeef66729c8d32e39  files/dir2/random
 d41d8cd98f00b204e9800998ecf8427e  files/dir1/zero
+d8e8fca2dc0f896fd7cb4cb0031ba249  files/dir2/test.txt
 edfcbda2f87663507ecf63eeb885b956  files/.hidden
 "))
 

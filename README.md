@@ -22,7 +22,7 @@ Here is a simple script that connects over ssh, the runs a command and disconnec
 (ns test-simple.core
   (:require [babashka.pods :as pods]))
 
-(pods/load-pod "./bbssh" {:transport :socket})
+(pods/load-pod 'epiccastle/bbssh "0.1.0")
 
 (require '[pod.epiccastle.bbssh.core :as bbssh])
 

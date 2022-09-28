@@ -39,6 +39,12 @@ jobs:
               tar xzf graalvm-ce-java11-linux-amd64-22.2.0.tar.gz
             fi
       - run:
+          name: Install babashka
+          command: |
+            curl -sLO https://raw.githubusercontent.com/babashka/babashka/master/install
+            chmod +x install
+            ./install
+      - run:
           name: Run JVM tests
           command: |
             make test

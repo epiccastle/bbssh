@@ -33,7 +33,7 @@ After installing try writing the following into `test_bbssh.clj`
 (ns test-bbssh
   (:require [babashka.pods :as pods]))
 
-(pods/load-pod "bbssh" {:transport :socket})
+(pods/load-pod 'epiccastle/bbssh "0.1.0")
 
 (require '[pod.epiccastle.bbssh.core :as bbssh])
 

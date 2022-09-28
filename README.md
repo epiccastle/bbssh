@@ -1,6 +1,9 @@
 # bbssh
 Babashka pod for SSH support.
 
+[![CircleCI](https://circleci.com/gh/epiccastle/bbssh/tree/master.svg?style=shield)](https://circleci.com/gh/epiccastle/bbssh/tree/master)
+[![Babashka](https://raw.githubusercontent.com/babashka/babashka/master/logo/badge.svg)](https://github.com/babashka/babashka)
+
 This is a work in progress. It is not ready for use.
 
 ## Using

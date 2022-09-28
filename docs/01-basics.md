@@ -94,7 +94,7 @@ Specify the format for the final value of `:out` and `:err` by passing in option
 
 ## Streaming between local and remote
 
-Bbssh interoperates with [babashka.process](https://github.com/babashka/process) pipelining. The first argument of `pod.epiccastle.bbssh.core/exec` can be substituted for an `SshProcess` or a babashka.process `Process`. When doing so you need to pass in the session via the options hashmap. Here we stream between from a local process, to a remote process and back to a local process:
+Bbssh interoperates with [babashka.process](https://github.com/babashka/process) pipelining. The first argument of `pod.epiccastle.bbssh.core/exec` can be substituted for an `SshProcess` or a babashka.process `Process`. When doing so you need to pass in the session via the options hashmap. Here we stream from a local process to a remote process and then back to a local process again:
 
 ```clojure
 (-> (babashka.process/process "echo this is local")

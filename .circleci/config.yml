@@ -2,6 +2,7 @@
 #
 # Check https://circleci.com/docs/2.0/language-clojure/ for more details
 #
+
 version: 2.1
 
 jobs:
@@ -29,7 +30,7 @@ jobs:
           name: Install native dev tools
           command: |
             sudo apt-get update
-            sudo apt-get -y install gcc zlib1g-dev make rlwrap
+            sudo apt-get -y install gcc zlib1g-dev make rlwrap build-essential
       - run:
           name: Download GraalVM
           command: |
@@ -38,6 +39,7 @@ jobs:
               curl -O -sL https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-22.2.0/graalvm-ce-java11-linux-amd64-22.2.0.tar.gz
               tar xzf graalvm-ce-java11-linux-amd64-22.2.0.tar.gz
             fi
+            graalvm-ce-java11-22.2.0/bin/gu install native-image
       - run:
           name: Install babashka
           command: |
@@ -148,10 +150,10 @@ workflows:
   version: 2
   ci:
     jobs:
-      # - jvm:
-      #     filters:
-      #       branches:
-      #         only: main
+      - jvm:
+          filters:
+            branches:
+              only: main
       - mac:
           filters:
             branches:

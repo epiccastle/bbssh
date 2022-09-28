@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-
+set -x
 install_dir=${1:-/tmp/clojure}
 mkdir -p "$install_dir"
 cd /tmp

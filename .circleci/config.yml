@@ -30,7 +30,7 @@ jobs:
           name: Install native dev tools
           command: |
             sudo apt-get update
-            sudo apt-get -y install gcc zlib1g-dev make rlwrap build-essential
+            sudo apt-get -y install gcc zlib1g-dev make rlwrap build-essential docker.io
       - run:
           name: Download GraalVM
           command: |
@@ -154,14 +154,12 @@ workflows:
           filters:
             branches:
               only: main
-      - mac:
-          filters:
-            branches:
-              only: main
+      # - mac:
+      #     filters:
+      #       branches:
+      #         only: main
 
-      # build on free circleci account runs out of ram
-      # Error: Image build request failed with exit status 137
-      - linux:
-          filters:
-            branches:
-              only: main
+      # - linux:
+      #     filters:
+      #       branches:
+      #         only: main

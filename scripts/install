@@ -33,7 +33,7 @@ if [ "$?" -eq 0 ]; then
   case "$UNAME_S" in
     Linux*)   PLATFORM=linux COMPRESSION=tgz;;
     FreeBSD*) PLATFORM=freebsd COMPRESSION=tgz;;
-    Darwin*)  PLATFORM=macos COMPRESSION=zip;;
+    Darwin*)  PLATFORM=macos COMPRESSION=tgz;;
     *)        PLATFORM=unknown COMPRESSION=zip;;
   esac
 else

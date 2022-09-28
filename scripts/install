@@ -28,9 +28,9 @@ echo $BBSSH_RELEASED_VERSION
 
 echo -n "detecting os... "
 set +e
-UNAME=$(uname -s)
+UNAME_S=$(uname -s)
 if [ "$?" -eq 0 ]; then
-  case "$UNAME" in
+  case "$UNAME_S" in
     Linux*)   PLATFORM=linux COMPRESSION=tgz;;
     FreeBSD*) PLATFORM=freebsd COMPRESSION=tgz;;
     Darwin*)  PLATFORM=macos COMPRESSION=zip;;
@@ -39,15 +39,28 @@ if [ "$?" -eq 0 ]; then
 else
   PLATFORM=windows COMPRESSION=zip
 fi
+
+UNAME_M=$(uname -m)
+if [ "$?" -eq 0 ]; then
+  case "$UNAME_M" in
+    arm64*)   ARCH=aarch64;;
+    amd64*)   ARCH=amd64;;
+    x86_64*)  ARCH=amd64;;
+    *)        ARCH=unknown;;
+  esac
+else
+  ARCH=unknown
+fi
+
 set -e
-echo $PLATFORM
+echo $PLATFORM $ARCH
 
 case "$PLATFORM" in
   freebsd) echo "freebsd install not supported from installer script"; exit 1;;
   windows) echo "bbssh does not support windows clients (yet)"; exit 1;;
 esac
 
-DOWNLOAD_FILE="bbssh-${BBSSH_RELEASED_VERSION}-${PLATFORM}-amd64.${COMPRESSION}"
+DOWNLOAD_FILE="bbssh-${BBSSH_RELEASED_VERSION}-${PLATFORM}-${ARCH}.${COMPRESSION}"
 DOWNLOAD_URL="https://github.com/epiccastle/bbssh/releases/download/v${BBSSH_RELEASED_VERSION}/${DOWNLOAD_FILE}"
 
 echo -n "downloading archive from $DOWNLOAD_URL... "

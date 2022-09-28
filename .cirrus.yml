@@ -14,5 +14,6 @@ task:
     sudo /usr/sbin/softwareupdate --install-rosetta --agree-to-license
     java -version
     make package-m1 GRAALVM_HOME=$GRAALVM_HOME STATIC=false
+    cp build/bbssh-0.1.0-macos-aarch64.zip  build/bbssh-0.1.0-macos-aarch64.bin
   binaries_artifacts:
     path: "build/*"

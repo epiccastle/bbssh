@@ -4,8 +4,9 @@ $(error Please use a Java 11 version of Graal)
 endif
 STATIC=true
 PATH := $(GRAALVM_HOME)/bin:$(PATH)
-VERSION = $(shell cat .meta/VERSION)
+VERSION = $(shell cat resources/BBSSH_VERSION)
 UNAME = $(shell uname)
+ARCH = $(shell uname -p)
 JNI_DIR=target/jni
 CLASS_FILE=src/c/BbsshUtils.class
 JAR_FILE=target/uberjar/bbssh-$(VERSION)-standalone.jar
@@ -64,16 +65,22 @@ run:
 #
 # Native image related targets
 #
-bbssh: resources/libbbssh.so $(CLOJURE_FILES)
+build/bbssh: resources/libbbssh.so $(CLOJURE_FILES)
 ifeq ($(STATIC),true)
 	GRAALVM_HOME=$(GRAALVM_HOME) clojure -M:native-image-static
 else
 	GRAALVM_HOME=$(GRAALVM_HOME) clojure -M:native-image
 endif
 	mkdir -p build
-	cp bbssh build
+	mv bbssh build
 
-native-image: bbssh
+native-image: build/bbssh
+
+package-linux: build/bbssh
+	cd build && tar cvfz bbssh-$(ARCH)-linux-$(VERSION).tgz bbssh
+
+package-mac: build/bbssh
+	cd build && zip bbssh-$(VERSION)-macos-$(ARCH).zip bbssh
 
 #
 # Babashka related targets

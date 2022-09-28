@@ -13,6 +13,11 @@ Babashka v0.1.194 or higher is required.
 The pod artefact is a single static executable. Install this on your
 path and making it executable. Alternatively, use the installation script:
 
+```bash
+$ curl -O https://raw.githubusercontent.com/epiccastle/bbssh/main/scripts/install
+$ bash install
+```
+
 When installed you should be able to run it from the shell:
 
 ```bash

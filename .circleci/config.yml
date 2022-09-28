@@ -160,12 +160,12 @@ workflows:
           filters:
             branches:
               only: main
-      # - mac:
-      #     filters:
-      #       branches:
-      #         only: main
+      - mac:
+          filters:
+            branches:
+              only: main
 
-      # - linux:
-      #     filters:
-      #       branches:
-      #         only: main
+      - linux:
+          filters:
+            branches:
+              only: main

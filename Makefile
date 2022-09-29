@@ -14,7 +14,7 @@ JAVA_HOME=$(GRAALVM_HOME)
 JAVAC=$(JAVA_HOME)/bin/javac
 INCLUDE_DIRS=$(shell find $(JAVA_HOME)/include -type d)
 INCLUDE_ARGS=$(INCLUDE_DIRS:%=-I%)
-CLOJURE_FILES=$(shell find src/clj -name *.clj)
+CLOJURE_FILES=$(shell find src/clj -name '*.clj')
 ifeq ($(UNAME),Linux)
 	LIB_FILE=libbbssh.a
 else ifeq ($(UNAME),FreeBSD)

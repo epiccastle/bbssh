@@ -8,45 +8,31 @@
  :aliases
  {:native-image
   {
-   :main-opts  ["-m" "clj.native-image" "bbssh.core"
-                "--enable-https"
-                "--no-fallback"
-                "--allow-incomplete-classpath"
-                "--enable-all-security-services"
-                "-H:+ReportExceptionStackTraces"
-                "-H:ConfigurationFileDirectories=graal-configs/"
-                "--initialize-at-build-time"
-                "--initialize-at-run-time=com.jcraft.jsch.PortWatcher"
-                "--native-compiler-options=-I/home/crispin/dev/clojure/bbssh/src/c/"
-                "--native-compiler-options=-L/home/crispin/dev/clojure/bbssh/"
-                "-H:Name=bbssh"]
-   :jvm-opts   ["-Dclojure.compiler.direct-linking=true"]
-   :extra-deps {clj.native-image/clj.native-image
-                {:git/url    "https://github.com/taylorwood/clj.native-image.git"
-                 :exclusions [commons-logging/commons-logging
-                              org.slf4j/slf4j-nop]
-                 :sha        "5227df16ead1fef7cddd94e6853d810e7d08579b"}}}
+   :extra-paths ["."]
+   :extra-deps {org.clojure/clojure {:mvn/version "1.10.1"}
+                org.clojure/tools.deps.alpha {:mvn/version "0.9.755"}
+                org.clojure/tools.namespace {:mvn/version "1.0.0"}}
+   :main-opts  ["-m" "build"]
+   :jvm-opts   ["-Dclojure.compiler.direct-linking=true"]}
 
   :native-image-static
   {
-   :main-opts  ["-m" "clj.native-image" "bbssh.core"
-                "--enable-https"
-                "--no-fallback"
-                "--static"
-                "-H:+StaticExecutableWithDynamicLibC"
-                "--allow-incomplete-classpath"
-                "--enable-all-security-services"
-                "-H:+ReportExceptionStackTraces"
-                "-H:ConfigurationFileDirectories=graal-configs/"
-                "--initialize-at-build-time"
-                "--initialize-at-run-time=com.jcraft.jsch.PortWatcher"
-                "-H:Name=bbssh"]
-   :jvm-opts   ["-Dclojure.compiler.direct-linking=true"]
-   :extra-deps {clj.native-image/clj.native-image
-                {:git/url    "https://github.com/taylorwood/clj.native-image.git"
-                 :exclusions [commons-logging/commons-logging
-                              org.slf4j/slf4j-nop]
-                 :sha        "5227df16ead1fef7cddd94e6853d810e7d08579b"}}}
+   :extra-paths ["."]
+   :extra-deps {org.clojure/clojure {:mvn/version "1.10.1"}
+                org.clojure/tools.deps.alpha {:mvn/version "0.9.755"}
+                org.clojure/tools.namespace {:mvn/version "1.0.0"}}
+   :main-opts  ["-m" "build" "--static"]
+   :jvm-opts   ["-Dclojure.compiler.direct-linking=true"]}
+
+  :native-image-musl
+  {
+   :extra-paths ["."]
+   :extra-deps {org.clojure/clojure {:mvn/version "1.10.1"}
+                org.clojure/tools.deps.alpha {:mvn/version "0.9.755"}
+                org.clojure/tools.namespace {:mvn/version "1.0.0"}}
+   :main-opts  ["-m" "build" "--static"
+                "--libc=musl" "-H:CCompilerOption=-Wl,-z,stack-size=2097152"]
+   :jvm-opts   ["-Dclojure.compiler.direct-linking=true"]}
 
   :codox {:extra-deps {codox/codox {:mvn/version "0.10.8"}
                        babashka/fs {:mvn/version "0.1.11"}

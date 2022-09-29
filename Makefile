@@ -6,11 +6,7 @@ STATIC=false
 PATH := $(GRAALVM_HOME)/bin:$(PATH)
 VERSION = $(shell cat resources/BBSSH_VERSION)
 UNAME = $(shell uname)
-JNI_DIR=target/jni
 CLASS_FILE=src/c/BbsshUtils.class
-JAR_FILE=target/uberjar/bbssh-$(VERSION)-standalone.jar
-SOLIB_FILE=libbbssh.so
-DYLIB_FILE=libbbssh.dylib
 JAVA_FILE=src/c/BbsshUtils.java
 C_FILE=src/c/BbsshUtils.c
 C_HEADER=src/c/BbsshUtils.h
@@ -20,11 +16,13 @@ INCLUDE_DIRS=$(shell find $(JAVA_HOME)/include -type d)
 INCLUDE_ARGS=$(INCLUDE_DIRS:%=-I%)
 CLOJURE_FILES=$(shell find src/clj -name *.clj)
 ifeq ($(UNAME),Linux)
-	LIB_FILE=resources/libbbssh.so
+	LIB_FILE=libbbssh.a
 else ifeq ($(UNAME),FreeBSD)
-	LIB_FILE=resources/libbbssh.so
+	LIB_FILE=libbbssh.a
 else ifeq ($(UNAME),Darwin)
-	LIB_FILE=resources/libbbssh.dylib
+	LIB_FILE=libbbssh.a
+else # windows
+	LIB_FILE=bbssh.lib
 endif
 
 .PHONY: clean run uberjar uberjar-run uberjar-ls native-image test
@@ -32,7 +30,7 @@ endif
 all: bbssh
 
 clean:
-	-rm -rf resources/libbbssh.so resources/libbbssh.dylib target bbssh
+	-rm -rf resources/libbbssh.so resources/libbbssh.dylib target bbssh build
 
 #
 # C library related targets
@@ -40,20 +38,11 @@ clean:
 $(CLASS_FILE): $(JAVA_FILE)
 	$(JAVAC) $(JAVA_FILE)
 
-$(SOLIB_FILE): $(C_FILE) $(C_HEADER)
-	# $(CC) $(INCLUDE_ARGS) -shared $(C_FILE) -o $(SOLIB_FILE) -fPIC
+libbbssh.a: $(C_FILE) $(C_HEADER)
 	$(CC) $(INCLUDE_ARGS) -c $(C_FILE) -o libbbssh.a
 
-$(DYLIB_FILE):  $(C_FILE) $(C_HEADER)
-	$(CC) $(INCLUDE_ARGS) -dynamiclib -undefined suppress -flat_namespace $(C_FILE) -o $(DYLIB_FILE) -fPIC
-
-resources/libbbssh.so: $(SOLIB_FILE)
-	mkdir -p resources
-	cp $(SOLIB_FILE) resources
-
-resources/libbbssh.dylib: $(DYLIB_FILE)
-	mkdir -p resources
-	cp $(DYLIB_FILE) resources
+bbssh.lib:
+	cl -LD $(C_FILE)
 
 #
 # Clojure related targets
@@ -64,16 +53,17 @@ run: $(LIB_FILE) $(CLASS_FILE)
 #
 # Native image related targets
 #
-build/bbssh: #_$(LIB_FILE) $(CLOJURE_FILES)
-ifeq ($(STATIC),true)
-	GRAALVM_HOME=$(GRAALVM_HOME) clojure -M:native-image-static
-else
-	GRAALVM_HOME=$(GRAALVM_HOME) clojure -M:native-image
-endif
-	mkdir -p build
-	cp bbssh build
 
-native-image: build/bbssh
+native-image: $(LIB_FILE) $(CLOJURE_FILES)
+	clojure -M:native-image
+
+native-image-static: $(LIB_FILE) $(CLOJURE_FILES)
+	clojure -M:native-image-static
+
+native-image-musl: $(LIB_FILE) $(CLOJURE_FILES) toolchain
+	PATH=toolchain/x86_64-linux-musl-native/bin:$(PATH) \
+		clojure -M:native-image-musl
+
 
 package-linux: build/bbssh
 	cd build && tar cvfz bbssh-$(VERSION)-linux-amd64.tgz bbssh
@@ -105,3 +95,39 @@ codox:
 
 codox-upload:
 	rsync -av --delete target/docs/ www-data@epiccastle.io:~/epiccastle.io/public/bbssh/
+
+
+#
+# musl toolchain
+#
+ARCH=x86_64
+MUSL_PREBUILT_TOOLCHAIN_VERSION=10.2.1
+ZLIB_VERSION=1.2.12
+CURRENT_DIR = $(shell pwd)
+
+toolchain/$(ARCH)-linux-musl-native/bin/gcc:
+	-mkdir toolchain
+	curl -L -o toolchain/$(ARCH)-linux-musl-native.tgz https://more.musl.cc/$(MUSL_PREBUILT_TOOLCHAIN_VERSION)/$(ARCH)-linux-musl/$(ARCH)-linux-musl-native.tgz
+	cd toolchain && tar xvfz $(ARCH)-linux-musl-native.tgz
+
+musl: toolchain/$(ARCH)-linux-musl-native/bin/gcc
+
+build/zlib/zlib-$(ZLIB_VERSION).tar.gz:
+	-mkdir -p build/zlib
+	curl -L -o build/zlib/zlib-$(ZLIB_VERSION).tar.gz https://zlib.net/zlib-$(ZLIB_VERSION).tar.gz
+
+build/zlib/zlib-$(ZLIB_VERSION)/src: build/zlib/zlib-$(ZLIB_VERSION).tar.gz
+	-mkdir -p build/zlib/zlib-$(ZLIB_VERSION)
+	tar -xvzf build/zlib/zlib-$(ZLIB_VERSION).tar.gz -C build/zlib/zlib-$(ZLIB_VERSION) --strip-components 1
+	touch build/zlib/zlib-$(ZLIB_VERSION)/src
+
+toolchain/$(ARCH)-linux-musl-native/lib/libz.a: build/zlib/zlib-$(ZLIB_VERSION)/src
+	-mkdir toolchain
+	cd build/zlib/zlib-$(ZLIB_VERSION) && \
+	./configure --static --prefix=$(CURRENT_DIR)/toolchain/$(ARCH)-linux-musl-native && \
+	make PATH=$(CURRENT_DIR)/toolchain/$(ARCH)-linux-musl-native/bin:$$PATH CC=$(ARCH)-linux-musl-gcc && \
+	make install
+
+libz: toolchain/$(ARCH)-linux-musl-native/lib/libz.a
+
+toolchain: musl libz

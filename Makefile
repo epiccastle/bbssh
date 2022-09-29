@@ -42,7 +42,7 @@ libbbssh.a: $(C_FILE) $(C_HEADER)
 	$(CC) $(INCLUDE_ARGS) -c $(C_FILE) -o libbbssh.a
 
 bbssh.lib:
-	cl -LD $(C_FILE)
+	cl.exe -LD $(C_FILE)
 
 #
 # Clojure related targets

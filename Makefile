@@ -42,7 +42,7 @@ $(CLASS_FILE): $(JAVA_FILE)
 
 $(SOLIB_FILE): $(C_FILE) $(C_HEADER)
 	# $(CC) $(INCLUDE_ARGS) -shared $(C_FILE) -o $(SOLIB_FILE) -fPIC
-	$(CC) $(INCLUDE_ARGS) $(C_FILE) -fPIC
+	$(CC) $(INCLUDE_ARGS) -c $(C_FILE) -o libbbssh.a
 
 $(DYLIB_FILE):  $(C_FILE) $(C_HEADER)
 	$(CC) $(INCLUDE_ARGS) -dynamiclib -undefined suppress -flat_namespace $(C_FILE) -o $(DYLIB_FILE) -fPIC

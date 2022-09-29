@@ -71,5 +71,18 @@ public final class BbsshUtils {
     @CFunction("enter_raw_mode")
     public static native void enter_raw_mode(int quiet);
 
+    @CFunction("is_stdout_a_tty")
+    public static native int is_stdout_a_tty();
+
+    @CFunction("get_terminal_width")
+    public static native int get_terminal_width();
+
+    @CFunction("get_terminal_height")
+    public static native int get_terminal_height();
+
+    @CFunction("ssh_open_auth_socket")
+    public static native int
+        ssh_open_auth_socket(CCharPointer cpath);
+
 
 }

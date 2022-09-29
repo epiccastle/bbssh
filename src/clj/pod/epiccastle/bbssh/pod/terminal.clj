@@ -1,11 +1,15 @@
 (ns pod.epiccastle.bbssh.pod.terminal)
 
 (defn is-terminal? []
-  ;;(pos? (BbsshUtils/is-a-tty))
+  (pos? (BbsshUtils/is-stdout-a-tty))
   )
 
 (defn get-width []
-  ;;(BbsshUtils/get-terminal-width)
+  (BbsshUtils/get-terminal-width)
+  )
+
+(defn get-height []
+  (BbsshUtils/get-terminal-height)
   )
 
 (defn enter-raw-mode [n]

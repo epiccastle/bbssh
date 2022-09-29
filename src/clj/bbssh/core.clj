@@ -13,7 +13,16 @@
       string/trim))
 
 (defn -main [& args]
-  (let [{:keys [options]} (cli/parse-opts args [["-v" "--version"]])]
+  #_(lib/init!)
+  #_(prn 'load (clojure.lang.RT/loadLibrary "bbssh"))
+  #_(System/load "/home/crispin/dev/clojure/bbssh/libbbssh.so")
+  #_(prn (System/loadLibrary "bbssh"))
+  (prn (BbsshUtils/enter-raw-mode 1))
+  (let [result (read-line)]
+    (prn (BbsshUtils/leave-raw-mode 1))
+    (prn result)
+    )
+  #_(let [{:keys [options]} (cli/parse-opts args [["-v" "--version"]])]
     (if (:version options)
       (println "bbssh version" version)
       (do

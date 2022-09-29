@@ -5,6 +5,9 @@
 
 version: 2.1
 
+orbs:
+  win: circleci/windows@2.2.0
+
 jobs:
   test:
     machine:
@@ -152,19 +155,30 @@ jobs:
           path: build
           destination: build
 
+  windows:
+    executor: win/default
+
+    steps:
+      - checkout
+      - run: Write-Host 'Hello, Windows'
+
 workflows:
   version: 2
   ci:
     jobs:
-      - test:
-          filters:
-            branches:
-              only: main
-      - mac:
-          filters:
-            branches:
-              only: main
-      - linux:
+      # - test:
+      #     filters:
+      #       branches:
+      #         only: main
+      # - mac:
+      #     filters:
+      #       branches:
+      #         only: main
+      # - linux:
+      #     filters:
+      #       branches:
+      #         only: main
+      - windows:
           filters:
             branches:
               only: main

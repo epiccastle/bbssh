@@ -164,7 +164,8 @@ jobs:
           name: debug
           shell: cmd.exe
           command: |
-            "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
+            "c:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat"
+            pwd
 
 
 workflows:

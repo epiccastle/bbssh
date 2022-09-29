@@ -25,10 +25,10 @@
     (docker/exec "rm /root/bbssh-test")
     (docker/exec "mkdir /root/bbssh-test")
     (scp/scp-to [(io/file "test/files")
-                 ["content🚀" {:name "string"}]
-                 [(byte-array [1 2 3 4]) {:name "byte-array"}]
+                 ["content🚀" {:filename "string"}]
+                 [(byte-array [1 2 3 4]) {:filename "byte-array"}]
                  [(io/input-stream (byte-array [0xf0 0x9f 0x9a 0x80 0x00]))
-                  {:name "input-stream"
+                  {:filename "input-stream"
                    :size 5
                    }]]
                 "bbssh-test"
@@ -138,10 +138,10 @@ edfcbda2f87663507ecf63eeb885b956  files/.hidden
     (is
      (= 10
         (scp/scp-to [(io/file "test/files")
-                     ["content🚀" {:name "string"}]
-                     [(byte-array [1 2 3 4]) {:name "byte-array"}]
+                     ["content🚀" {:filename "string"}]
+                     [(byte-array [1 2 3 4]) {:filename "byte-array"}]
                      [(io/input-stream (byte-array [0xf0 0x9f 0x9a 0x80 0x00]))
-                      {:name "input-stream"
+                      {:filename "input-stream"
                        :size 5
                        }]]
                     "bbssh-test"

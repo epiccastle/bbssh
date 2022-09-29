@@ -232,9 +232,9 @@
          preserve-times? true
          buffer-size default-buffer-size}
     :as options}]
-  (when-not (:name info)
-    (throw (ex-info "scp data info must contain :name"
-                    {:type ::name-error})))
+  (when-not (:filename info)
+    (throw (ex-info "scp data info must contain :filename"
+                    {:type ::filename-error})))
   (let [data (if (string? source)
                (.getBytes source (:encoding info "utf-8"))
                source)
@@ -252,7 +252,7 @@
      (format "C%04o %d %s"
              (:mode info mode)
              size
-             (:name info)))
+             (:filename info)))
     (let [progress-context
           (if progress-fn
             (io-copy-with-progress source in
@@ -315,7 +315,7 @@
   When using raw data transfers, the source declaration should be
   a vector of the form `[data info-hash]`. The `data` can be a string,
   a byte-array or an input-stream. The `info-hash` must contain a
-  `:name` that is used to specify the name of the destination file.
+  `:filename` that is used to specify the name of the destination file.
   In the case of an input-stream the size of the stream in bytes
   must be specified in a `:size` entry in the `info-hash` and must
   be correct (or else the scp protocol communication will fail).

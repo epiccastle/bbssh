@@ -164,7 +164,11 @@ jobs:
           name: debug
           shell: powershell.exe
           command: |
-            "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat"
+            cmd.exe /c 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat'
+            Write-Host "setup"
+            pwd
+            (New-Object Net.WebClient).DownloadFile('https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-22.0.0.2/graalvm-ce-java11-windows-amd64-22.0.0.2.zip', 'graalvm.zip')
+            dir
 
 
 

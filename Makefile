@@ -9,15 +9,15 @@ UNAME = $(shell uname)
 JNI_DIR=target/jni
 CLASS_FILE=src/c/BbsshUtils.class
 JAR_FILE=target/uberjar/bbssh-$(VERSION)-standalone.jar
-SOLIB_FILE=$(JNI_DIR)/libbbssh.so
-DYLIB_FILE=$(JNI_DIR)/libbbssh.dylib
+SOLIB_FILE=libbbssh.so
+DYLIB_FILE=libbbssh.dylib
 JAVA_FILE=src/c/BbsshUtils.java
 C_FILE=src/c/BbsshUtils.c
-C_HEADER=$(JNI_DIR)/BbsshUtils.h
+C_HEADER=src/c/BbsshUtils.h
 JAVA_HOME=$(GRAALVM_HOME)
 JAVAC=$(JAVA_HOME)/bin/javac
 INCLUDE_DIRS=$(shell find $(JAVA_HOME)/include -type d)
-INCLUDE_ARGS=$(INCLUDE_DIRS:%=-I%) -I$(JNI_DIR)
+INCLUDE_ARGS=$(INCLUDE_DIRS:%=-I%)
 CLOJURE_FILES=$(shell find src/clj -name *.clj)
 ifeq ($(UNAME),Linux)
 	LIB_FILE=resources/libbbssh.so
@@ -40,13 +40,9 @@ clean:
 $(CLASS_FILE): $(JAVA_FILE)
 	$(JAVAC) $(JAVA_FILE)
 
-$(C_HEADER): $(CLASS_FILE)
-	mkdir -p $(JNI_DIR)
-	$(JAVAC) -h $(JNI_DIR) $(JAVA_FILE)
-	@touch $(C_HEADER)
-
 $(SOLIB_FILE): $(C_FILE) $(C_HEADER)
-	$(CC) $(INCLUDE_ARGS) -shared $(C_FILE) -o $(SOLIB_FILE) -fPIC
+	# $(CC) $(INCLUDE_ARGS) -shared $(C_FILE) -o $(SOLIB_FILE) -fPIC
+	$(CC) $(INCLUDE_ARGS) $(C_FILE) -fPIC
 
 $(DYLIB_FILE):  $(C_FILE) $(C_HEADER)
 	$(CC) $(INCLUDE_ARGS) -dynamiclib -undefined suppress -flat_namespace $(C_FILE) -o $(DYLIB_FILE) -fPIC
@@ -62,13 +58,13 @@ resources/libbbssh.dylib: $(DYLIB_FILE)
 #
 # Clojure related targets
 #
-run:
+run: $(LIB_FILE) $(CLASS_FILE)
 	clj -J-Djava.library.path=resources -m bbssh.core
 
 #
 # Native image related targets
 #
-build/bbssh: $(LIB_FILE) $(CLOJURE_FILES)
+build/bbssh: #_$(LIB_FILE) $(CLOJURE_FILES)
 ifeq ($(STATIC),true)
 	GRAALVM_HOME=$(GRAALVM_HOME) clojure -M:native-image-static
 else

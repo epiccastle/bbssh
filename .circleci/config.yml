@@ -176,10 +176,10 @@ workflows:
   version: 2
   ci:
     jobs:
-      - test:
-          filters:
-            branches:
-              only: main
+      # - test:
+      #     filters:
+      #       branches:
+      #         only: main
       - mac:
           filters:
             branches:

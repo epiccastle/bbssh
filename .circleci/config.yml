@@ -176,19 +176,19 @@ workflows:
   version: 2
   ci:
     jobs:
-      # - test:
-      #     filters:
-      #       branches:
-      #         only: main
-      # - mac:
-      #     filters:
-      #       branches:
-      #         only: main
-      # - linux:
-      #     filters:
-      #       branches:
-      #         only: main
-      - windows:
+      - test:
           filters:
             branches:
               only: main
+      - mac:
+          filters:
+            branches:
+              only: main
+      - linux:
+          filters:
+            branches:
+              only: main
+      # - windows:
+      #     filters:
+      #       branches:
+      #         only: main

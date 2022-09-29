@@ -17,6 +17,8 @@
                 "-H:ConfigurationFileDirectories=graal-configs/"
                 "--initialize-at-build-time"
                 "--initialize-at-run-time=com.jcraft.jsch.PortWatcher"
+                "--native-compiler-options=-I/home/crispin/dev/clojure/bbssh/src/c/"
+                "--native-compiler-options=-L/home/crispin/dev/clojure/bbssh/"
                 "-H:Name=bbssh"]
    :jvm-opts   ["-Dclojure.compiler.direct-linking=true"]
    :extra-deps {clj.native-image/clj.native-image

@@ -29,7 +29,7 @@ endif
 
 .PHONY: clean run uberjar uberjar-run uberjar-ls native-image test
 
-all: bbssh
+all: build/bbssh
 
 clean:
 	-rm -rf resources/libbbssh.so resources/libbbssh.dylib target bbssh

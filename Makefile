@@ -103,13 +103,18 @@ native-image-musl: toolchain $(NATIVE_LIB_FILE)
 
 package-linux: native-image-musl
 	cd build && tar cvfz bbssh-$(VERSION)-linux-amd64.tgz bbssh
+	-mkdir dist
+	cp build/bbssh build/bbssh-$(VERSION)-linux-amd64.tgz dist
 
 package-macos: native-image
 	cd build && tar cvfz bbssh-$(VERSION)-macos-amd64.tgz bbssh
+	-mkdir dist
+	cp build/bbssh build/bbssh-$(VERSION)-macos-amd64.tgz dist
 
 package-m1: native-image
 	cd build && tar cvfz bbssh-$(VERSION)-macos-aarch64.tgz bbssh
-
+	-mkdir dist
+	cp build/bbssh build/bbssh-$(VERSION)-macos-aarch64.tgz dist
 #
 # Babashka related targets
 #

@@ -110,8 +110,8 @@ jobs:
             - ~/graalvm-ce-java11-22.0.0.2
           key: linux-{{ checksum "deps.edn" }}-{{ checksum ".circleci/config.yml" }}
       - store_artifacts:
-          path: build
-          destination: build
+          path: dist
+          destination: dist
 
   mac:
     macos:
@@ -152,8 +152,8 @@ jobs:
             - ~/graalvm-ce-java11-22.2.0
           key: mac-{{ checksum "deps.edn" }}-{{ checksum ".circleci/config.yml" }}
       - store_artifacts:
-          path: build
-          destination: build
+          path: dist
+          destination: dist
 
   windows:
     executor: win/default

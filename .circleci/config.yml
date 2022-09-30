@@ -191,4 +191,4 @@ workflows:
       - windows:
           filters:
             branches:
-              only: main
+              only: remove-jni

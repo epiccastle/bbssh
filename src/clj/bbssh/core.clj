@@ -41,6 +41,7 @@
             (println "Error: bbssh needs to be run as a babashka pod."))
           (System/exit 1))
 
-        (lib/init!)
-        (clojure.lang.RT/loadLibrary "bbssh")
+        ;;(lib/init!)
+        (when-not (native-image?)
+          (clojure.lang.RT/loadLibrary "bbssh"))
         (pod/main)))))

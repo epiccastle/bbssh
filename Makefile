@@ -41,6 +41,9 @@ $(CLASS_FILE): $(JAVA_FILE)
 libbbssh.a: $(C_FILE) $(C_HEADER)
 	$(CC) $(INCLUDE_ARGS) -c $(C_FILE) -o libbbssh.a
 
+libbbssh.so: $(C_FILE) $(C_HEADER)
+	$(CC) $(INCLUDE_ARGS) -shared $(C_FILE) -fPIC -o libbbssh.so
+
 bbssh.lib:
 	cl.exe -LD $(C_FILE)
 
@@ -48,7 +51,7 @@ bbssh.lib:
 # Clojure related targets
 #
 run: $(LIB_FILE) $(CLASS_FILE)
-	clj -J-Djava.library.path=resources -m bbssh.core
+	clj -J-Djava.library.path=. -m bbssh.core
 
 #
 # Native image related targets

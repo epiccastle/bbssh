@@ -143,14 +143,14 @@ CURRENT_DIR = $(shell pwd)
 
 toolchain/$(ARCH)-linux-musl-native/bin/gcc:
 	-mkdir toolchain
-	curl -L -o toolchain/$(ARCH)-linux-musl-native.tgz https://more.musl.cc/$(MUSL_PREBUILT_TOOLCHAIN_VERSION)/$(ARCH)-linux-musl/$(ARCH)-linux-musl-native.tgz
+	curl -k -L -o toolchain/$(ARCH)-linux-musl-native.tgz https://more.musl.cc/$(MUSL_PREBUILT_TOOLCHAIN_VERSION)/$(ARCH)-linux-musl/$(ARCH)-linux-musl-native.tgz
 	cd toolchain && tar xvfz $(ARCH)-linux-musl-native.tgz
 
 musl: toolchain/$(ARCH)-linux-musl-native/bin/gcc
 
 build/zlib/zlib-$(ZLIB_VERSION).tar.gz:
 	-mkdir -p build/zlib
-	curl -L -o build/zlib/zlib-$(ZLIB_VERSION).tar.gz https://zlib.net/zlib-$(ZLIB_VERSION).tar.gz
+	curl -k -L -o build/zlib/zlib-$(ZLIB_VERSION).tar.gz https://zlib.net/zlib-$(ZLIB_VERSION).tar.gz
 
 build/zlib/zlib-$(ZLIB_VERSION)/src: build/zlib/zlib-$(ZLIB_VERSION).tar.gz
 	-mkdir -p build/zlib/zlib-$(ZLIB_VERSION)

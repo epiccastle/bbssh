@@ -120,7 +120,7 @@
         "--initialize-at-run-time=com.jcraft.jsch.PortWatcher"
         "--native-compiler-options=-I{{PROJECT_ROOT}}/src/c"
         "--native-compiler-options=-L{{PROJECT_ROOT}}/build"
-        "-H:Name=bbssh"]
+        "-H:Name=build/bbssh"]
        extra-args)
       (map (fn [arg]
              (if (.contains arg "{{PROJECT_ROOT}}")

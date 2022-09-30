@@ -56,7 +56,7 @@ public final class BbsshUtils {
     public static final class Directives implements CContext.Directives {
         @Override
         public List<String> getHeaderFiles() {
-            return Collections.singletonList("\"bbsshutils.h\"");
+            return Collections.singletonList("\"bbssh.h\"");
         }
 
         @Override

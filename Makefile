@@ -39,6 +39,7 @@ $(CLASS_FILE): $(JAVA_FILE)
 	$(JAVAC) $(JAVA_FILE)
 
 libbbssh.a:
+	$(JAVAC) -h src/c/native/ src/c/native/BbsshUtils.java
 	$(CC) $(INCLUDE_ARGS) -c src/c/bbssh.c -o libbbssh.a
 
 libbbssh.so:

@@ -507,13 +507,6 @@
         "allPublicMethods": true
     },
     {
-        "name": "com.jcraft.jsch.jce.SignatureECDSA512",
-        "allDeclaredConstructors": true,
-        "allPublicConstructors": true,
-        "allDeclaredMethods": true,
-        "allPublicMethods": true
-    },
-    {
         "name": "com.jcraft.jsch.jce.SignatureRSA",
         "allDeclaredConstructors": true,
         "allPublicConstructors": true,
@@ -1314,12 +1307,6 @@
         "allPublicConstructors": true
     },
     {
-        "name": "java.security.MessageDigest  ",
-        "allPublicMethods": true,
-        "allPublicFields": true,
-        "allPublicConstructors": true
-    },
-    {
         "name": "java.util.concurrent.LinkedBlockingQueue",
         "allPublicMethods": true,
         "allPublicFields": true,
@@ -1417,12 +1404,6 @@
     },
     {
         "name": "java.util.zip.GZIPOutputStream",
-        "allPublicMethods": true,
-        "allPublicFields": true,
-        "allPublicConstructors": true
-    },
-    {
-        "name": "org.yaml.snakeyaml.error.YAMLException",
         "allPublicMethods": true,
         "allPublicFields": true,
         "allPublicConstructors": true

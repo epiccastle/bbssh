@@ -26,4 +26,15 @@
           (System/exit 1))
         (when-not (native-image?)
           (clojure.lang.RT/loadLibrary "bbssh"))
-        (pod/main)))))
+        (if (System/getenv "TEST")
+          (do
+            (prn {:width (BbsshUtils/get-terminal-width)
+                  :height (BbsshUtils/get-terminal-height)
+                  :tty? (BbsshUtils/is-stdout-a-tty)})
+            (print "enter: ")
+            (.flush *out*)
+            (BbsshUtils/enter-raw-mode 1)
+            (let [res (read-line)]
+              (BbsshUtils/leave-raw-mode 1)
+              (prn 'result res)))
+          (pod/main))))))

@@ -107,22 +107,24 @@
   (try
     (build
      "bbssh.core"
-     (concat
-      [
-       "--enable-https"
-       "--no-fallback"
-       "--allow-incomplete-classpath"
-       "--enable-all-security-services"
-       "-H:+ReportExceptionStackTraces"
-       "-H:ConfigurationFileDirectories=graal-configs/"
-       "--initialize-at-build-time"
-       "--initialize-at-run-time=com.jcraft.jsch.PortWatcher"
-       "-H:Name=bbssh"]
-      (for [arg extra-args]
-        (if (.contains arg "{{PROJECT_ROOT}}")
-          (string/replace arg #"\{\{PROJECT_ROOT\}\}" project-root)
-          arg)
-        ))
-     )
+     (->>
+      (concat
+       [
+        "--enable-https"
+        "--no-fallback"
+        "--allow-incomplete-classpath"
+        "--enable-all-security-services"
+        "-H:+ReportExceptionStackTraces"
+        "-H:ConfigurationFileDirectories=graal-configs/"
+        "--initialize-at-build-time"
+        "--initialize-at-run-time=com.jcraft.jsch.PortWatcher"
+        "--native-compiler-options=-I{{PROJECT_ROOT}}/src/c"
+        "--native-compiler-options=-L{{PROJECT_ROOT}}"
+        "-H:Name=bbssh"]
+       extra-args)
+      (map (fn [arg]
+             (if (.contains arg "{{PROJECT_ROOT}}")
+               (string/replace arg #"\{\{PROJECT_ROOT\}\}" project-root)
+               arg)))))
     (finally
       (shutdown-agents))))

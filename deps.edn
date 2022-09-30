@@ -20,10 +20,7 @@
                 org.clojure/tools.deps.alpha {:mvn/version "0.9.755"}
                 org.clojure/tools.namespace {:mvn/version "1.0.0"}}
    :main-opts  ["-m" "build"
-                "-H:CCompilerOption={{PROJECT_ROOT}}/libbbssh.a"
-                "--native-compiler-options=-I{{PROJECT_ROOT}}/src/c"
-                "--native-compiler-options=-L{{PROJECT_ROOT}}"
-                ]
+                "-H:CCompilerOption={{PROJECT_ROOT}}/libbbssh.a"]
    :jvm-opts   ["-Dclojure.compiler.direct-linking=true"]}
 
   :native-image-static-dynamic-lib-c
@@ -33,10 +30,7 @@
                 org.clojure/tools.deps.alpha {:mvn/version "0.9.755"}
                 org.clojure/tools.namespace {:mvn/version "1.0.0"}}
    :main-opts  ["-m" "build"
-                "-H:+StaticExecutableWithDynamicLibC"
-                "--native-compiler-options=-I{{PROJECT_ROOT}}/src/c"
-                "--native-compiler-options=-L{{PROJECT_ROOT}}"
-                ]
+                "-H:+StaticExecutableWithDynamicLibC"]
    :jvm-opts   ["-Dclojure.compiler.direct-linking=true"]}
 
   :native-image-static
@@ -46,9 +40,7 @@
                 org.clojure/tools.deps.alpha {:mvn/version "0.9.755"}
                 org.clojure/tools.namespace {:mvn/version "1.0.0"}}
    :main-opts  ["-m" "build"
-                "--static"
-                "--native-compiler-options=-I{{PROJECT_ROOT}}/src/c"
-                "--native-compiler-options=-L{{PROJECT_ROOT}}"]
+                "--static"]
    :jvm-opts   ["-Dclojure.compiler.direct-linking=true"]}
 
   :native-image-musl
@@ -59,8 +51,6 @@
                 org.clojure/tools.namespace {:mvn/version "1.0.0"}}
    :main-opts  ["-m" "build"
                 "--static"
-                "--native-compiler-options=-I{{PROJECT_ROOT}}/src/c"
-                "--native-compiler-options=-L{{PROJECT_ROOT}}"
                 "--libc=musl"
                 "-H:CCompilerOption=-Wl,-z,stack-size=2097152"]
    :jvm-opts   ["-Dclojure.compiler.direct-linking=true"]}

@@ -24,7 +24,6 @@
           (binding [*out* *err*]
             (println "Error: bbssh needs to be run as a babashka pod."))
           (System/exit 1))
-
         (when-not (native-image?)
           (clojure.lang.RT/loadLibrary "bbssh"))
         (pod/main)))))

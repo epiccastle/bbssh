@@ -9,7 +9,7 @@
  {:run-local
   {
    :extra-paths ["src/c/jni"]
-   :jvm-opts ["-Djava.library.path=."]
+   :jvm-opts ["-Djava.library.path=build"]
    :main-opts ["-m" "bbssh.core"]
    }
 
@@ -20,7 +20,8 @@
                 org.clojure/tools.deps.alpha {:mvn/version "0.9.755"}
                 org.clojure/tools.namespace {:mvn/version "1.0.0"}}
    :main-opts  ["-m" "build"
-                "-H:CCompilerOption={{PROJECT_ROOT}}/libbbssh.a"]
+                ;;"-H:CCompilerOption={{PROJECT_ROOT}}/build/libbbssh.a"
+                ]
    :jvm-opts   ["-Dclojure.compiler.direct-linking=true"]}
 
   :native-image-static-dynamic-lib-c

@@ -16,13 +16,21 @@ INCLUDE_DIRS=$(shell find $(JAVA_HOME)/include -type d)
 INCLUDE_ARGS=$(INCLUDE_DIRS:%=-I%)
 CLOJURE_FILES=$(shell find src/clj -name '*.clj')
 ifeq ($(UNAME),Linux)
-	LIB_FILE=libbbssh.a
+	NATIVE_LIB_FILE=build/libbbssh.a
+	JNI_LIB_FILE=build/libbbssh.so
+	FLAVOUR=unix
 else ifeq ($(UNAME),FreeBSD)
-	LIB_FILE=libbbssh.a
+	NATIVE_LIB_FILE=build/libbbssh.a
+	JNI_LIB_FILE=build/libbbssh.so
+	FLAVOUR=unix
 else ifeq ($(UNAME),Darwin)
-	LIB_FILE=libbbssh.a
-else # windows
-	LIB_FILE=bbssh.lib
+	NATIVE_LIB_FILE=build/libbbssh.a
+	JNI_LIB_FILE=build/libbbssh.dylib
+	FLAVOUR=mac
+else
+	NATIVE_LIB_FILE=build/bbssh.lib
+	JNI_LIB_FILE=build/bbssh.dll
+	FLAVOUR=window
 endif
 
 .PHONY: clean run uberjar uberjar-run uberjar-ls native-image test
@@ -30,7 +38,7 @@ endif
 all: bbssh
 
 clean:
-	-rm -rf resources/libbbssh.so resources/libbbssh.dylib target bbssh build
+	-rm -rf resources/libbbssh.so resources/libbbssh.dylib target bbssh build src/c/native/BbsshUtils.class src/c/jni/BbsshUtils.class
 
 #
 # C library related targets
@@ -38,41 +46,57 @@ clean:
 $(CLASS_FILE): $(JAVA_FILE)
 	$(JAVAC) $(JAVA_FILE)
 
-libbbssh.a:
+src/c/native/BbsshUtils.class: src/c/native/BbsshUtils.java
 	$(JAVAC) -h src/c/native/ src/c/native/BbsshUtils.java
-	$(CC) $(INCLUDE_ARGS) -c src/c/bbssh.c -o libbbssh.a
 
-libbbssh.so:
+src/c/jni/BbsshUtils.class: src/c/jni/BbsshUtils.java
 	$(JAVAC) -h src/c/jni/ src/c/jni/BbsshUtils.java
+
+build/libbbssh.a: src/c/native/BbsshUtils.class
+	-mkdir build
+	$(CC) $(INCLUDE_ARGS) -c src/c/bbssh.c -o build/libbbssh.a
+
+build/libbbssh.so: src/c/jni/BbsshUtils.class
+	-mkdir build
 	$(CC) $(INCLUDE_ARGS) -shared \
 		-Isrc/c \
 		src/c/jni/BbsshUtils.c \
 		src/c/bbssh.c \
-		-fPIC -o libbbssh.so
+		-fPIC -o build/libbbssh.so
 
-bbssh.lib:
+build/libbbssh.dylib: src/c/jni/BbsshUtils.class
+	-mkdir build
+	$(CC) $(INCLUDE_ARGS) -dynamiclib \
+		-undefined suppress \
+		-flat_namespace \
+		-Isrc/c \
+		src/c/jni/BbsshUtils.c \
+		src/c/bbssh.c \
+		-fPIC -o build/libbbssh.dylib
+
+build/bbssh.lib:
 	cl.exe -LD $(C_FILE)
 
 #
 # Clojure related targets
 #
-run:
+run: $(JNI_LIB_FILE)
 	clojure -M:run-local
 
 #
 # Native image related targets
 #
 
-native-image:
+native-image: $(NATIVE_LIB_FILE)
 	clojure -M:native-image
 
-native-image-static-dynamic-lib-c:
+native-image-static-dynamic-lib-c: $(NATIVE_LIB_FILE)
 	clojure -M:native-image-static-dynamic-lib-c
 
-native-image-static:
+native-image-static: $(NATIVE_LIB_FILE)
 	clojure -M:native-image-static
 
-native-image-musl: toolchain
+native-image-musl: toolchain $(NATIVE_LIB_FILE)
 	PATH=toolchain/x86_64-linux-musl-native/bin:$(PATH) \
 		clojure -M:native-image-musl
 

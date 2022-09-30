@@ -1,4 +1,4 @@
-#include "BbsshUtils.h"
+#include "bbssh.h"
 
 /* move terminal into and out of raw mode for password entry */
 
@@ -100,7 +100,7 @@ bbssh_strlcpy(char * __restrict dst, const char * __restrict src, size_t dsize)
 /* same error as openbsd ssh code uses */
 #define SSH_ERR_SYSTEM_ERROR -24
 
-int ssh_open_auth_socket (char *cpath) {
+int ssh_open_auth_socket (const char *cpath) {
   struct sockaddr_un sunaddr;
   memset(&sunaddr, 0, sizeof(sunaddr));
   sunaddr.sun_family = AF_UNIX;
@@ -125,15 +125,15 @@ int ssh_open_auth_socket (char *cpath) {
 
 void ssh_close_auth_socket(int socket)
 {
-  close((int)socket);
+  close(socket);
 }
 
-int ssh_auth_socket_read(int fd, char *buffer, int count)
+int ssh_auth_socket_read(int fd, void *buffer, int count)
 {
-  return read(fd, (void *)buffer, count);
+  return read(fd, buffer, count);
 }
 
-int ssh_auth_socket_write(int fd, char *buffer, int count)
+int ssh_auth_socket_write(int fd, const void *buffer, int count)
 {
-  return write(fd, (const void *)buffer, count);
+  return write(fd, buffer, count);
 }

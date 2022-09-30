@@ -1,6 +1,5 @@
 (ns bbssh.core
-  (:require [bbssh.impl.lib :as lib]
-            [bbssh.impl.pod :as pod]
+  (:require [bbssh.impl.pod :as pod]
             [clojure.string :as string]
             [clojure.java.io :as io]
             [clojure.tools.cli :as cli])

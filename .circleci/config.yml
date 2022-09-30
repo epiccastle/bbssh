@@ -180,15 +180,15 @@ workflows:
       #     filters:
       #       branches:
       #         only: main
-      - mac:
-          filters:
-            branches:
-              only: remove-jni
-      - linux:
-          filters:
-            branches:
-              only: remove-jni
-      # - windows:
+      # - mac:
       #     filters:
       #       branches:
-      #         only: main
+      #         only: remove-jni
+      # - linux:
+      #     filters:
+      #       branches:
+      #         only: remove-jni
+      - windows:
+          filters:
+            branches:
+              only: main

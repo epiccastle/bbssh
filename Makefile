@@ -101,13 +101,13 @@ native-image-musl: toolchain $(NATIVE_LIB_FILE)
 		clojure -M:native-image-musl
 
 
-package-linux: build/bbssh
+package-linux: native-image-musl
 	cd build && tar cvfz bbssh-$(VERSION)-linux-amd64.tgz bbssh
 
-package-macos: build/bbssh
+package-macos: native-image
 	cd build && tar cvfz bbssh-$(VERSION)-macos-amd64.tgz bbssh
 
-package-m1: build/bbssh
+package-m1: native-image
 	cd build && tar cvfz bbssh-$(VERSION)-macos-aarch64.tgz bbssh
 
 #

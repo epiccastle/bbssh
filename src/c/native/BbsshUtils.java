@@ -82,7 +82,48 @@ public final class BbsshUtils {
 
     @CFunction("ssh_open_auth_socket")
     public static native int
-        ssh_open_auth_socket(CCharPointer cpath);
+        cssh_open_auth_socket(CCharPointer cpath);
 
+    public static int ssh_open_auth_socket(String path)
+    {
+        return cssh_open_auth_socket(
+            CTypeConversion.toCString(path).get()
+        );
+    }
 
+    @CFunction("ssh_close_auth_socket")
+    public static native int ssh_close_auth_socket(int sock_fd);
+
+    @CFunction("ssh_auth_socket_read")
+    public static native int
+        cssh_auth_socket_read(int fd,
+                              CCharPointer buffer,
+                              int count);
+
+    public static int ssh_auth_socket_read(int fd, byte[] buf, int count)
+    {
+        return cssh_auth_socket_read
+            (
+             fd,
+             CTypeConversion.toCBytes(buf).get(),
+             count
+             );
+
+    }
+
+    @CFunction("ssh_auth_socket_write")
+    public static native int
+        cssh_auth_socket_write(int fd,
+                              CCharPointer buffer,
+                              int count);
+
+    public static int ssh_auth_socket_write(int fd, byte[] buf, int count)
+    {
+        return cssh_auth_socket_write
+            (
+             fd,
+             CTypeConversion.toCBytes(buf).get(),
+             count
+             );
+    }
 }

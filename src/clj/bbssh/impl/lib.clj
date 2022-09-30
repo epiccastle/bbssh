@@ -44,17 +44,19 @@
         libs-dir (path-join config-dir "libs")]
     libs-dir))
 
+(defn native-image? []
+  (and (= "Substrate VM" (System/getProperty "java.vm.name"))
+       (= "runtime" (System/getProperty "org.graalvm.nativeimage.imagecode")))
+  )
+
 (defn init!
   "add the lib path to the java library path when running
   as a graalvm native image"
   []
-  (let [native-image?
-        (and (= "Substrate VM" (System/getProperty "java.vm.name"))
-             (= "runtime" (System/getProperty "org.graalvm.nativeimage.imagecode")))
-        libs-dir (get-libs-dir)]
+  (let [libs-dir (get-libs-dir)]
     (.mkdirs (io/as-file libs-dir))
     (setup libs-dir)
-    (when native-image?
+    (when (native-image?)
       ;; most JVM implementations: this property needs to be set on launch
       ;; but graalvm allows us to dynamically change it
       (System/setProperty "java.library.path" libs-dir))))

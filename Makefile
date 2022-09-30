@@ -66,6 +66,9 @@ run:
 native-image:
 	clojure -M:native-image
 
+native-image-static-dynamic-lib-c:
+	clojure -M:native-image-static-dynamic-lib-c
+
 native-image-static:
 	clojure -M:native-image-static
 

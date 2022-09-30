@@ -12,6 +12,10 @@
       slurp
       string/trim))
 
+(defn native-image? []
+  (and (= "Substrate VM" (System/getProperty "java.vm.name"))
+       (= "runtime" (System/getProperty "org.graalvm.nativeimage.imagecode"))))
+
 (defn -main [& args]
   #_(lib/init!)
   (prn 'load (clojure.lang.RT/loadLibrary "bbssh"))

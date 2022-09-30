@@ -1,7 +1,7 @@
 (ns build
   "Builds GraalVM native images from deps.edn projects."
   (:require [clojure.java.io :as io]
-            [clojure.string :as cs]
+            [clojure.string :as string]
             [clojure.tools.deps.alpha :as deps]
             [clojure.tools.namespace.find :refer [find-namespaces-in-dir]])
   (:import (java.io BufferedReader File)))
@@ -10,12 +10,12 @@
   "Returns the current tools.deps classpath string, minus clj.native-image and plus *compile-path*."
   []
   (as-> (System/getProperty "java.class.path") $
-        (cs/split $ (re-pattern (str File/pathSeparatorChar)))
-        (remove #(cs/includes? "clj.native-image" %) $) ;; exclude ourselves
+        (string/split $ (re-pattern (str File/pathSeparatorChar)))
+        (remove #(string/includes? "clj.native-image" %) $) ;; exclude ourselves
         (cons *compile-path* $) ;; prepend compile path for classes
-        (cs/join File/pathSeparatorChar $)))
+        (string/join File/pathSeparatorChar $)))
 
-(def windows? (cs/starts-with? (System/getProperty "os.name") "Windows"))
+(def windows? (string/starts-with? (System/getProperty "os.name") "Windows"))
 
 (defn merged-deps
   "Merges install, user, local deps.edn maps left-to-right."
@@ -59,7 +59,7 @@
 (defn native-image-bin-path []
   (let [graal-paths [(str (System/getenv "GRAALVM_HOME") "/bin")
                      (System/getenv "GRAALVM_HOME")]
-        paths (lazy-cat graal-paths (cs/split (System/getenv "PATH") (re-pattern (File/pathSeparator))))
+        paths (lazy-cat graal-paths (string/split (System/getenv "PATH") (re-pattern (File/pathSeparator))))
         filename (cond-> "native-image" windows? (str ".cmd"))]
     (first
      (for [path (distinct paths)
@@ -68,7 +68,7 @@
        (.getAbsolutePath file)))))
 
 (defn- munge-class-name [class-name]
-  (cs/replace class-name "-" "_"))
+  (string/replace class-name "-" "_"))
 
 (defn build [main-ns opts]
   (let [[nat-img-path & nat-img-opts]
@@ -101,8 +101,7 @@
         (native-image-classpath)
         (munge-class-name main-ns))))))
 
-(def include-path (.getAbsolutePath (File. "src/c")))
-(def lib-path (.getAbsolutePath (File. "")))
+(def project-root (.getAbsolutePath (File. "")))
 
 (defn -main [& extra-args]
   (try
@@ -118,10 +117,12 @@
        "-H:ConfigurationFileDirectories=graal-configs/"
        "--initialize-at-build-time"
        "--initialize-at-run-time=com.jcraft.jsch.PortWatcher"
-       (str "--native-compiler-options=-I" include-path)
-       (str "--native-compiler-options=-L" lib-path)
        "-H:Name=bbssh"]
-      extra-args)
+      (for [arg extra-args]
+        (if (.contains arg "{{PROJECT_ROOT}}")
+          (string/replace arg #"\{\{PROJECT_ROOT\}\}" project-root)
+          arg)
+        ))
      )
     (finally
       (shutdown-agents))))

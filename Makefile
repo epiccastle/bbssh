@@ -63,13 +63,13 @@ run:
 # Native image related targets
 #
 
-native-image: $(LIB_FILE) $(CLOJURE_FILES)
+native-image:
 	clojure -M:native-image
 
-native-image-static: $(LIB_FILE) $(CLOJURE_FILES)
+native-image-static:
 	clojure -M:native-image-static
 
-native-image-musl: $(LIB_FILE) $(CLOJURE_FILES) toolchain
+native-image-musl: toolchain
 	PATH=toolchain/x86_64-linux-musl-native/bin:$(PATH) \
 		clojure -M:native-image-musl
 

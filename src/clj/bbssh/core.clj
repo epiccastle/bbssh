@@ -14,7 +14,7 @@
 
 (defn -main [& args]
   #_(lib/init!)
-  #_(prn 'load (clojure.lang.RT/loadLibrary "bbssh"))
+  (prn 'load (clojure.lang.RT/loadLibrary "bbssh"))
   #_(System/load "/home/crispin/dev/clojure/bbssh/libbbssh.so")
   #_(prn (System/loadLibrary "bbssh"))
   (prn
@@ -22,7 +22,7 @@
    (BbsshUtils/get-terminal-width)
    (BbsshUtils/get-terminal-height)
    )
-  (prn
+  #_(prn
    (BbsshUtils/ssh-open-auth-socket
     (.get (org.graalvm.nativeimage.c.type.CTypeConversion/toCString
            "/run/user/1000/keyring/ssh")))

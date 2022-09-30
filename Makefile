@@ -38,11 +38,16 @@ clean:
 $(CLASS_FILE): $(JAVA_FILE)
 	$(JAVAC) $(JAVA_FILE)
 
-libbbssh.a: $(C_FILE) $(C_HEADER)
-	$(CC) $(INCLUDE_ARGS) -c $(C_FILE) -o libbbssh.a
+libbbssh.a:
+	$(CC) $(INCLUDE_ARGS) -c src/c/bbssh.c -o libbbssh.a
 
-libbbssh.so: $(C_FILE) $(C_HEADER)
-	$(CC) $(INCLUDE_ARGS) -shared $(C_FILE) -fPIC -o libbbssh.so
+libbbssh.so:
+	$(JAVAC) -h src/c/jni/ src/c/jni/BbsshUtils.java
+	$(CC) $(INCLUDE_ARGS) -shared \
+		-Isrc/c \
+		src/c/jni/BbsshUtils.c \
+		src/c/bbssh.c \
+		-fPIC -o libbbssh.so
 
 bbssh.lib:
 	cl.exe -LD $(C_FILE)
@@ -50,8 +55,8 @@ bbssh.lib:
 #
 # Clojure related targets
 #
-run: $(LIB_FILE) $(CLASS_FILE)
-	clj -J-Djava.library.path=. -m bbssh.core
+run:
+	clojure -M:run-local
 
 #
 # Native image related targets

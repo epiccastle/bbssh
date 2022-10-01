@@ -191,6 +191,9 @@ jobs:
             [Environment]::SetEnvironmentVariable("PATH", "$NEWPATH", "Machine")
             [Environment]::SetEnvironmentVariable("GRAALVM_HOME", "$pwd\graalvm\graalvm-ce-java11-22.0.0.2", "Machine")
 
+            Write-Host "PATH: $PATH"
+            Write-Host "GRAALVM_HOME: $GRAALVM_HOME"
+
             Write-Host "Building native-image..."
             clj -M:native-image
 

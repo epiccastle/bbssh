@@ -226,14 +226,14 @@ workflows:
       #     filters:
       #       branches:
       #         only: main
-      # - mac:
-      #     filters:
-      #       branches:
-      #         only: remove-jni
-      # - linux:
-      #     filters:
-      #       branches:
-      #         only: remove-jni
+      - mac:
+          filters:
+            branches:
+              only: remove-jni
+      - linux:
+          filters:
+            branches:
+              only: remove-jni
       - windows:
           filters:
             branches:

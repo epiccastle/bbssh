@@ -114,6 +114,7 @@
           (munge-class-name main-ns)))))))
 
 (def project-root (.getAbsolutePath (File. "")))
+(prn 'project-root project-root)
 
 (defn -main [& extra-args]
   (try

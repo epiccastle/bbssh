@@ -192,6 +192,9 @@ jobs:
             Write-Host "PATH: $env:Path"
             Write-Host "GRAALVM_HOME: $env:GRAALVM_HOME"
 
+            Write-Host "Building BbsshUtils..."
+            javac -h src\c\native src\c\native\BbsshUtils.java
+
             Write-Host "Building native-image..."
             clj -M:native-image
 

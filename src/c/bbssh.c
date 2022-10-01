@@ -2,12 +2,16 @@
 
 /* move terminal into and out of raw mode for password entry */
 
+#ifndef _WIN32
+
 static struct termios _saved_tio;
 static int _in_raw_mode = 0;
+#endif
 
 void
 leave_raw_mode(int quiet)
 {
+#ifndef _WIN32
         if (!_in_raw_mode)
                 return;
         if (tcsetattr(fileno(stdin), TCSADRAIN, &_saved_tio) == -1) {
@@ -15,11 +19,13 @@ leave_raw_mode(int quiet)
                         perror("tcsetattr");
         } else
                 _in_raw_mode = 0;
+#endif
 }
 
 void
 enter_raw_mode(int quiet)
 {
+#ifndef _WIN32
         struct termios tio;
 
         if (tcgetattr(fileno(stdin), &tio) == -1) {
@@ -45,28 +51,44 @@ enter_raw_mode(int quiet)
                         perror("tcsetattr");
         } else
                 _in_raw_mode = 1;
+#endif
 }
 
 int is_stdout_a_tty() {
+#ifndef _WIN32
   return isatty(STDOUT_FILENO);
+#else
+  return 0;
+#endif
 }
 
+#ifndef _WIN32
 static int get_win_size(int fd, struct winsize *win) {
   return ioctl(fd, TIOCGWINSZ, (char*)win);
 }
+#endif
 
 int get_terminal_width () {
+#ifndef _WIN32
   struct winsize size;
   (void)get_win_size(STDOUT_FILENO, &size);
   return (size.ws_col);
+#else
+  return 80;
+#endif
 }
 
 int get_terminal_height () {
+#ifndef _WIN32
   struct winsize size;
   (void)get_win_size(STDOUT_FILENO, &size);
   return (size.ws_row);
+#else
+  return 40;
+#endif
 }
 
+#ifndef _WIN32
 /*
  * Copy string src to buffer dst of size dsize.  At most dsize-1
  * chars will be copied.  Always NUL terminates (unless dsize == 0).
@@ -96,11 +118,13 @@ bbssh_strlcpy(char * __restrict dst, const char * __restrict src, size_t dsize)
 
         return(src - osrc - 1);	/* count does not include NUL */
 }
+#endif
 
 /* same error as openbsd ssh code uses */
 #define SSH_ERR_SYSTEM_ERROR -24
 
 int ssh_open_auth_socket (const char *cpath) {
+#ifndef _WIN32
   struct sockaddr_un sunaddr;
   memset(&sunaddr, 0, sizeof(sunaddr));
   sunaddr.sun_family = AF_UNIX;
@@ -121,19 +145,32 @@ int ssh_open_auth_socket (const char *cpath) {
     }
 
   return sock;
+#else
+  return 100;
+#endif
 }
 
 void ssh_close_auth_socket(int socket)
 {
+#ifndef _WIN32
   close(socket);
+#endif
 }
 
 int ssh_auth_socket_read(int fd, void *buffer, int count)
 {
+#ifndef _WIN32
   return read(fd, buffer, count);
+#else
+  return 0;
+#endif
 }
 
 int ssh_auth_socket_write(int fd, const void *buffer, int count)
 {
+#ifndef _WIN32
   return write(fd, buffer, count);
+#else
+  return 0;
+#endif
 }

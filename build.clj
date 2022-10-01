@@ -49,7 +49,7 @@
   [bin opts cp main]
   (let [cli-args (cond-> []
                    (seq opts)     (into opts)
-                   cp             (into ["-cp" cp])
+                   cp             (into cp)
                    main           (conj main)
                    ;; apparently native-image --no-server isn't currently supported on Windows
                    (not windows?) (conj "--no-server"))]
@@ -99,19 +99,18 @@
         (println "Compiling" ns)
         (compile (symbol ns)))
 
-      (let [class-path (native-image-classpath)
-            class-path-arg
-            (if windows?
-              (do
-                (spit "native-image-args" (str "-cp " class-path))
-                "@native-image-args")
-              class-path)]
+      (let [class-path (native-image-classpath)]
+
+        (when windows?
+          (spit "native-image-args" (str "-cp " class-path)))
 
         (System/exit
          (exec-native-image
           nat-img-path
           nat-img-opts
-          class-path-arg
+          (if windows?
+            ["@native-image-args"]
+            ["-cp" class-path])
           (munge-class-name main-ns)))))))
 
 (def project-root (.getAbsolutePath (File. "")))

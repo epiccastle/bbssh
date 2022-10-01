@@ -205,7 +205,7 @@ jobs:
             javac -h src\c\native src\c\native\BbsshUtils.java
 
             Write-Host "Building native-image..."
-            clj -M:native-image
+            clj -M:native-image-windows
 
 workflows:
   version: 2

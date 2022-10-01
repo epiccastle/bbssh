@@ -172,10 +172,11 @@ jobs:
               }
             }
 
-            # Write-Host "compiling c..."
-            # cl /c src\c\windows.c
-            # Rename-Item windows.obj bbssh.obj
-            # md build
+            Write-Host "compiling c..."
+            md build
+            cl /c src\c\bbssh.c
+            Rename-Item bbssh.obj build\bbssh.obj
+
             # lib /out:build\bbssh.lib bbssh.obj
 
             Write-Host "downloading graal..."

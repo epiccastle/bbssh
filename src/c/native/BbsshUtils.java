@@ -87,7 +87,7 @@ public final class BbsshUtils {
     public static int ssh_open_auth_socket(String path)
     {
         return cssh_open_auth_socket(
-            CTypeConversion.toCString(path).get()
+            org.graalvm.nativeimage.c.type.CTypeConversion.toCString(path).get()
         );
     }
 
@@ -105,7 +105,7 @@ public final class BbsshUtils {
         return cssh_auth_socket_read
             (
              fd,
-             CTypeConversion.toCBytes(buf).get(),
+             org.graalvm.nativeimage.c.type.CTypeConversion.toCBytes(buf).get(),
              count
              );
 
@@ -122,7 +122,7 @@ public final class BbsshUtils {
         return cssh_auth_socket_write
             (
              fd,
-             CTypeConversion.toCBytes(buf).get(),
+             org.graalvm.nativeimage.c.type.CTypeConversion.toCBytes(buf).get(),
              count
              );
     }

@@ -160,6 +160,9 @@ jobs:
 
     steps:
       - checkout
+      - restore_cache:
+          keys:
+            - mac-{{ checksum "deps.edn" }}-{{ checksum ".circleci/config.yml" }}
       - run:
           name: debug
           shell: powershell.exe
@@ -218,6 +221,17 @@ jobs:
             Write-Host "Building native-image..."
             clj -M:native-image-windows
 
+            md dist
+            copy build\bbssh dist
+      - save_cache:
+          paths:
+            - ~/project/graalvm
+          key: mac-{{ checksum "deps.edn" }}-{{ checksum ".circleci/config.yml" }}
+      - store_artifacts:
+          path: dist
+          destination: dist
+
+
 workflows:
   version: 2
   ci:
@@ -226,14 +240,14 @@ workflows:
       #     filters:
       #       branches:
       #         only: main
-      - mac:
-          filters:
-            branches:
-              only: remove-jni
-      - linux:
-          filters:
-            branches:
-              only: remove-jni
+      # - mac:
+      #     filters:
+      #       branches:
+      #         only: remove-jni
+      # - linux:
+      #     filters:
+      #       branches:
+      #         only: remove-jni
       - windows:
           filters:
             branches:

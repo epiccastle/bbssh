@@ -169,7 +169,8 @@ jobs:
             if (Test-Path('graalvm')) { return } else { (New-Object Net.WebClient).DownloadFile('https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-22.0.0.2/graalvm-ce-java11-windows-amd64-22.0.0.2.zip', 'graalvm.zip') }
             Write-Host "expanding graal..."
             if (Test-Path('graalvm')) { return } else { Expand-Archive graalvm.zip graalvm }
-
+            Write-Host "installing native-image..."
+            graalvm\bin\gu install native-image
             $Version = '1.11.1.1165'
             Write-Host "downloading clojure $Version..."
             $ClojureToolsUrl = "https://download.clojure.org/install/clojure-tools-$Version.zip"

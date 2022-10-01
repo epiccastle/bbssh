@@ -188,9 +188,11 @@ jobs:
 
             $env:Path = 'C:\Users\circleci\project\graalvm\graalvm-ce-java11-22.0.0.2\bin;' + $env:Path
             $env:GRAALVM_HOME = 'C:\Users\circleci\project\graalvm\graalvm-ce-java11-22.0.0.2'
+            $env:JAVA_HOME = 'C:\Users\circleci\project\graalvm\graalvm-ce-java11-22.0.0.2'
 
             Write-Host "PATH: $env:Path"
             Write-Host "GRAALVM_HOME: $env:GRAALVM_HOME"
+            Write-Host "JAVA_HOME: $env:JAVA_HOME"
 
             Write-Host "Building BbsshUtils..."
             javac -h src\c\native src\c\native\BbsshUtils.java

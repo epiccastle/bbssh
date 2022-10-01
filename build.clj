@@ -99,12 +99,20 @@
         (println "Compiling" ns)
         (compile (symbol ns)))
 
-      (System/exit
-       (exec-native-image
-        nat-img-path
-        nat-img-opts
-        (native-image-classpath)
-        (munge-class-name main-ns))))))
+      (let [class-path (native-image-classpath)
+            class-path-arg
+            (if windows?
+              (do
+                (spit "native-image-args" (str "-cp " class-path))
+                "@native-image-args")
+              class-path)]
+
+        (System/exit
+         (exec-native-image
+          nat-img-path
+          nat-img-opts
+          class-path-arg
+          (munge-class-name main-ns)))))))
 
 (def project-root (.getAbsolutePath (File. "")))
 

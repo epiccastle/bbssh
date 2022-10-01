@@ -166,11 +166,11 @@ jobs:
           command: |
             cmd.exe /c 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat'
             Write-Host "downloading graal..."
-            if (Test-Path('graalvm')) { return } else { (New-Object Net.WebClient).DownloadFile('https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-22.0.0.2/graalvm-ce-java11-windows-amd64-22.0.0.2.zip', 'graalvm.zip') }
+            if (Test-Path('graalvm')) { return } else { (New-Object Net.WebClient).DownloadFile('https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-22.2.0/graalvm-ce-java11-windows-amd64-22.2.0.zip', 'graalvm.zip') }
             Write-Host "expanding graal..."
             if (Test-Path('graalvm')) { return } else { Expand-Archive graalvm.zip graalvm }
             Write-Host "installing native-image..."
-            graalvm\graalvm-ce-java11-22.0.0.2\bin\gu install native-image
+            graalvm\graalvm-ce-java11-22.2.0\bin\gu install native-image
             $Version = '1.11.1.1165'
             Write-Host "downloading clojure $Version..."
             $ClojureToolsUrl = "https://download.clojure.org/install/clojure-tools-$Version.zip"
@@ -186,9 +186,9 @@ jobs:
             Write-Host "Installed clojure:"
             clj --version
 
-            $env:Path = 'C:\Users\circleci\project\graalvm\graalvm-ce-java11-22.0.0.2\bin;' + $env:Path
-            $env:GRAALVM_HOME = 'C:\Users\circleci\project\graalvm\graalvm-ce-java11-22.0.0.2'
-            $env:JAVA_HOME = 'C:\Users\circleci\project\graalvm\graalvm-ce-java11-22.0.0.2'
+            $env:Path = 'C:\Users\circleci\project\graalvm\graalvm-ce-java11-22.2.0\bin;' + $env:Path
+            $env:GRAALVM_HOME = 'C:\Users\circleci\project\graalvm\graalvm-ce-java11-22.2.0'
+            $env:JAVA_HOME = 'C:\Users\circleci\project\graalvm\graalvm-ce-java11-22.2.0'
 
             Write-Host "PATH: $env:Path"
             Write-Host "GRAALVM_HOME: $env:GRAALVM_HOME"

@@ -177,7 +177,7 @@ jobs:
             cl /c src\c\bbssh.c
             # Rename-Item bbssh.obj build\bbssh.obj
             lib /out:build\bbssh.lib bbssh.obj
-            copy bbssh.lib build\bbssh.lib
+            #copy bbssh.lib build\bbssh.lib
 
             Write-Host "downloading graal..."
             if (Test-Path('graalvm')) { return } else { (New-Object Net.WebClient).DownloadFile('https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-22.2.0/graalvm-ce-java11-windows-amd64-22.2.0.zip', 'graalvm.zip') }

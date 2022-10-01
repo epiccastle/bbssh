@@ -222,7 +222,7 @@ jobs:
             clj -M:native-image-windows
 
             md dist
-            copy build\bbssh dist
+            copy build\bbssh.exe dist
       - save_cache:
           paths:
             - ~/project/graalvm

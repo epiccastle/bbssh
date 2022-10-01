@@ -164,7 +164,14 @@ jobs:
           name: debug
           shell: powershell.exe
           command: |
-            cmd.exe /c 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat'
+            Write-Host "Setting up build environment..."
+            cmd.exe /c "call `"C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat`" && set > %temp%\vcvars.txt"
+            Get-Content "$env:temp\vcvars.txt" | Foreach-Object {
+              if ($_ -match "^(.*?)=(.*)$") {
+                Set-Content "env:\$($matches[1])" $matches[2]
+              }
+            }
+
             Write-Host "downloading graal..."
             if (Test-Path('graalvm')) { return } else { (New-Object Net.WebClient).DownloadFile('https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-22.2.0/graalvm-ce-java11-windows-amd64-22.2.0.zip', 'graalvm.zip') }
             Write-Host "expanding graal..."

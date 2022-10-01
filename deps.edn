@@ -72,8 +72,8 @@
                 org.clojure/tools.namespace {:mvn/version "1.0.0"}}
    :main-opts  ["-m" "build"
                 ;;"-H:CCompilerOption={{PROJECT_ROOT}}/build/libbbssh.a"
-                "--native-compiler-options=/IC:\\\\Users\\circleci\\project\\src\\c"
-                "--native-compiler-options=/LC:\\\\Users\\circleci\\project\\build"
+                "--native-compiler-options=/I{{PROJECT_ROOT}}\\src\\c"
+                "--native-compiler-options=/L{{PROJECT_ROOT}}\\build"
                 ]
    :jvm-opts   ["-Dclojure.compiler.direct-linking=true"]}
 

@@ -185,6 +185,12 @@ jobs:
 
             Write-Host "Installed clojure:"
             clj --version
+
+            $OLDPATH = [System.Environment]::GetEnvironmentVariable('PATH','machine')
+            $NEWPATH = "$OLDPATH;$pwd\graalvm\graalvm-ce-java11-22.0.0.2\bin"
+            [Environment]::SetEnvironmentVariable("PATH", "$NEWPATH", "Machine")
+            [Environment]::SetEnvironmentVariable("GRAALVM_HOME", "$pwd\graalvm\graalvm-ce-java11-22.0.0.2", "Machine")
+
             Write-Host "Building native-image..."
             clj -M:native-image
 

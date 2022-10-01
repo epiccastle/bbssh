@@ -172,7 +172,7 @@ jobs:
               }
             }
 
-            Write-Host compiling c..."
+            Write-Host "compiling c..."
             cl /c src\c\windows.c
             Rename-Item windows.obj bbssh.obj
             md build

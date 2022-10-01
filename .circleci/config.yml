@@ -165,11 +165,20 @@ jobs:
           shell: powershell.exe
           command: |
             cmd.exe /c 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat'
-            Write-Host "setup"
+            Write-Host "setup graal"
             pwd
-            (New-Object Net.WebClient).DownloadFile('https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-22.0.0.2/graalvm-ce-java11-windows-amd64-22.0.0.2.zip', 'graalvm.zip')
-            dir
-
+            if (Test-Path('graalvm')) { return } else { (New-Object Net.WebClient).DownloadFile('https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-22.0.0.2/graalvm-ce-java11-windows-amd64-22.0.0.2.zip', 'graalvm.zip') }
+            if (Test-Path('graalvm')) { return } else { Expand-Archive graalvm.zip graalvm }
+            $Version = '1.11.1.1165'
+            $ClojureToolsUrl = "https://download.clojure.org/install/clojure-tools-$Version.zip"
+            [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]'Tls12'
+            Invoke-WebRequest -Uri $ClojureToolsUrl -OutFile clojure-tools.zip
+            $DestinationPath = "C:\Users\circleci\Documents\WindowsPowerShell\Modules"
+            $ExistingLocation = "$DestinationPath\ClojureTools"
+            if (Test-Path $ExistingLocation) { Remove-Item -Path $ExistingLocation -Recurse }
+            Expand-Archive clojure-tools.zip -DestinationPath $DestinationPath
+            Remove-Item clojure-tools.zip
+            clj -h
 
 
 workflows:

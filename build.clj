@@ -130,7 +130,7 @@
        extra-args)
       (map (fn [arg]
              (if (.contains arg "{{PROJECT_ROOT}}")
-               (let [escaped (string/replace escaped #"\\" "\\\\\\\\")
+               (let [escaped (string/replace project-root #"\\" "\\\\\\\\")
                      r (string/replace arg #"\{\{PROJECT_ROOT\}\}" escaped)]
                  (prn 'replacement arg)
                  (prn 'result r)

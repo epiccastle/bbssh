@@ -187,7 +187,7 @@ jobs:
             graalvm\graalvm-ce-java11-22.2.0\bin\gu install native-image
 
             Write-Host "installing bbssh lib..."
-            copy bbssh.lib C:\Users\circleci\project\graalvm\graalvm-ce-java11-22.2.0\lib\static\windows-amd64\
+            copy build\bbssh.lib C:\Users\circleci\project\graalvm\graalvm-ce-java11-22.2.0\lib\static\windows-amd64\
 
             $Version = '1.11.1.1165'
             Write-Host "downloading clojure $Version..."

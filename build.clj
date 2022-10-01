@@ -27,6 +27,11 @@
   "Launches a process with optional args, returning exit code.
   Prints stdout & stderr."
   [bin & args]
+  (prn 'sh bin args)
+  (prn 'count args)
+  (doseq [a args]
+    (prn 'arg (count a)))
+  (prn 'total (apply + (map count args)))
   (let [arg-array ^"[Ljava.lang.String;" (into-array String (cons bin args))
         process (-> (ProcessBuilder. arg-array)
                     (.redirectErrorStream true) ;; TODO stream stderr to stderr

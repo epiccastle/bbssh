@@ -186,8 +186,8 @@ jobs:
             Write-Host "Installed clojure:"
             clj --version
 
-            $env:Path = '$pwd\graalvm\graalvm-ce-java11-22.0.0.2\bin' + $env:Path
-            $env:GRAALVM_HOME = '$pwd\graalvm\graalvm-ce-java11-22.0.0.2'
+            $env:Path = 'C:\Users\circleci\project\graalvm\graalvm-ce-java11-22.0.0.2\bin;' + $env:Path
+            $env:GRAALVM_HOME = 'C:\Users\circleci\project\graalvm\graalvm-ce-java11-22.0.0.2'
 
             Write-Host "PATH: $env:Path"
             Write-Host "GRAALVM_HOME: $env:GRAALVM_HOME"

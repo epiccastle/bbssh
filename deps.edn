@@ -74,6 +74,7 @@
                 ;;"-H:CCompilerOption={{PROJECT_ROOT}}/build/libbbssh.a"
                 "--native-compiler-options=/I{{PROJECT_ROOT}}\\src\\c"
                 "--native-compiler-options=/L{{PROJECT_ROOT}}\\build"
+                "--native-compiler-options=/LIBPATH:{{PROJECT_ROOT}}\\build"
                 ]
    :jvm-opts   ["-Dclojure.compiler.direct-linking=true"]}
 

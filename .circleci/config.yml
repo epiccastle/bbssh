@@ -183,7 +183,7 @@ jobs:
             }
 
             if (Test-Path('graalvm')) {
-              return
+              echo "skipping graal expansion."
             } else {
               Write-Host "expanding graal..."
               Expand-Archive graalvm.zip graalvm

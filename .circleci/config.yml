@@ -223,6 +223,7 @@ jobs:
 
             md dist
             copy build\bbssh.exe dist
+            copy build\sunmscapi.dll dist
       - save_cache:
           paths:
             - ~/project/graalvm

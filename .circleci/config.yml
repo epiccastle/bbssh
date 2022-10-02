@@ -189,7 +189,7 @@ jobs:
               Expand-Archive graalvm.zip graalvm
             }
 
-            if (Test-Path('graalvm\graalvm-ce-java11-22.2.0\bin\native-image')) {
+            if (Test-Path('graalvm\graalvm-ce-java11-22.2.0\bin\native-image.cmd')) {
               Write-Host "native-image already installed."
             } else {
               Write-Host "installing native-image..."

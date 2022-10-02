@@ -27,7 +27,7 @@
         (when-not (native-image?)
           (clojure.lang.RT/loadLibrary "bbssh"))
         (if (System/getenv "TEST")
-          ;; temporary tests for lib builds on different archs
+          ;; temporary tests for lib builds on different  archs
           (do
             (prn {:width (BbsshUtils/get-terminal-width)
                   :height (BbsshUtils/get-terminal-height)

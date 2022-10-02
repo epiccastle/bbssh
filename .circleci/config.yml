@@ -220,8 +220,8 @@ jobs:
             lib /out:build\bbssh.lib bbssh.obj
             #copy bbssh.lib build\bbssh.lib
 
-            Write-Host "installing bbssh lib..."
-            copy build\bbssh.lib C:\Users\circleci\project\graalvm\graalvm-ce-java11-22.2.0\lib\static\windows-amd64\
+            #Write-Host "installing bbssh lib..."
+            #copy build\bbssh.lib C:\Users\circleci\project\graalvm\graalvm-ce-java11-22.2.0\lib\static\windows-amd64\
 
 
 

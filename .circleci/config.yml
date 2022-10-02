@@ -162,7 +162,7 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - mac-{{ checksum "deps.edn" }}-{{ checksum ".circleci/config.yml" }}
+            - windows-{{ checksum "deps.edn" }}-{{ checksum ".circleci/config.yml" }}
       - run:
           name: debug
           shell: powershell.exe
@@ -227,7 +227,7 @@ jobs:
       - save_cache:
           paths:
             - ~/project/graalvm
-          key: mac-{{ checksum "deps.edn" }}-{{ checksum ".circleci/config.yml" }}
+          key: windows-{{ checksum "deps.edn" }}-{{ checksum ".circleci/config.yml" }}
       - store_artifacts:
           path: dist
           destination: dist

@@ -188,7 +188,7 @@ int ssh_open_auth_socket (const char *cpath) {
 
   return sock;
 #else
-  return CreateFileA
+  return CreateFileW
     (
      cpath,
      GENERIC_READ | GENERIC_WRITE,

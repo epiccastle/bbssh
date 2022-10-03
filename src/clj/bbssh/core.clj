@@ -40,7 +40,7 @@
               (prn 'result res))
             (when-let [auth-sock (System/getenv "SSH_AUTH_SOCK")
                        ]
-              (let [auth-sock (if (string/starts-with auth-sock "\\\\?\\")
+              (let [auth-sock (if (string/starts-with? auth-sock "\\\\?\\")
                                 (subs auth-sock 4)
                                 auth-sock
                                 )

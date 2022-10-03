@@ -201,6 +201,7 @@ int ssh_open_auth_socket (const char *cpath) {
   if(result==-1)
     {
       wchar_t buf[256];
+      printf("error: %d\n", GetLastError());
       FormatMessageA(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
                      NULL, GetLastError(), MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
                      buf, (sizeof(buf)), NULL);

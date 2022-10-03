@@ -216,14 +216,10 @@ jobs:
             Write-Host "compiling bbssh..."
             md build
             cl /c src\c\bbssh.c
-            # Rename-Item bbssh.obj build\bbssh.obj
             lib /out:build\bbssh.lib bbssh.obj
-            #copy bbssh.lib build\bbssh.lib
 
-            #Write-Host "installing bbssh lib..."
-            #copy build\bbssh.lib C:\Users\circleci\project\graalvm\graalvm-ce-java11-22.2.0\lib\static\windows-amd64\
-
-
+            Write-Host "installing bbssh lib..."
+            copy build\bbssh.lib C:\Users\circleci\project\graalvm\graalvm-ce-java11-22.2.0\lib\static\windows-amd64\
 
             Write-Host "Installed clojure:"
             clj --version
@@ -241,6 +237,9 @@ jobs:
 
             Write-Host "Building native-image..."
             clj -M:native-image-windows
+
+            Write-Host "Cleaning bbssh.lib..."
+            Remove-Item "C:\Users\circleci\project\graalvm\graalvm-ce-java11-22.2.0\lib\static\windows-amd64\bbssh.lib"
 
             md dist
             copy build\bbssh.exe dist

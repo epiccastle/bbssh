@@ -188,7 +188,15 @@ int ssh_open_auth_socket (const char *cpath) {
 
   return sock;
 #else
-  return 100;
+  return CreateFileA
+    (
+     cpath,
+     GENERIC_READ | GENERIC_WRITE,
+     0,
+     NULL,
+     OPEN_EXISTING,
+     FILE_ATTRIBUTE_NORMAL,
+     NULL);
 #endif
 }
 
@@ -196,6 +204,8 @@ void ssh_close_auth_socket(int socket)
 {
 #ifndef _WIN32
   close(socket);
+#else
+  CloseHandle(socket);
 #endif
 }
 
@@ -204,7 +214,11 @@ int ssh_auth_socket_read(int fd, void *buffer, int count)
 #ifndef _WIN32
   return read(fd, buffer, count);
 #else
-  return 0;
+  DWORD bytes_read;
+  if(ReadFile(fd,buffer,count,&bytes_read, NULL))
+    return bytes_read;
+  else
+    return -1;
 #endif
 }
 
@@ -213,6 +227,10 @@ int ssh_auth_socket_write(int fd, const void *buffer, int count)
 #ifndef _WIN32
   return write(fd, buffer, count);
 #else
-  return 0;
+  DWORD bytes_written;
+  if(WriteFile(fd,buffer,count,&bytes_written, NULL))
+    return bytes_written;
+  else
+    return -1;
 #endif
 }

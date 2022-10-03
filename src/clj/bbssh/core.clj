@@ -37,5 +37,14 @@
             (BbsshUtils/enter-raw-mode 1)
             (let [res (read-line)]
               (BbsshUtils/leave-raw-mode 1)
-              (prn 'result res)))
+              (prn 'result res))
+            (when-let [auth-sock (System/getenv "SSH_AUTH_SOCK")]
+              (let [sock (BbsshUtils/ssh-open-auth-socket auth-sock)]
+                (prn 'open sock)
+                (let [send (byte-array [0 0 0 1 11])]
+                  (prn 'send (seq send))
+                  (BbsshUtils/ssh-auth-socket-write sock send (count send))
+                  (let [read-buff (byte-array 4)]
+                    (BbsshUtils/ssh-auth-socket-read sock read-buff 4)
+                    (prn 'read (seq read-buff)))))))
           (pod/main))))))

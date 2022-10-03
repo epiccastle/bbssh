@@ -1,18 +1,6 @@
 #ifndef _BBSSH_H_
 #define _BBSSH_H_
 
-#ifndef _WIN32
-#include <stdio.h>
-#include <string.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include <sys/types.h>
-#include <sys/un.h>
-#include <sys/socket.h>
-#include <termios.h>
-#include <sys/ioctl.h>
-#endif
-
 void leave_raw_mode(int);
 void enter_raw_mode(int);
 int is_stdout_a_tty();

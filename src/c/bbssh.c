@@ -1,3 +1,17 @@
+#ifndef _WIN32
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <sys/types.h>
+#include <sys/un.h>
+#include <sys/socket.h>
+#include <termios.h>
+#include <sys/ioctl.h>
+#else
+#include <windows.h>
+#endif
+
 #include "bbssh.h"
 
 /* move terminal into and out of raw mode for password entry */
@@ -19,6 +33,13 @@ leave_raw_mode(int quiet)
                         perror("tcsetattr");
         } else
                 _in_raw_mode = 0;
+#else
+        HANDLE stdin_handle=GetStdHandle(STD_INPUT_HANDLE);
+        DWORD mode;
+        if(GetConsoleMode(stdin_handle, &mode))
+          {
+            SetConsoleMode(stdin_handle, mode | ENABLE_ECHO_INPUT);
+          }
 #endif
 }
 
@@ -51,6 +72,13 @@ enter_raw_mode(int quiet)
                         perror("tcsetattr");
         } else
                 _in_raw_mode = 1;
+#else
+        HANDLE stdin_handle=GetStdHandle(STD_INPUT_HANDLE);
+        DWORD mode;
+        if(GetConsoleMode(stdin_handle, &mode))
+          {
+            SetConsoleMode(stdin_handle, mode & ~ENABLE_ECHO_INPUT);
+          }
 #endif
 }
 

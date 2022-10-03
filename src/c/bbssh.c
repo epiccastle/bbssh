@@ -86,7 +86,7 @@ int is_stdout_a_tty() {
 #ifndef _WIN32
   return isatty(STDOUT_FILENO);
 #else
-  return 0;
+  return GetFileType(GetStdHandle(STD_OUTPUT_HANDLE))==FILE_TYPE_CHAR?1:0;
 #endif
 }
 
@@ -102,7 +102,14 @@ int get_terminal_width () {
   (void)get_win_size(STDOUT_FILENO, &size);
   return (size.ws_col);
 #else
-  return 80;
+  HANDLE stdout_handle=GetStdHandle(STD_OUTPUT_HANDLE);
+  CONSOLE_SCREEN_BUFFER_INFO info;
+  if(GetConsoleScreenBufferInfo(stdout_handle, &info)) {
+    return info.dwSize.X;
+  } else {
+    // fake width if it fails
+    return 80;
+  }
 #endif
 }
 
@@ -112,7 +119,14 @@ int get_terminal_height () {
   (void)get_win_size(STDOUT_FILENO, &size);
   return (size.ws_row);
 #else
-  return 40;
+  HANDLE stdout_handle=GetStdHandle(STD_OUTPUT_HANDLE);
+  CONSOLE_SCREEN_BUFFER_INFO info;
+  if(GetConsoleScreenBufferInfo(stdout_handle, &info)) {
+    return info.dwSize.Y;
+  } else {
+    // fake width if it fails
+    return 80;
+  }
 #endif
 }
 

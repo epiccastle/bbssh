@@ -201,9 +201,9 @@ int ssh_open_auth_socket (const char *cpath) {
   if(result==-1)
     {
       wchar_t buf[256];
-      FormatMessageW(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+      FormatMessageA(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
                      NULL, GetLastError(), MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-                     buf, (sizeof(buf) / sizeof(wchar_t)), NULL);
+                     buf, (sizeof(buf)), NULL);
       printf(buf);
       printf("\n");
       return -1;

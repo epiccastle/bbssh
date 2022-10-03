@@ -190,7 +190,7 @@ int ssh_open_auth_socket (const char *cpath) {
 #else
   HANDLE result = CreateFileW
     (
-     cpath,
+     cpath[4],
      GENERIC_READ | GENERIC_WRITE,
      0,
      NULL,

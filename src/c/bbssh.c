@@ -188,7 +188,7 @@ int ssh_open_auth_socket (const char *cpath) {
 
   return sock;
 #else
-  return CreateFileW
+  HANDLE result = CreateFileW
     (
      cpath,
      GENERIC_READ | GENERIC_WRITE,
@@ -197,6 +197,20 @@ int ssh_open_auth_socket (const char *cpath) {
      OPEN_EXISTING,
      FILE_ATTRIBUTE_NORMAL,
      NULL);
+
+  if(result==-1)
+    {
+      wchar_t buf[256];
+      FormatMessageW(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+                     NULL, GetLastError(), MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+                     buf, (sizeof(buf) / sizeof(wchar_t)), NULL);
+      printf(buf);
+      printf("\n");
+      return -1;
+    }
+
+  return result;
+
 #endif
 }
 

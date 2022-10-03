@@ -38,8 +38,14 @@
             (let [res (read-line)]
               (BbsshUtils/leave-raw-mode 1)
               (prn 'result res))
-            (when-let [auth-sock (System/getenv "SSH_AUTH_SOCK")]
-              (let [sock (BbsshUtils/ssh-open-auth-socket auth-sock)]
+            (when-let [auth-sock (System/getenv "SSH_AUTH_SOCK")
+                       ]
+              (let [auth-sock (if (string/starts-with auth-sock "\\\\?\\")
+                                (subs auth-sock 4)
+                                auth-sock
+                                )
+                    _ (prn 'auth-sock auth-sock)
+                    sock (BbsshUtils/ssh-open-auth-socket auth-sock)]
                 (prn 'open sock)
                 (let [send (byte-array [0 0 0 1 11])]
                   (prn 'send (seq send))

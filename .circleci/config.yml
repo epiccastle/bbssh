@@ -241,6 +241,11 @@ jobs:
             Write-Host "Cleaning bbssh.lib..."
             Remove-Item "C:\Users\circleci\project\graalvm\graalvm-ce-java11-22.2.0\lib\static\windows-amd64\bbssh.lib"
 
+            Write-Host "testing bbssh..."
+            $env:TEST = 1
+            $env:BABASHKA_POD = 1
+            C:\Users\circleci\project\build\bbssh
+
             md dist
             copy build\bbssh.exe dist
             copy build\sunmscapi.dll dist

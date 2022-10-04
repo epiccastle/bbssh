@@ -12,7 +12,8 @@
   (-> "clojure -Spath -m bbssh.core"
       process/sh
       :out
-      string/trim))
+      string/trim
+      (str ":src/c/jni")))
 
 (case (System/getenv "BBSSH_TEST_TARGET")
   "native-image"
@@ -21,7 +22,7 @@
 
   ;; by default: run pod process under java in dev
   (pods/load-pod ["java"
-                  "-Djava.library.path=resources"
+                  "-Djava.library.path=build"
                   "-cp"
                   class-path
                   "clojure.main"

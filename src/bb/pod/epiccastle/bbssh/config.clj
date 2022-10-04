@@ -42,22 +42,35 @@
     :args []
     :callbacks callbacks}))
 
-(defn get-hostname [config]
+(defn get-hostname
+  "return the hostname from a config object"
+  [config]
   (config/get-hostname
    (cleaner/split-key config)))
 
-(defn get-user [config]
+(defn get-user
+  "return the username for a config object"
+  [config]
   (config/get-user
    (cleaner/split-key config)))
 
-(defn get-port [config]
+(defn get-port
+  "return the port for a config object"
+  [config]
   (config/get-port
    (cleaner/split-key config)))
 
-(defn get-value [config]
+(defn get-value
+  "return the string setting for `key` from a config object"
+  [config key]
   (config/get-value
-   (cleaner/split-key config)))
+   (cleaner/split-key config)
+   key))
 
-(defn get-values [config]
+(defn get-values
+  "return a vector of strings that is set for the value `key`
+  from a config object"
+  [config key]
   (config/get-values
-   (cleaner/split-key config)))
+   (cleaner/split-key config)
+   key))

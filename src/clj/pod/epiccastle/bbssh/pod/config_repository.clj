@@ -3,7 +3,7 @@
             [bbssh.impl.utils :as utils]
             [pod.epiccastle.bbssh.pod.callbacks :as callbacks]
             [pod.epiccastle.bbssh.pod.cleaner :as cleaner])
-  (:import [com.jcraft.jsch ConfigRepository]
+  (:import [com.jcraft.jsch ConfigRepository OpenSSHConfig]
            [java.util Vector]))
 
 ;; pod.epiccastle.bbssh.pod.* are invoked on pod side.
@@ -25,3 +25,11 @@
   (.getConfig
    ^ConfigRepository (references/get-instance config-repository)
    ^String hostname))
+
+(defn openssh-config-file [config-file]
+  (references/add-instance
+   (OpenSSHConfig/parseFile config-file)))
+
+(defn openssh-config-string [config]
+  (references/add-instance
+   (OpenSSHConfig/parse config)))

@@ -165,6 +165,44 @@ bbssh_strlcpy(char * __restrict dst, const char * __restrict src, size_t dsize)
 /* same error as openbsd ssh code uses */
 #define SSH_ERR_SYSTEM_ERROR -24
 
+
+
+
+/* extra windows util functions */
+#ifdef _WIN32
+wchar_t *
+utf8_to_utf16(const char *utf8)
+{
+        int needed = 0;
+        wchar_t* utf16 = NULL;
+        if ((needed = MultiByteToWideChar(CP_UTF8, 0, utf8, -1, NULL, 0)) == 0 ||
+            (utf16 = malloc(needed * sizeof(wchar_t))) == NULL ||
+            MultiByteToWideChar(CP_UTF8, 0, utf8, -1, utf16, needed) == 0) {
+                errno = ENOMEM;
+                return NULL;
+        }
+
+        return utf16;
+}
+
+char *
+utf16_to_utf8(const wchar_t* utf16)
+{
+        int needed = 0;
+        char* utf8 = NULL;
+        if ((needed = WideCharToMultiByte(CP_UTF8, 0, utf16, -1, NULL, 0, NULL, NULL)) == 0 ||
+            (utf8 = malloc(needed)) == NULL ||
+            WideCharToMultiByte(CP_UTF8, 0, utf16, -1, utf8, needed, NULL, NULL) == 0)
+                return NULL;
+
+        return utf8;
+}
+
+
+#endif
+
+
+
 int ssh_open_auth_socket (const char *cpath) {
 #ifndef _WIN32
   struct sockaddr_un sunaddr;
@@ -188,15 +226,24 @@ int ssh_open_auth_socket (const char *cpath) {
 
   return sock;
 #else
+  wchar_t* name_w = NULL;
+
+  if ((name_w = utf8_to_utf16(cpath)) == NULL) {
+    return -1;
+  }
+
   HANDLE result = CreateFileW
     (
-     cpath,
+     name_w,
      GENERIC_READ | GENERIC_WRITE,
      0,
      NULL,
      OPEN_EXISTING,
-     FILE_ATTRIBUTE_NORMAL,
+     FILE_FLAG_OVERLAPPED | SECURITY_SQOS_PRESENT | SECURITY_IDENTIFICATION,
      NULL);
+
+  if (name_w)
+    free(name_w);
 
   if(result==-1)
     {

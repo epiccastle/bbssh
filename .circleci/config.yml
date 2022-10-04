@@ -263,19 +263,19 @@ workflows:
   version: 2
   ci:
     jobs:
-      # - test:
-      #     filters:
-      #       branches:
-      #         only: main
-      # - mac:
-      #     filters:
-      #       branches:
-      #         only: remove-jni
-      # - linux:
-      #     filters:
-      #       branches:
-      #         only: remove-jni
+      - test:
+          filters:
+            branches:
+              only: main
+      - mac:
+          filters:
+            branches:
+              only: main
+      - linux:
+          filters:
+            branches:
+              only: main
       - windows:
           filters:
             branches:
-              only: remove-jni
+              only: main

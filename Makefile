@@ -118,11 +118,11 @@ package-m1: native-image
 #
 # Babashka related targets
 #
-test: $(LIB_FILE)
+test: $(JNI_LIB_FILE)
 	-mkdir test/files/dir1/dir3
 	umask 0000; bb --config test/bb.edn -m bb-test.core
 
-test-bb: $(LIB_FILE)
+test-bb: $(JNI_LIB_FILE)
 	-mkdir test/files/dir1/dir3
 	BABASHKA_CLASSPATH=test umask 0000 && java -jar $(BABASHKA_SRC)/target/babashka-0.9.162-SNAPSHOT-standalone.jar test/bb_test/core.clj
 

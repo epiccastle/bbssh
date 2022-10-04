@@ -104,10 +104,11 @@
     :get-signature
     (fn [data algorithm]
       (when-let [auth-sock-path (get-sock-path)]
-        (let [sock (socket/open auth-sock-path)
-              signature (sign-request sock blob data algorithm)]
-          (socket/close sock)
-          signature)))
+        (let [sock (socket/open auth-sock-path)]
+          (when (pos? sock)
+            (let [signature (sign-request sock blob data algorithm)]
+              (socket/close sock)
+              signature)))))
     :get-alg-name
     (fn []
       (->> blob pack/decode-string first (map char) (apply str)))
@@ -126,8 +127,11 @@
     :get-identities
     (fn []
       (when-let [auth-sock-path (get-sock-path)]
-        (let [sock (socket/open auth-sock-path)
-              identities (request-identities sock)]
-          (socket/close sock)
-          (let [result (mapv new-identity identities)]
-            result))))}))
+        (let [sock (socket/open auth-sock-path)]
+          (if (pos? sock)
+            (let [identities (request-identities sock)]
+              (socket/close sock)
+              (let [result (mapv new-identity identities)]
+                result))
+            ;; socket failed to open. windows?
+            []))))}))

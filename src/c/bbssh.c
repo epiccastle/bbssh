@@ -165,44 +165,6 @@ bbssh_strlcpy(char * __restrict dst, const char * __restrict src, size_t dsize)
 /* same error as openbsd ssh code uses */
 #define SSH_ERR_SYSTEM_ERROR -24
 
-
-
-
-/* extra windows util functions */
-#ifdef _WIN32
-wchar_t *
-utf8_to_utf16(const char *utf8)
-{
-        int needed = 0;
-        wchar_t* utf16 = NULL;
-        if ((needed = MultiByteToWideChar(CP_UTF8, 0, utf8, -1, NULL, 0)) == 0 ||
-            (utf16 = malloc(needed * sizeof(wchar_t))) == NULL ||
-            MultiByteToWideChar(CP_UTF8, 0, utf8, -1, utf16, needed) == 0) {
-                errno = ENOMEM;
-                return NULL;
-        }
-
-        return utf16;
-}
-
-char *
-utf16_to_utf8(const wchar_t* utf16)
-{
-        int needed = 0;
-        char* utf8 = NULL;
-        if ((needed = WideCharToMultiByte(CP_UTF8, 0, utf16, -1, NULL, 0, NULL, NULL)) == 0 ||
-            (utf8 = malloc(needed)) == NULL ||
-            WideCharToMultiByte(CP_UTF8, 0, utf16, -1, utf8, needed, NULL, NULL) == 0)
-                return NULL;
-
-        return utf8;
-}
-
-
-#endif
-
-
-
 int ssh_open_auth_socket (const char *cpath) {
 #ifndef _WIN32
   struct sockaddr_un sunaddr;
@@ -226,39 +188,7 @@ int ssh_open_auth_socket (const char *cpath) {
 
   return sock;
 #else
-  wchar_t* name_w = NULL;
-
-  if ((name_w = utf8_to_utf16(cpath)) == NULL) {
-    return -1;
-  }
-
-  HANDLE result = CreateFileW
-    (
-     name_w,
-     GENERIC_READ | GENERIC_WRITE,
-     0,
-     NULL,
-     OPEN_EXISTING,
-     FILE_FLAG_OVERLAPPED | SECURITY_SQOS_PRESENT | SECURITY_IDENTIFICATION,
-     NULL);
-
-  if (name_w)
-    free(name_w);
-
-  if(result==-1)
-    {
-      wchar_t buf[256];
-      printf("error: %d\n", GetLastError());
-      FormatMessageA(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
-                     NULL, GetLastError(), MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-                     buf, (sizeof(buf)), NULL);
-      printf(buf);
-      printf("\n");
-      return -1;
-    }
-
-  return result;
-
+  return -1; // unimplemented
 #endif
 }
 
@@ -266,8 +196,6 @@ void ssh_close_auth_socket(int socket)
 {
 #ifndef _WIN32
   close(socket);
-#else
-  CloseHandle(socket);
 #endif
 }
 
@@ -276,11 +204,7 @@ int ssh_auth_socket_read(int fd, void *buffer, int count)
 #ifndef _WIN32
   return read(fd, buffer, count);
 #else
-  DWORD bytes_read;
-  if(ReadFile(fd,buffer,count,&bytes_read, NULL))
-    return bytes_read;
-  else
-    return -1;
+  return -1; // unimplemented
 #endif
 }
 
@@ -289,10 +213,6 @@ int ssh_auth_socket_write(int fd, const void *buffer, int count)
 #ifndef _WIN32
   return write(fd, buffer, count);
 #else
-  DWORD bytes_written;
-  if(WriteFile(fd,buffer,count,&bytes_written, NULL))
-    return bytes_written;
-  else
-    return -1;
+  return -1; // unimplemented
 #endif
 }

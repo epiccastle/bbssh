@@ -3,7 +3,7 @@
             [bbssh.impl.utils :as utils]
             [pod.epiccastle.bbssh.pod.callbacks :as callbacks]
             [pod.epiccastle.bbssh.pod.cleaner :as cleaner])
-  (:import [com.jcraft.jsch Config]))
+  (:import [com.jcraft.jsch ConfigRepository$Config]))
 
 ;; pod.epiccastle.bbssh.pod.* are invoked on pod side.
 
@@ -12,7 +12,7 @@
 (defn ^:async new [reply-fn]
   (let [result
         (references/add-instance
-         (proxy [Config] []
+         (proxy [ConfigRepository$Config] []
            (getHostname []
              (callbacks/call-method reply-fn :get-hostname []))
            (getUser []
@@ -31,20 +31,22 @@
 
 (defn get-hostname [config]
   (.getHostname
-   ^Config (references/get-instance config)))
+   ^ConfigRepository$Config (references/get-instance config)))
 
 (defn get-user [config]
   (.getUser
-   ^Config (references/get-instance config)))
+   ^ConfigRepository$Config (references/get-instance config)))
 
 (defn get-port [config]
   (.getPort
-   ^Config (references/get-instance config)))
+   ^ConfigRepository$Config (references/get-instance config)))
 
-(defn get-value [config]
+(defn get-value [config key]
   (.getValue
-   ^Config (references/get-instance config)))
+   ^ConfigRepository$Config (references/get-instance config)
+   ^String key))
 
-(defn get-values [config]
+(defn get-values [config key]
   (.getValues
-   ^Config (references/get-instance config)))
+   ^ConfigRepository$Config (references/get-instance config)
+   ^String key))

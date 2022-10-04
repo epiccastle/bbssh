@@ -2,7 +2,8 @@
   "Creates and calls the various methods of an ConfigRepository that
   exists on the pod heap."
   (:require [pod.epiccastle.bbssh.impl.cleaner :as cleaner]
-            [pod.epiccastle.bbssh.impl.utils :as utils]))
+            [pod.epiccastle.bbssh.impl.utils :as utils]
+            [pod.epiccastle.bbssh.pod.config :as config]))
 
 (defn new
   "Create a new config instance. Pass in a hashmap containing

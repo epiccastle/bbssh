@@ -42,12 +42,14 @@
   can be a string (supports tilde expansion of home directory)
   or a java.io.File instance."
   [config-file]
-  (config-repository/openssh-config-file
-   (if (string? config-file)
-     config-file
-     (.getPath config-file))))
+  (cleaner/register
+   (config-repository/openssh-config-file
+    (if (string? config-file)
+      config-file
+      (.getPath config-file)))))
 
 (defn openssh-config-string
   "Create and OpenSSH config-repository from a data string."
   [config]
-  (config-repository/openssh-config-string config))
+  (cleaner/register
+   (config-repository/openssh-config-string config)))

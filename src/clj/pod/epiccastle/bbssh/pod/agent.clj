@@ -51,12 +51,12 @@
 (defn get-config-repository
   [agent]
   (references/add-instance
-   (.getIdentityRepository
+   (.getConfigRepository
     ^JSch (references/get-instance agent))))
 
 (defn set-config-repository
   [agent config-repository]
-  (.setIdentityRepository
+  (.setConfigRepository
    ^JSch (references/get-instance agent)
    ^ConfigRepository (references/get-instance config-repository)))
 

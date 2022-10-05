@@ -5,11 +5,7 @@
             [bb-test.keys :as keys]
             [clojure.test :refer [is deftest]]))
 
-(deftest identity-repository
-  (docker/cleanup)
-  (docker/build {:root-password "root-access-please"})
-  (docker/start {:ssh-port 9876})
-
+(deftest test-key-pair
   (let [agent (agent/new)
         kp (keys/create-key-pair agent :rsa-nopassphrase)]
     (is (= (key-pair/get-finger-print kp)
@@ -27,7 +23,29 @@
              1024))
       (is (= (seq (key-pair/get-public-key-blob kp))
              (get-in keys/keys [:rsa-passphrase :public-blob])))
-      (is (key-pair/is-encrypted kp))))
+      (is (key-pair/is-encrypted kp)))))
 
-  (docker/cleanup)
-  )
+(deftest test-ed25519
+  (let [agent (agent/new)
+        kp (key-pair/generate agent :ed25519)]
+    (is (= 32 (key-pair/get-key-size kp)))))
+
+(deftest test-ed448
+  (let [agent (agent/new)
+        kp (key-pair/generate agent :ed448)]
+    (is (= 57 (key-pair/get-key-size kp)))))
+
+(deftest test-ecdsa
+  (let [agent (agent/new)
+        kp (key-pair/generate agent :ecdsa 256)]
+    (is (= 256 (key-pair/get-key-size kp)))))
+
+(deftest test-dsa
+  (let [agent (agent/new)
+        kp (key-pair/generate agent :dsa 1024)]
+    (is (= 1024 (key-pair/get-key-size kp)))))
+
+(deftest test-rsa
+  (let [agent (agent/new)
+        kp (key-pair/generate agent :rsa 1024)]
+    (is (= 1024 (key-pair/get-key-size kp)))))

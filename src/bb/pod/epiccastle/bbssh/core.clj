@@ -193,6 +193,9 @@
     hosts, or a changed key modified, only after the user has confirmed
     this is what they wish to do via the terminal.
     Default is `:ask`
+  - `:config-file` A string or java.io.File referencing an OpenSSH
+    config file to use for configuration settings. Defaults to
+    `\"~/.ssh/config\"`. Passing in `false` disables any config file.
   - `:known-hosts` A string defining the path to the known_hosts file
     to use. It is set to ~/.ssh/known_hosts by default. Set to `false`
     to disable using a known hosts file.
@@ -246,6 +249,7 @@
    & [{:keys [agent port username password
               identity passphrase private-key public-key
               strict-host-key-checking
+              config-file
               known-hosts accept-host-key connection-options
               no-connect identity-repository user-info
               host-key-repository]
@@ -263,6 +267,26 @@
        (or known-hosts
            (str (System/getProperty "user.home")
                 "/.ssh/known_hosts"))))
+    (when (not= false config-file)
+      (cond
+        (string? config-file)
+        (agent/set-config-repository
+         agent
+         (config-repository/openssh-config-file config-file))
+
+        (= java.io.File (class config-file))
+        (agent/set-config-repository
+         agent
+         (config-repository/openssh-config-file (.getPath config-file)))
+
+        (and (nil? config-file)
+             (.exists (io/file (str (System/getProperty "user.home")
+                                    "/.ssh/config"))))
+        (agent/set-config-repository
+         agent
+         (config-repository/openssh-config-file
+          (str (System/getProperty "user.home")
+               "/.ssh/config")))))
     (when password (session/set-password session password))
     (when identity
       (if passphrase

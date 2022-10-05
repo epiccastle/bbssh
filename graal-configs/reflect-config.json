@@ -1314,6 +1314,12 @@
         "allPublicConstructors": true
     },
     {
+        "name": "java.security.MessageDigest",
+        "allPublicMethods": true,
+        "allPublicFields": true,
+        "allPublicConstructors": true
+    },
+    {
         "name": "java.util.concurrent.LinkedBlockingQueue",
         "allPublicMethods": true,
         "allPublicFields": true,

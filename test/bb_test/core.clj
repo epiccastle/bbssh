@@ -38,7 +38,8 @@
          '[bb-test.test-key-pair]
          '[bb-test.test-identity-repository]
          '[bb-test.test-host-key]
-         '[bb-test.test-known-hosts])
+         '[bb-test.test-known-hosts]
+         '[bb-test.test-openssh-config])
 
 (defn -main [& args]
   (let [result
@@ -51,7 +52,8 @@
          'bb-test.test-key-pair
          'bb-test.test-identity-repository
          'bb-test.test-host-key
-         'bb-test.test-known-hosts)]
+         'bb-test.test-known-hosts
+         'bb-test.test-openssh-config)]
     (prn result)
     (when (or
            (pos? (:fail result))

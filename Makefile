@@ -18,7 +18,7 @@ CLOJURE_FILES=$(shell find src/clj -name '*.clj')
 ifeq ($(UNAME),Linux)
 	NATIVE_LIB_FILE=build/libbbssh.a
 	JNI_LIB_FILE=build/libbbssh.so
-	FLAVOUR=unix
+	FLAVOUR=linux
 else ifeq ($(UNAME),FreeBSD)
 	NATIVE_LIB_FILE=build/libbbssh.a
 	JNI_LIB_FILE=build/libbbssh.so
@@ -30,7 +30,7 @@ else ifeq ($(UNAME),Darwin)
 else
 	NATIVE_LIB_FILE=build/bbssh.lib
 	JNI_LIB_FILE=build/bbssh.dll
-	FLAVOUR=window
+	FLAVOUR=windows
 endif
 
 .PHONY: clean run uberjar uberjar-run uberjar-ls native-image test
@@ -100,6 +100,11 @@ native-image-musl: toolchain $(NATIVE_LIB_FILE)
 	PATH=toolchain/x86_64-linux-musl-native/bin:$(PATH) \
 		clojure -M:native-image-musl
 
+ifeq ($(FLAVOUR),linux)
+build/bbssh: native-image-musl
+else
+build/bbssh: native-image
+endif
 
 package-linux: native-image-musl
 	cd build && tar cvfz bbssh-$(VERSION)-linux-amd64.tgz bbssh

@@ -5,5 +5,5 @@ RUN apk add openssh-server openssh file
 RUN sed -E "s/^#(PermitRootLogin ).+$/\1yes/" /etc/ssh/sshd_config -i
 RUN ssh-keygen -A
 RUN echo "root:$root_password"|chpasswd
-ENTRYPOINT ["/usr/sbin/sshd","-D"]
+ENTRYPOINT ["/usr/sbin/sshd","-D","-E","/tmp/sshd.log"]
 EXPOSE 22/tcp

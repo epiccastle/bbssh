@@ -3,6 +3,12 @@ All notable changes to this project will be documented in this file. This change
 
 ## [Unreleased]
 
+### Fixed
+- Replace JNI calls with GraalVM C interop - #3
+
+### Added
+- Windows support (partial) - #4
+
 ## [0.1.0] - 2022-9-28
 Initial release.
 

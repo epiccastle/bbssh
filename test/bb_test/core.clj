@@ -18,7 +18,7 @@
 (case (System/getenv "BBSSH_TEST_TARGET")
   "native-image"
   ;; run pod process from native-image to test
-  (pods/load-pod "./bbssh" {:transport :socket})
+  (pods/load-pod "build/bbssh" {:transport :socket})
 
   ;; by default: run pod process under java in dev
   (pods/load-pod ["java"

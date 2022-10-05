@@ -5,9 +5,11 @@ All notable changes to this project will be documented in this file. This change
 
 ### Fixed
 - Replace JNI calls with GraalVM C interop - #3
+- NoClassDefFoundError: org/bouncycastle/crypto/params/Ed25519PrivateKeyParameters - #5
 
 ### Added
 - Windows support (partial) - #4
+- Support ssh conf files - #1
 
 ## [0.1.0] - 2022-9-28
 Initial release.

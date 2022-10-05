@@ -514,6 +514,13 @@
         "allPublicMethods": true
     },
     {
+        "name": "com.jcraft.jsch.jce.SignatureECDSA521",
+        "allDeclaredConstructors": true,
+        "allPublicConstructors": true,
+        "allDeclaredMethods": true,
+        "allPublicMethods": true
+    },
+    {
         "name": "com.jcraft.jsch.jce.SignatureRSA",
         "allDeclaredConstructors": true,
         "allPublicConstructors": true,
@@ -1309,6 +1316,12 @@
     },
     {
         "name": "java.nio.file.attribute.PosixFilePermissions",
+        "allPublicMethods": true,
+        "allPublicFields": true,
+        "allPublicConstructors": true
+    },
+    {
+        "name": "java.security.MessageDigest",
         "allPublicMethods": true,
         "allPublicFields": true,
         "allPublicConstructors": true

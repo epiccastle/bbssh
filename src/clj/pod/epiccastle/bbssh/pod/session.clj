@@ -57,21 +57,12 @@
 (defn delete-port-forwarding-local
   [session
    {:keys [bind-address
-           local-port
-           remote-host
-           remote-port
-           connect-timeout]
+           local-port]
     :or {bind-address "127.0.0.1"}}]
-  (.setPortForwardingL
+  (.delPortForwardingL
    ^Session (references/get-instance session)
    ^String bind-address
-   ^int local-port
-   ^String remote-host
-   ^int remote-port
-   nil
-   ^int connect-timeout)
-
-  )
+   ^int local-port))
 
 (defn get-port-forwarding-local
   [session]

@@ -1,6 +1,7 @@
 (ns pod.epiccastle.bbssh.pod.session
   (:require [bbssh.impl.references :as references]
-            [bbssh.impl.utils :as utils])
+            [bbssh.impl.utils :as utils]
+            [clojure.string :as string])
   (:import [com.jcraft.jsch JSch Session
             UserInfo IdentityRepository
             HostKeyRepository])
@@ -66,8 +67,15 @@
 
 (defn get-port-forwarding-local
   [session]
-  (.getPortForwardingL
-   ^Session (references/get-instance session)))
+  (->>
+   (.getPortForwardingL
+    ^Session (references/get-instance session))
+   (mapv (fn [s]
+           (let [[local-port remote-host remote-port]
+                 (string/split s #":")]
+             {:local-port (Integer/parseInt local-port)
+              :remote-host remote-host
+              :remote-port (Integer/parseInt remote-port)})))))
 
 (defn set-host
   [session host]

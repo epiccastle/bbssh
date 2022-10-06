@@ -1,0 +1,81 @@
+PS C:\Users\circleci> $env:SSH_AUTH_SOCK
+\\?\C:\Users\circleci\AppData\Local\Temp\circleci-2824820838\ssh_auth_sock
+PS C:\Users\circleci> dir C:\Users\circleci\AppData\Local\Temp\circleci-2824820838\
+
+
+    Directory: C:\Users\circleci\AppData\Local\Temp\circleci-2824820838
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+-a---l        9/30/2022   1:54 PM              0 ssh_auth_sock
+
+
+&"C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat"
+
+cmd.exe /k "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat"
+
+
+
+
+
+
+#!/usr/bin/env pwsh
+
+$ErrorActionPreference = 'Stop'
+
+$Version = '1.11.1.1165'
+$ClojureToolsUrl = "https://download.clojure.org/install/clojure-tools-$Version.zip"
+
+Write-Host 'Downloading Clojure tools' -ForegroundColor Gray
+[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]'Tls12'
+Invoke-WebRequest -Uri $ClojureToolsUrl -OutFile clojure-tools.zip
+
+Write-Warning 'Clojure will install as a module in your PowerShell module path.'
+Write-Host ''
+Write-Host 'Possible install locations:'
+
+$InstallLocations = $env:PSModulePath -split [IO.Path]::PathSeparator
+for ($Index = 0; $Index -lt $InstallLocations.Length; $Index++) {
+  Write-Host ('  {0}) {1}' -f ($Index + 1), $InstallLocations[$Index])
+}
+$Choice = Read-Host 'Enter number of preferred install location'
+$DestinationPath = $InstallLocations[$Choice - 1]
+
+Write-Host ''
+
+$ExistingLocation = "$DestinationPath\ClojureTools"
+if (Test-Path $ExistingLocation) {
+  Write-Host 'Cleaning up existing install' -ForegroundColor Gray
+  Remove-Item -Path $ExistingLocation -Recurse
+}
+
+Write-Host 'Installing PowerShell module'
+Expand-Archive clojure-tools.zip -DestinationPath $DestinationPath
+
+Write-Host 'Removing download'
+Remove-Item clojure-tools.zip
+
+Write-Host 'Clojure now installed. Use "clj -h" for help.' -ForegroundColor Green
+
+
+
+
+
+
+
+
+
+
+
+Downloading Clojure tools
+WARNING: Clojure will install as a module in your PowerShell module path.
+
+Possible install locations:
+  1) C:\Users\circleci\Documents\WindowsPowerShell\Modules
+  2) C:\Program Files (x86)\WindowsPowerShell\Modules
+  3) C:\Program Files\WindowsPowerShell\Modules
+  4) C:\Windows\system32\WindowsPowerShell\v1.0\Modules
+  5) C:\Program Files (x86)\Google\Cloud SDK\google-cloud-sdk\platform\PowerShell
+  6) C:\Program Files (x86)\Microsoft SQL Server\150\Tools\PowerShell\Modules\
+Enter number of preferred install location:

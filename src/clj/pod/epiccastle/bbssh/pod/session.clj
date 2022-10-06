@@ -43,7 +43,8 @@
            remote-host
            remote-port
            connect-timeout]
-    :or {bind-address "127.0.0.1"}}]
+    :or {bind-address "127.0.0.1"
+         connect-timeout 0}}]
   (.setPortForwardingL
    ^Session (references/get-instance session)
    ^String bind-address
@@ -51,9 +52,7 @@
    ^String remote-host
    ^int remote-port
    nil
-   ^int connect-timeout)
-
-  )
+   ^int connect-timeout))
 
 (defn delete-port-forwarding-local
   [session

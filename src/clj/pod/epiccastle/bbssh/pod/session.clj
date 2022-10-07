@@ -77,6 +77,43 @@
               :remote-host remote-host
               :remote-port (Integer/parseInt remote-port)})))))
 
+(defn set-port-forwarding-remote
+  [session
+   {:keys [bind-address
+           remote-port
+           local-host
+           local-port]
+    :or {bind-address "127.0.0.1"
+         local-host "127.0.0.1"}}]
+  (.setPortForwardingR
+   ^Session (references/get-instance session)
+   ^String bind-address
+   ^int remote-port
+   ^String local-host
+   ^int local-port))
+
+(defn delete-port-forwarding-remote
+  [session
+   {:keys [bind-address
+           remote-port]
+    :or {bind-address "127.0.0.1"}}]
+  (.delPortForwardingR
+   ^Session (references/get-instance session)
+   ^String bind-address
+   ^int remote-port))
+
+(defn get-port-forwarding-remote
+  [session]
+  (->>
+   (.getPortForwardingR
+    ^Session (references/get-instance session))
+   (mapv (fn [s]
+           (let [[local-port remote-host remote-port]
+                 (string/split s #":")]
+             {:remote-port (Integer/parseInt local-port)
+              :local-host remote-host
+              :local-port (Integer/parseInt remote-port)})))))
+
 (defn set-host
   [session host]
   (.setHost

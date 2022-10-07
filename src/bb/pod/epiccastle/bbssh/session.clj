@@ -69,6 +69,41 @@
   (session/get-port-forwarding-local
    (cleaner/split-key session)))
 
+(defn set-port-forwarding-remote
+  "Register the remote port to forward to the local machine and then
+  connect out to a host on the local network.
+
+  `options` is a hashmap for the following form
+
+  ```clj
+  {
+    :bind-address \"127.0.0.1\"            ;; the remote interface to bind to. Use \"*\" or \"0.0.0.0\" for all interfaces.
+    :remote-port 22                        ;; the remote port to bind to
+    :local-host \"host.localdomain\"       ;; the local network host to forward the connection to on the local side
+    :local-port 2200                       ;; the local port to connect to
+    :connect-timeout 30000                 ;; how long to try to connect for
+  }
+  ```
+  "
+  [session options]
+  (session/set-port-forwarding-remote
+   (cleaner/split-key session)
+   options))
+
+(defn delete-port-forwarding-remote
+  "Cancels the specified remote port forwarding"
+  [session options]
+  (session/delete-port-forwarding-remote
+   (cleaner/split-key session)
+   options))
+
+(defn get-port-forwarding-remote
+  "return a list of all the remote port forwards. List elements
+  are of the form \"local-port:host:host-port\"."
+  [session]
+  (session/get-port-forwarding-remote
+   (cleaner/split-key session)))
+
 (defn set-host
   "Set the host to connect to"
   [session host]

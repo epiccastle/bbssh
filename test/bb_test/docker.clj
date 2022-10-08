@@ -8,7 +8,7 @@
 (defn run [command error-message]
   (let [{:keys [exit err out]}
         (process/sh command)]
-    (assert (zero? exit) (str error-message ": " err))
+    (assert (zero? exit) (str error-message ": out:" out " err:" err))
     out))
 
 (defn run! [command]

@@ -40,6 +40,10 @@
     (str "docker exec bbssh-test " command)
     "docker exec failed"))
 
+(defn exec! [command]
+  (run!
+    (str "docker exec bbssh-test " command)))
+
 (defn cp-to [local-src remote-dest]
   (run
     (format "docker cp \"%s\" \"bbssh-test:%s\"" local-src remote-dest)

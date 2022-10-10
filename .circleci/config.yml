@@ -246,7 +246,14 @@ jobs:
             # $env:BABASHKA_POD = 1
             # C:\Users\circleci\project\build\bbssh
 
+            Write-Host "Making bbssh.zip..."
+            md archive
+            copy build\bbssh.exe archive
+            Add-Type -assembly "system.io.compression.filesystem"
+            [io.compression.zipfile]::CreateFromDirectory("archive", "build\bbssh.zip")
+
             md dist
+            copy build\bbssh.zip dist
             copy build\bbssh.exe dist
             copy build\sunmscapi.dll dist
       - save_cache:

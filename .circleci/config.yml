@@ -158,7 +158,7 @@ jobs:
   windows:
     executor: win/default
     environment:
-      VERSION: 0.2.0
+      BBSSH_VERSION: 0.2.0
     steps:
       - checkout
       - restore_cache:
@@ -254,7 +254,7 @@ jobs:
             [io.compression.zipfile]::CreateFromDirectory("archive", "build\bbssh-$VERSION-windows-amd64.zip")
 
             md dist
-            copy build\bbssh-$VERSION-windows-amd64.zip dist
+            copy build\bbssh-$BBSSH_VERSION-windows-amd64.zip dist
             copy build\bbssh.exe dist
             #copy build\sunmscapi.dll dist
       - save_cache:

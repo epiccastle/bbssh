@@ -197,6 +197,22 @@
   - `:config-file` A string or java.io.File referencing an OpenSSH
     config file to use for configuration settings. Defaults to
     `\"~/.ssh/config\"`. Passing in `false` disables any config file.
+  - `:port-forward-local` A vector of local port forwarding directives.
+    Each element should be a hashmap with the keys `:local-port`,
+    `:remote-host` and `:remote-port`. All connections to `:local-port`
+    on the local machine will be forwarded to `:remote-host`
+    `:remote-port` on the remote machine. An optional key of
+    `:bind-address` can be used to control the local interface that
+    is bound. Defaults to 127.0.0.1. Optional key `:connect-timeout`
+    defines how many milliseconds to persist in attempting the remote
+    connection. Defaults to 0 (try forever).
+  - `:port-forward-remote` A vector of remote port forwarding
+    directives. Each element should be a hashmap with the keys
+    `:remote-port`, `:local-host` and `:local-port`. All connections
+    to `:remote-port` on the remote machine will be forwarded to
+    `:local-host` `:local-port` on the local machine. An optional key
+    of `:bind-address` can be used to control the remote interface that
+    is bound. Defaults to 127.0.0.1.
   - `:known-hosts` A string defining the path to the known_hosts file
     to use. It is set to ~/.ssh/known_hosts by default. Set to `false`
     to disable using a known hosts file.
@@ -252,6 +268,7 @@
               strict-host-key-checking
               config-file
               known-hosts accept-host-key connection-options
+              port-forward-local port-forward-remote
               no-connect identity-repository user-info
               host-key-repository]
        :or {port 22
@@ -319,6 +336,12 @@
          (make-default-user-info options)))
     (when host-key-repository
       (session/set-host-key-repository session host-key-repository))
+    (when port-forward-local
+      (doseq [local port-forward-local]
+        (session/set-port-forwarding-local local)))
+    (when port-forward-remote
+      (doseq [remote port-forward-remote]
+        (session/set-port-forwarding-remote remote)))
     (when-not no-connect
       (session/connect session))
     session))

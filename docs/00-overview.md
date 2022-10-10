@@ -9,6 +9,15 @@ Project repository is [here](https://github.com/epiccastle/bbssh)
 Babashka v0.10.194 or higher is required for full functionality.
 A local installation of ssh is **not required**.
 
+bbssh supports the following operatibg systems and machine architectures:
+
+- Linux amd64
+- MacOS amd64
+- MacOS aarch64 (M1)
+- Windows amd64 *
+
+> __* Note:__ Windows bbssh does not support ssh-agent key authentication.
+
 ## Installation
 
 **The pod should automatically install on first use.**

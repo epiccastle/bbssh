@@ -212,7 +212,10 @@
     to `:remote-port` on the remote machine will be forwarded to
     `:local-host` `:local-port` on the local machine. An optional key
     of `:bind-address` can be used to control the remote interface that
-    is bound. Defaults to 127.0.0.1.
+    is bound. Defaults to 127.0.0.1. Note: remote port forwarding
+    cannot be setup until the connection is made. Thus setting
+    `:no-connect` to true will prevent `:port-forward-remote` from
+    initiating.
   - `:known-hosts` A string defining the path to the known_hosts file
     to use. It is set to ~/.ssh/known_hosts by default. Set to `false`
     to disable using a known hosts file.
@@ -336,14 +339,14 @@
          (make-default-user-info options)))
     (when host-key-repository
       (session/set-host-key-repository session host-key-repository))
-    (when port-forward-local
-      (doseq [local port-forward-local]
-        (session/set-port-forwarding-local local)))
-    (when port-forward-remote
-      (doseq [remote port-forward-remote]
-        (session/set-port-forwarding-remote remote)))
     (when-not no-connect
       (session/connect session))
+    (when port-forward-local
+      (doseq [local port-forward-local]
+        (session/set-port-forwarding-local session local)))
+    (when port-forward-remote
+      (doseq [remote port-forward-remote]
+        (session/set-port-forwarding-remote session remote)))
     session))
 
 (defrecord SshProcess

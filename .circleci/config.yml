@@ -157,6 +157,8 @@ jobs:
 
   windows:
     executor: win/default
+    environment:
+      BBSSH_VERSION: 0.2.0
     steps:
       - checkout
       - restore_cache:
@@ -166,7 +168,6 @@ jobs:
           name: debug
           shell: powershell.exe
           command: |
-            $BBSSH_VERSION = "0.2.0"
             Write-Host "Setting up build environment..."
             cmd.exe /c "call `"C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat`" && set > %temp%\vcvars.txt"
             Get-Content "$env:temp\vcvars.txt" | Foreach-Object {
@@ -250,7 +251,7 @@ jobs:
             md archive
             copy build\bbssh.exe archive
             Add-Type -assembly "system.io.compression.filesystem"
-            [io.compression.zipfile]::CreateFromDirectory("archive", "build\bbssh-$VERSION-windows-amd64.zip")
+            [io.compression.zipfile]::CreateFromDirectory("archive", "build\bbssh-$BBSSH_VERSION-windows-amd64.zip")
 
             md dist
             copy build\bbssh-$BBSSH_VERSION-windows-amd64.zip dist

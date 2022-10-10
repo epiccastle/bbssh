@@ -157,7 +157,8 @@ jobs:
 
   windows:
     executor: win/default
-
+    environment:
+      VERSION: 0.2.0
     steps:
       - checkout
       - restore_cache:
@@ -250,12 +251,12 @@ jobs:
             md archive
             copy build\bbssh.exe archive
             Add-Type -assembly "system.io.compression.filesystem"
-            [io.compression.zipfile]::CreateFromDirectory("archive", "build\bbssh.zip")
+            [io.compression.zipfile]::CreateFromDirectory("archive", "build\bbssh-$VERSION-windows-amd64.zip")
 
             md dist
-            copy build\bbssh.zip dist
+            copy build\bbssh-$VERSION-windows-amd64.zip dist
             copy build\bbssh.exe dist
-            copy build\sunmscapi.dll dist
+            #copy build\sunmscapi.dll dist
       - save_cache:
           paths:
             - ~/project/graalvm

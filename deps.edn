@@ -91,7 +91,7 @@
                       :description "A babashka pod providing SSH support"
                       :license {:name "Eclipse Public License 2.0"
                                 :url "https://github.com/epiccastle/bbssh/blob/main/LICENSE"}}
-          :extra-paths ["codox-processed/bb" "resources"]}
+          :extra-paths ["codox-processed/bb" "src/c/jni"]}
 
   :cider-clj {:extra-deps {cider/cider-nrepl {:mvn/version "0.22.4"}}
               :main-opts ["-m" "nrepl.cmdline" "--middleware" "[cider.nrepl/cider-middleware]"]}}}

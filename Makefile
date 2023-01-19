@@ -1,6 +1,6 @@
-GRAALVM_HOME = $(HOME)/graalvm-ce-java19-22.3.0
-ifeq (,$(findstring java19,$(GRAALVM_HOME)))
-$(error Please use a Java 19 version of Graal)
+GRAALVM_HOME = $(HOME)/graalvm-ce-java17-22.3.0
+ifeq (,$(findstring java17,$(GRAALVM_HOME)))
+$(error Please use a Java 17 version of Graal)
 endif
 STATIC=false
 PATH := $(GRAALVM_HOME)/bin:$(PATH)

@@ -13,3 +13,7 @@ pom.xml.asc
 .nrepl-port
 .cpcache/
 *~
+.babashka*port
+/build
+/toolchain
+/.tmp

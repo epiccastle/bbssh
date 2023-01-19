@@ -1,6 +1,6 @@
-GRAALVM_HOME = $(HOME)/graalvm-ce-java11-22.2.0
-ifeq (,$(findstring java11,$(GRAALVM_HOME)))
-$(error Please use a Java 11 version of Graal)
+GRAALVM_HOME = $(HOME)/graalvm-ce-java19-22.3.0
+ifeq (,$(findstring java19,$(GRAALVM_HOME)))
+$(error Please use a Java 19 version of Graal)
 endif
 STATIC=false
 PATH := $(GRAALVM_HOME)/bin:$(PATH)
@@ -148,7 +148,7 @@ codox-upload:
 #
 ARCH=x86_64
 MUSL_PREBUILT_TOOLCHAIN_VERSION=10.2.1
-ZLIB_VERSION=1.2.12
+ZLIB_VERSION=1.2.13
 CURRENT_DIR = $(shell pwd)
 
 toolchain/$(ARCH)-linux-musl-native/bin/gcc:

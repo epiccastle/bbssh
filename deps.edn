@@ -58,7 +58,6 @@
                 org.clojure/tools.deps.alpha {:mvn/version "0.9.755"}
                 org.clojure/tools.namespace {:mvn/version "1.0.0"}}
    :main-opts  ["-m" "build"
-                "--enable-preview"
                 "--static"
                 "--libc=musl"
                 "--native-compiler-options=-I{{PROJECT_ROOT}}/src/c"

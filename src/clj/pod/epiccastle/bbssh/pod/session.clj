@@ -22,11 +22,19 @@
    ^UserInfo (references/get-instance user-info)))
 
 (defn make-proxy
-  [{:keys [type host port]}]
-  (case type
-    :http (ProxyHTTP. host port)
-    :socks4 (ProxySOCKS4. host port)
-    :socks5 (ProxySOCKS5. host port)))
+  [{:keys [type host port username password]}]
+  (let [proxy (case type
+                :http (ProxyHTTP. host port)
+                :socks4 (ProxySOCKS4. host port)
+                :socks5 (ProxySOCKS5. host port))]
+    (when username
+      (case type
+        ;; Seems we don't have a better way to avoid the code duplication since
+        ;; the setUserPasswd method is not in the jsch `Proxy` interface.
+        :http (.setUserPasswd ^ProxyHTTP proxy username password)
+        :socks4 (.setUserPasswd ^ProxySOCKS4 proxy username password)
+        :socks5 (.setUserPasswd ^ProxySOCKS5 proxy username password)))
+    proxy))
 
 (defn set-proxy
   [session proxy]

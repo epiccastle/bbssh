@@ -76,3 +76,10 @@
   (-> (exec (format "md5sum '%s'" path))
       (string/split #" ")
       first))
+
+(defn get-container-ip
+  []
+  (-> (process/sh
+        "docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' bbssh-test")
+      :out
+      (string/trim)))

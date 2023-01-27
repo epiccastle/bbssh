@@ -98,9 +98,6 @@
         port (.getLocalPort server)
         pid (.pid (java.lang.ProcessHandle/current))
         port-file (io/file (str ".babashka-pod-" pid ".port"))
-        _ (.addShutdownHook (Runtime/getRuntime)
-                            (Thread. (fn []
-                                       (.delete port-file))))
         _ (spit port-file
                 (str port "\n"))
         socket (.accept server)
@@ -127,6 +124,7 @@
               (write out
                      {"port" port
                       "format" "edn"
+                      "ops" {"shutdown" {}}
                       "namespaces"
                       (concat
                        ;; this comes first to create an internal name
@@ -189,6 +187,9 @@
               (recur))
             "load-ns"
             (recur)
+
+            "shutdown"
+            (.delete port-file)
 
             "invoke"
             (do

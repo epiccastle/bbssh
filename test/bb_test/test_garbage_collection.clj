@@ -44,8 +44,12 @@
   ;; from the pod. TODO: investigate why its slow
   #_(Thread/sleep 5000)
 
-  (while (not (empty? (cleaner/get-references)))
-    (prn 'gc (count (cleaner/get-references)))
-    (Thread/sleep 500))
+  (loop [n 0]
+    (when (seq (cleaner/get-references))
+      (Thread/sleep 500)
+      (when (< n 10)
+        (recur (inc n)))))
+
+  (is (empty? (cleaner/get-references)))
 
   (docker/cleanup))

@@ -170,3 +170,17 @@
   (session/set-host-key-repository
    (cleaner/split-key session)
    (cleaner/split-key host-key-repository)))
+
+(defn set-proxy
+  "sets the http/socks proxy to connect with the ssh server.
+
+  The provided arg must have at least `:type` (one of
+  `#{:http :socks4 :socks5}`), `:host`, `:port` and optionally `:username` and
+  `:password` for proxy authentication. "
+
+  [session {:keys [type] :as proxy}]
+  (assert (#{:http :socks4 :socks5} type)
+    (format "Invalid proxy type '%s'" type))
+  (session/set-proxy
+   (cleaner/split-key session)
+   proxy))

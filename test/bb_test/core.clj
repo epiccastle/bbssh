@@ -40,7 +40,8 @@
          '[bb-test.test-host-key]
          '[bb-test.test-known-hosts]
          '[bb-test.test-openssh-config]
-         '[bb-test.test-port-forward])
+         '[bb-test.test-port-forward]
+         '[bb-test.test-proxy-support])
 
 (defn -main [& args]
   (let [result
@@ -55,7 +56,8 @@
          'bb-test.test-host-key
          'bb-test.test-known-hosts
          'bb-test.test-openssh-config
-         'bb-test.test-port-forward)]
+         'bb-test.test-port-forward
+         'bb-test.test-proxy-support)]
     (prn result)
     (when (or
            (pos? (:fail result))

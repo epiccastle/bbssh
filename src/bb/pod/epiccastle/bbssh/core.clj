@@ -246,6 +246,10 @@
   - `:host-key-repository` Use a custom host-key-repository in the
     connection. Specifying this value will override `:known-hosts`
     setting (your host-key-repository functions will be called instead).
+  - `:proxy` Use a http or socks proxy to make the connection. The provided arg
+    must have at least `:type` (one of `#{:http :socks4 :socks5}`), `:host`,
+     `:port` and optionally `:username` and `:password` for proxy
+     authentication.
 
   The hashmap passed in `:connection-options` can have the following
   keys. Each key takes a string or a function as a configuration
@@ -273,7 +277,7 @@
               known-hosts accept-host-key connection-options
               port-forward-local port-forward-remote
               no-connect identity-repository user-info
-              host-key-repository]
+              host-key-repository proxy]
        :or {port 22
             strict-host-key-checking :ask
             accept-host-key false
@@ -339,6 +343,8 @@
          (make-default-user-info options)))
     (when host-key-repository
       (session/set-host-key-repository session host-key-repository))
+    (when proxy
+      (session/set-proxy session proxy))
     (when-not no-connect
       (session/connect session))
     (when port-forward-local

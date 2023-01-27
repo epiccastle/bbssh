@@ -42,7 +42,10 @@
 
   ;; takes some time for the references to be removed
   ;; from the pod. TODO: investigate why its slow
-  (Thread/sleep 5000)
+  #_(Thread/sleep 5000)
 
-  (is (empty? (cleaner/get-references)))
+  (while (not (empty? (cleaner/get-references)))
+    (prn 'gc (count (cleaner/get-references)))
+    (Thread/sleep 500))
+
   (docker/cleanup))

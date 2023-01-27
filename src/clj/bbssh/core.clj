@@ -26,4 +26,5 @@
           (System/exit 1))
         (when-not (native-image?)
           (clojure.lang.RT/loadLibrary "bbssh"))
-        (pod/main)))))
+        (pod/main))))
+  (shutdown-agents))

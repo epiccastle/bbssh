@@ -19,7 +19,8 @@
     (session/connect session)
     (is (session/connected? session))
     (is (not (empty? (cleaner/get-references))))
-    (session/disconnect session)))
+    (session/disconnect session)
+    nil))
 
 (defn gc []
   (let [t (atom (Object.))

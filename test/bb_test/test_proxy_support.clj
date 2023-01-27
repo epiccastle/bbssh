@@ -120,5 +120,6 @@
                                       :host container-ip
                                       :port proxy-auth-port
                                       :username proxy-username
-                                      :password proxy-password}))))
-      ))))
+                                      :password proxy-password})))))))
+
+  (docker/cleanup))

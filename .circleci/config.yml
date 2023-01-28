@@ -166,7 +166,7 @@ jobs:
           name: debug
           shell: powershell.exe
           command: |
-            $BBSSH_VERSION = "0.2.0"
+            $BBSSH_VERSION = "0.3.0"
             Write-Host "Setting up build environment..."
             cmd.exe /c "call `"C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat`" && set > %temp%\vcvars.txt"
             Get-Content "$env:temp\vcvars.txt" | Foreach-Object {

@@ -110,6 +110,25 @@
      private-key-file
      public-key-file))))
 
+(defn load-bytes
+  "Load the key pair from a byte array. Pass both private and
+  public keys either as byte arrays or as strings. Half a keypair
+  can be loaded to perform some operations. You may pass in
+  `nil` for one of the key portions to only load the public or private
+  portion."
+  [agent private-key-bytes public-key-bytes]
+  (cleaner/register
+    (key-pair/load-bytes
+      (cleaner/split-key agent)
+      (when private-key-bytes
+        (if (bytes? private-key-bytes)
+          (utils/encode-base64 private-key-bytes)
+          (utils/encode-base64 (.getBytes private-key-bytes))))
+      (when public-key-bytes
+        (if (bytes? public-key-bytes)
+          (utils/encode-base64 public-key-bytes)
+          (utils/encode-base64 (.getBytes public-key-bytes)))))))
+
 (defn get-signature
   "Sign the passed in data with the private key, using algorithm
   if it is passed aswell"

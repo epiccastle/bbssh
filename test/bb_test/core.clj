@@ -31,6 +31,7 @@
 
 
 (require '[bb-test.test-utils]
+         '[bb-test.test-ssh-identity]
          '[bb-test.test-scp]
          '[bb-test.test-password-exec]
          '[bb-test.test-user-info]
@@ -46,6 +47,7 @@
 (defn -main [& args]
   (let [result
         (test/run-tests
+         'bb-test.test-ssh-identity
          'bb-test.test-scp
          'bb-test.test-utils
          'bb-test.test-password-exec

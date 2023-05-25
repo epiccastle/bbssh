@@ -333,10 +333,11 @@
       (session/set-config session :strict-host-key-checking false))
     (when connection-options
       (process-session-connection-options session connection-options))
-    (session/set-identity-repository
-     session
-     (or identity-repository
-         (ssh-agent/new-identity-repository)))
+    (when (and (not identity) (not password))
+      (session/set-identity-repository
+        session
+        (or identity-repository
+            (ssh-agent/new-identity-repository))))
     (session/set-user-info
      session
      (or user-info

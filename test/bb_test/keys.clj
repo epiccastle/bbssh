@@ -112,8 +112,8 @@ XhzDqj/oj12oH+G4k4weAAAADGNyaXNwaW5AdmFzaAE=
     :passphrase nil}})
 
 (defn create-key-pair [agent key-id]
-  (docker/run "rm -rf .test/bbssh-test-key .test/bbssh-test-key.pub")
-  (docker/run "mkdir -p .test/bbssh-test-key")
+  (docker/run "rm -rf .test/bbssh-test-key .test/bbssh-test-key.pub" "cannot clean test files")
+  (docker/run "mkdir -p .test/bbssh-test-key" "cannor mkdir .test/bbssh-test-key")
   (spit ".test/bbssh-test-key" (get-in keys [key-id :private]))
   (spit ".test/bbssh-test-key.pub" (get-in keys [key-id :public]))
   (key-pair/load agent ".test/bbssh-test-key" ".test/bbssh-test-key.pub"))

@@ -54,7 +54,7 @@ clj -J-Djava.library.path=resources -m bbssh.core
 ### As native image
 
 ```console
-$ ./bbssh -v
+$ build/bbssh -v
 ```
 
 ## System wide installation

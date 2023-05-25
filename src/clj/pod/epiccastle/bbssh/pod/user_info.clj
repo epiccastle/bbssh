@@ -18,7 +18,7 @@
              (boolean
               (callbacks/call-method reply-fn :prompt-yes-no [s])))
            (getPassphrase []
-             (callbacks/call-method reply-fn :get-passphase []))
+             (callbacks/call-method reply-fn :get-passphrase []))
            (promptPassphrase [^String s]
              (boolean
               (callbacks/call-method reply-fn :prompt-passphrase [s])))

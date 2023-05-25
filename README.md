@@ -17,7 +17,7 @@ Here is a simple script that connects over ssh, the runs a command and disconnec
 (ns test-simple.core
   (:require [babashka.pods :as pods]))
 
-(pods/load-pod 'epiccastle/bbssh "0.1.0")
+(pods/load-pod 'epiccastle/bbssh "0.4.0")
 
 (require '[pod.epiccastle.bbssh.core :as bbssh])
 

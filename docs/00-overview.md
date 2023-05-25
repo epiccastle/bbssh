@@ -23,9 +23,9 @@ bbssh supports the following operatibg systems and machine architectures:
 **The pod should automatically install on first use.**
 
 ```clojure
-user=> (pods/load-pod 'epiccastle/bbssh "0.1.0")
-Downloading pod epiccastle/bbssh (0.1.0)
-Successfully installed pod epiccastle/bbssh (0.1.0)
+user=> (pods/load-pod 'epiccastle/bbssh "0.4.0")
+Downloading pod epiccastle/bbssh (0.4.0)
+Successfully installed pod epiccastle/bbssh (0.4.0)
 #:pod{:id "pod.epiccastle.bbssh"}
 ```
 
@@ -37,7 +37,7 @@ Try writing the following into `test_bbssh.clj`
 (ns test-bbssh
   (:require [babashka.pods :as pods]))
 
-(pods/load-pod 'epiccastle/bbssh "0.1.0")
+(pods/load-pod 'epiccastle/bbssh "0.4.0")
 
 (require '[pod.epiccastle.bbssh.core :as bbssh])
 

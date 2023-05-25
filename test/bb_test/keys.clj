@@ -1,6 +1,7 @@
 (ns bb-test.keys
   [:refer-clojure :exclude [keys]]
-  (:require [pod.epiccastle.bbssh.key-pair :as key-pair]
+  (:require [bb-test.docker :as docker]
+            [pod.epiccastle.bbssh.key-pair :as key-pair]
             [clojure.string :as string]))
 
 (def keys
@@ -111,9 +112,11 @@ XhzDqj/oj12oH+G4k4weAAAADGNyaXNwaW5AdmFzaAE=
     :passphrase nil}})
 
 (defn create-key-pair [agent key-id]
-  (spit "/tmp/bbssh-test-key" (get-in keys [key-id :private]))
-  (spit "/tmp/bbssh-test-key.pub" (get-in keys [key-id :public]))
-  (key-pair/load agent "/tmp/bbssh-test-key" "/tmp/bbssh-test-key.pub"))
+  (docker/run "rm -rf .test/bbssh-test-key .test/bbssh-test-key.pub")
+  (docker/run "mkdir -p .test/bbssh-test-key")
+  (spit ".test/bbssh-test-key" (get-in keys [key-id :private]))
+  (spit ".test/bbssh-test-key.pub" (get-in keys [key-id :public]))
+  (key-pair/load agent ".test/bbssh-test-key" ".test/bbssh-test-key.pub"))
 
 (defn get-public-key-base64 [key-id]
   (-> keys

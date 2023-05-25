@@ -3,6 +3,15 @@ All notable changes to this project will be documented in this file. This change
 
 ## [Unreleased]
 
+## [0.4.0] - 2023-5-25
+
+### Fixed
+- Issue with connecting with plain :identity - #11
+- Bug preventing unspecified passphrase from being asked for in the terminal
+
+### Added
+- pod.epiccastle.bbssh.pod.key-pair/load-bytes
+
 ## [0.3.0] - 2023-1-28
 
 ### Fixed

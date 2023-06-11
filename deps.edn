@@ -87,7 +87,7 @@
                       :doc-paths ["docs"]
                       :themes [:epiccastle]
                       :name "bbssh"
-                      :version "0.3.0"
+                      :version "0.4.0"
                       :description "A babashka pod providing SSH support"
                       :license {:name "Eclipse Public License 2.0"
                                 :url "https://github.com/epiccastle/bbssh/blob/main/LICENSE"}}

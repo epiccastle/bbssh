@@ -131,7 +131,7 @@ test-bb: $(JNI_LIB_FILE)
 	-mkdir test/files/dir1/dir3
 	BABASHKA_CLASSPATH=test umask 0000 && java -jar $(BABASHKA_SRC)/target/babashka-0.9.162-SNAPSHOT-standalone.jar test/bb_test/core.clj
 
-codox:
+codox: src/c/jni/BbsshUtils.class
 	-rm -rf codox-processed
 	mkdir codox-processed
 	cp -a src/bb codox-processed

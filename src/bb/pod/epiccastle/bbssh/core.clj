@@ -201,7 +201,9 @@
     Each element should be a hashmap with the keys `:local-port`,
     `:remote-host` and `:remote-port`. All connections to `:local-port`
     on the local machine will be forwarded to `:remote-host`
-    `:remote-port` on the remote machine. An optional key of
+    `:remote-port` on the remote machine. Instead of setting `:remote-host`
+    and `:remote-port` you may set `:remote-unix-socket` to the remote
+    file path of a unix domain socket to forward to that. An optional key of
     `:bind-address` can be used to control the local interface that
     is bound. Defaults to 127.0.0.1. Optional key `:connect-timeout`
     defines how many milliseconds to persist in attempting the remote

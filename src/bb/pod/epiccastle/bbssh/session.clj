@@ -38,8 +38,9 @@
   "Register the local port to forward all connection to the remote
   side, where they will connect to a remote host on a port.
 
-  `options` is a hashmap for the following form
+  `options` is a hashmap with one of the following forms
 
+  To port forward to a remote TCP/IP port
   ```clj
   {
     :bind-address \"127.0.0.1\"              ;; the local interface to bind to. Use \"*\" or \"0.0.0.0\" for all interfaces.
@@ -49,6 +50,15 @@
     :connect-timeout 30000                 ;; how long to try to connect for
   }
   ```
+
+  To port forward to a remote unix domain socket
+  ```clj
+  {
+    :bind-address \"127.0.0.1\"              ;; the local interface to bind to. Use \"*\" or \"0.0.0.0\" for all interfaces.
+    :local-port 2200                       ;; the local port to listen on
+    :remote-unix-socket \"/var/run/socket\"  ;; the remote host to forward the connection to on the remote side
+    :connect-timeout 30000                 ;; how long to try to connect for
+  }
   "
   [session options]
   (session/set-port-forwarding-local

@@ -63,18 +63,28 @@
    {:keys [bind-address
            local-port
            remote-host
+           remote-unix-socket
            remote-port
            connect-timeout]
     :or {bind-address "127.0.0.1"
          connect-timeout 0}}]
-  (.setPortForwardingL
-   ^Session (references/get-instance session)
-   ^String bind-address
-   ^int local-port
-   ^String remote-host
-   ^int remote-port
-   nil
-   ^int connect-timeout))
+  (if remote-unix-socket
+    (.setSocketForwardingL
+      ^Session (references/get-instance session)
+      ^String bind-address
+      ^int local-port
+      ^String remote-unix-socket
+      nil
+      ^int connect-timeout
+      )
+    (.setPortForwardingL
+      ^Session (references/get-instance session)
+      ^String bind-address
+      ^int local-port
+      ^String remote-host
+      ^int remote-port
+      nil
+      ^int connect-timeout)))
 
 (defn delete-port-forwarding-local
   [session
@@ -94,9 +104,13 @@
    (mapv (fn [s]
            (let [[local-port remote-host remote-port]
                  (string/split s #":")]
-             {:local-port (Integer/parseInt local-port)
-              :remote-host remote-host
-              :remote-port (Integer/parseInt remote-port)})))))
+             (if (and (= remote-host "null")
+                      (= remote-port "0"))
+               ;; Jsch PortWatcher doesn't report socket forwarding path details
+               {:local-port (Integer/parseInt local-port)}
+               {:local-port (Integer/parseInt local-port)
+                :remote-host remote-host
+                :remote-port (Integer/parseInt remote-port)}))))))
 
 (defn set-port-forwarding-remote
   [session

@@ -69,7 +69,7 @@ jobs:
 
   linux:
     docker:
-      - image: circleci/clojure:openjdk-11-lein-2.9.0
+      - image: cimg/clojure:1.11.1
     working_directory: ~/repo
     environment:
       LEIN_ROOT: "true"

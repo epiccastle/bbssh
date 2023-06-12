@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file. This change
 
 ## [Unreleased]
 
+## [0.5.0] - 2023-6-12
+
+### Added
+- Support for port forwarding to remote unix domain socket - #12
+
 ## [0.4.0] - 2023-5-25
 
 ### Fixed

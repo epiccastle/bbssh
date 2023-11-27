@@ -4,11 +4,11 @@ macos_instance:
 task:
   skip: "changesIncludeOnly('**.md')"
   env:
-    GRAALVM_HOME: ${HOME}/graalvm-ce-java17-22.2.0/Contents/Home
+    GRAALVM_HOME: ${HOME}/graalvm-21.0.1/Contents/Home
   script: |
     sudo .circleci/script/install-clojure /usr/local/
-    curl -O -sL https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-22.2.0/graalvm-ce-java17-darwin-aarch64-22.2.0.tar.gz
-    tar -C $HOME -xf graalvm-ce-java17-darwin-aarch64-22.2.0.tar.gz
+    curl -O -sL https://download.oracle.com/graalvm/21/archive/graalvm-jdk-21.0.1_macos-aarch64_bin.tar.gz
+    tar -C $HOME -xf graalvm-jdk-21.0.1_macos-aarch64_bin.tar.gz
     $GRAALVM_HOME/bin/gu install native-image
     export PATH=$GRAALVM_HOME/bin:$PATH
     sudo /usr/sbin/softwareupdate --install-rosetta --agree-to-license

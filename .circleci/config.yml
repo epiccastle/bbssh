@@ -41,11 +41,11 @@ jobs:
           name: Download GraalVM
           command: |
             cd ~
-            if ! [ -d graalvm-ce-java11-22.2.0 ]; then
-              curl -O -sL https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-22.2.0/graalvm-ce-java11-linux-amd64-22.2.0.tar.gz
-              tar xzf graalvm-ce-java11-linux-amd64-22.2.0.tar.gz
+            if ! [ -d graalvm-ce-java17-22.2.0 ]; then
+              curl -O -sL https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-22.2.0/graalvm-ce-java17-linux-amd64-22.2.0.tar.gz
+              tar xzf graalvm-ce-java17-linux-amd64-22.2.0.tar.gz
             fi
-            graalvm-ce-java11-22.2.0/bin/gu install native-image
+            graalvm-ce-java17-22.2.0/bin/gu install native-image
       - run:
           name: Install babashka
           command: |
@@ -73,7 +73,7 @@ jobs:
     working_directory: ~/repo
     environment:
       LEIN_ROOT: "true"
-      GRAALVM_HOME: /home/circleci/graalvm-ce-java11-22.2.0
+      GRAALVM_HOME: /home/circleci/graalvm-ce-java17-22.2.0
     steps:
       - checkout
       - restore_cache:
@@ -94,11 +94,11 @@ jobs:
           name: Download GraalVM
           command: |
             cd ~
-            if ! [ -d graalvm-ce-java11-22.2.0 ]; then
-              curl -O -sL https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-22.2.0/graalvm-ce-java11-linux-amd64-22.2.0.tar.gz
-              tar xzf graalvm-ce-java11-linux-amd64-22.2.0.tar.gz
+            if ! [ -d graalvm-ce-java17-22.2.0 ]; then
+              curl -O -sL https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-22.2.0/graalvm-ce-java17-linux-amd64-22.2.0.tar.gz
+              tar xzf graalvm-ce-java17-linux-amd64-22.2.0.tar.gz
             fi
-            graalvm-ce-java11-22.2.0/bin/gu install native-image
+            graalvm-ce-java17-22.2.0/bin/gu install native-image
       - run:
           name: Build binary
           command: |
@@ -107,7 +107,7 @@ jobs:
       - save_cache:
           paths:
             - ~/.m2
-            - ~/graalvm-ce-java11-22.0.0.2
+            - ~/graalvm-ce-java17-22.0.0.2
           key: linux-{{ checksum "deps.edn" }}-{{ checksum ".circleci/config.yml" }}
       - store_artifacts:
           path: dist
@@ -117,7 +117,7 @@ jobs:
     macos:
       xcode: "14.0.0"
     environment:
-      GRAALVM_HOME: /Users/distiller/graalvm-ce-java11-22.2.0/Contents/Home
+      GRAALVM_HOME: /Users/distiller/graalvm-ce-java17-22.2.0/Contents/Home
     steps:
       - checkout
       - restore_cache:
@@ -132,9 +132,9 @@ jobs:
           command: |
             cd ~
             ls -la
-            if ! [ -d graalvm-ce-java11-22.2.0 ]; then
-              curl -O -sL https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-22.2.0/graalvm-ce-java11-darwin-amd64-22.2.0.tar.gz
-              tar xzf graalvm-ce-java11-darwin-amd64-22.2.0.tar.gz
+            if ! [ -d graalvm-ce-java17-22.2.0 ]; then
+              curl -O -sL https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-22.2.0/graalvm-ce-java17-darwin-amd64-22.2.0.tar.gz
+              tar xzf graalvm-ce-java17-darwin-amd64-22.2.0.tar.gz
             fi
             $GRAALVM_HOME/bin/gu install native-image
       # - run:
@@ -149,7 +149,7 @@ jobs:
       - save_cache:
           paths:
             - ~/.m2
-            - ~/graalvm-ce-java11-22.2.0
+            - ~/graalvm-ce-java17-22.2.0
           key: mac-{{ checksum "deps.edn" }}-{{ checksum ".circleci/config.yml" }}
       - store_artifacts:
           path: dist
@@ -179,7 +179,7 @@ jobs:
               Write-Host "skipping graal download."
             } else {
               Write-Host "downloading graal..."
-              (New-Object Net.WebClient).DownloadFile('https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-22.2.0/graalvm-ce-java11-windows-amd64-22.2.0.zip', 'graalvm.zip')
+              (New-Object Net.WebClient).DownloadFile('https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-22.2.0/graalvm-ce-java17-windows-amd64-22.2.0.zip', 'graalvm.zip')
             }
 
             if (Test-Path('graalvm')) {
@@ -189,11 +189,11 @@ jobs:
               Expand-Archive graalvm.zip graalvm
             }
 
-            if (Test-Path('graalvm\graalvm-ce-java11-22.2.0\bin\native-image.cmd')) {
+            if (Test-Path('graalvm\graalvm-ce-java17-22.2.0\bin\native-image.cmd')) {
               Write-Host "native-image already installed."
             } else {
               Write-Host "installing native-image..."
-              graalvm\graalvm-ce-java11-22.2.0\bin\gu install native-image
+              graalvm\graalvm-ce-java17-22.2.0\bin\gu install native-image
             }
 
             $Version = '1.11.1.1165'
@@ -219,14 +219,14 @@ jobs:
             lib /out:build\bbssh.lib bbssh.obj
 
             Write-Host "installing bbssh lib..."
-            copy build\bbssh.lib C:\Users\circleci\project\graalvm\graalvm-ce-java11-22.2.0\lib\static\windows-amd64\
+            copy build\bbssh.lib C:\Users\circleci\project\graalvm\graalvm-ce-java17-22.2.0\lib\static\windows-amd64\
 
             Write-Host "Installed clojure:"
             clj --version
 
-            $env:Path = 'C:\Users\circleci\project\graalvm\graalvm-ce-java11-22.2.0\bin;' + $env:Path
-            $env:GRAALVM_HOME = 'C:\Users\circleci\project\graalvm\graalvm-ce-java11-22.2.0'
-            $env:JAVA_HOME = 'C:\Users\circleci\project\graalvm\graalvm-ce-java11-22.2.0'
+            $env:Path = 'C:\Users\circleci\project\graalvm\graalvm-ce-java17-22.2.0\bin;' + $env:Path
+            $env:GRAALVM_HOME = 'C:\Users\circleci\project\graalvm\graalvm-ce-java17-22.2.0'
+            $env:JAVA_HOME = 'C:\Users\circleci\project\graalvm\graalvm-ce-java17-22.2.0'
 
             Write-Host "PATH: $env:Path"
             Write-Host "GRAALVM_HOME: $env:GRAALVM_HOME"
@@ -239,7 +239,7 @@ jobs:
             clj -M:native-image-windows
 
             Write-Host "Cleaning bbssh.lib..."
-            Remove-Item "C:\Users\circleci\project\graalvm\graalvm-ce-java11-22.2.0\lib\static\windows-amd64\bbssh.lib"
+            Remove-Item "C:\Users\circleci\project\graalvm\graalvm-ce-java17-22.2.0\lib\static\windows-amd64\bbssh.lib"
 
             # Write-Host "testing bbssh..."
             # $env:TEST = 1

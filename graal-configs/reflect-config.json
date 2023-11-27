@@ -122,14 +122,7 @@
         "allPublicMethods": true
     },
     {
-        "name": "com.jcraft.jsch.bc.KeyPairGenEdDSA",
-        "allDeclaredConstructors": true,
-        "allPublicConstructors": true,
-        "allDeclaredMethods": true,
-        "allPublicMethods": true
-    },
-    {
-        "name": "com.jcraft.jsch.bc.SignatureEd25519",
+        "name": "com.jcraft.jsch.jce.KeyPairGenEdDSA",
         "allDeclaredConstructors": true,
         "allPublicConstructors": true,
         "allDeclaredMethods": true,

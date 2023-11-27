@@ -1,4 +1,4 @@
-GRAALVM_HOME = $(HOME)/graalvm-ce-java17-22.2.0
+GRAALVM_HOME = $(HOME)/graalvm-jdk-21.0.1+12.1
 STATIC=false
 PATH := $(GRAALVM_HOME)/bin:$(PATH)
 VERSION = $(shell cat resources/BBSSH_VERSION)

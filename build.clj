@@ -124,8 +124,6 @@
         "--enable-all-security-services"
         "-H:+ReportExceptionStackTraces"
         "-H:ConfigurationFileDirectories=graal-configs/"
-        "--initialize-at-build-time"
-        "--initialize-at-run-time=com.jcraft.jsch.PortWatcher"
         "-H:Name=build/bbssh"]
        extra-args)
       (map (fn [arg]

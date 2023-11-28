@@ -118,12 +118,17 @@
      (->>
       (concat
        [
-        "--enable-https"
+        "--verbose"
         "--no-fallback"
-        "--allow-incomplete-classpath"
-        "--enable-all-security-services"
-        "-H:+ReportExceptionStackTraces"
+        "--native-image-info"
+        "--install-exit-handlers"
+        "--enable-preview"
+        "-march=compatibility"
+        "-O1"
         "-H:ConfigurationFileDirectories=graal-configs/"
+        "--features=clj_easy.graal_build_time.InitClojureClasses"
+        "--initialize-at-build-time=com.jcraft.jsch"
+        "--initialize-at-run-time=com.jcraft.jsch.PortWatcher"
         "-H:Name=build/bbssh"]
        extra-args)
       (map (fn [arg]

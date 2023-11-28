@@ -65,7 +65,7 @@
     (boolean (#{\y \Y} first-char))))
 
 (defn- make-default-user-info
-  [{:keys [accept-host-key]}]
+  [{:keys [accept-host-key silence-messages]}]
   (let [message (atom nil)]
     (user-info/new
      {:get-password
@@ -163,8 +163,10 @@
         true)
 
       :show-message
-      (fn [s]
-        (println s))})))
+      (if silence-messages
+        (fn [_])
+        (fn [s]
+          (println s)))})))
 
 (defn ssh
   "Start an SSH session. If connection is successful, returns the SSH
@@ -252,6 +254,10 @@
     must have at least `:type` (one of `#{:http :socks4 :socks5}`), `:host`,
      `:port` and optionally `:username` and `:password` for proxy
      authentication.
+  - `:silence-messages` When set to true do not echo SSH messages to stdout
+    in the default user-info. Such messages include any Banner setup
+    on the server. Only has an effect if you are not using a custom
+    user-info.
 
   The hashmap passed in `:connection-options` can have the following
   keys. Each key takes a string or a function as a configuration

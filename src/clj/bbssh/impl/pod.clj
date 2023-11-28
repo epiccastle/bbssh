@@ -260,4 +260,5 @@
             (do
               (write out {"err" (str "unknown op:" (name op))})
               (recur)))))
+      (.close socket)
       (catch java.io.EOFException _ nil))))

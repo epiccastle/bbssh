@@ -27,4 +27,6 @@
         (when-not (native-image?)
           (clojure.lang.RT/loadLibrary "bbssh"))
         (pod/main))))
-  (shutdown-agents))
+  (shutdown-agents)
+  (System/exit 0) ;; required for bb to exit cleanly after loading pod
+  )

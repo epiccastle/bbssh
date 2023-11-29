@@ -252,8 +252,8 @@
     setting (your host-key-repository functions will be called instead).
   - `:proxy` Use a http or socks proxy to make the connection. The provided arg
     must have at least `:type` (one of `#{:http :socks4 :socks5}`), `:host`,
-     `:port` and optionally `:username` and `:password` for proxy
-     authentication.
+    `:port` and optionally `:username` and `:password` for proxy
+    authentication.
   - `:silence-messages` When set to true do not echo SSH messages to stdout
     in the default user-info. Such messages include any Banner setup
     on the server. Only has an effect if you are not using a custom

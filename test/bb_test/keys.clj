@@ -109,7 +109,20 @@ AAAECvtLycE1Yy7e6yZDxFXyT5dJSZ7WXCzOtv+mEhq437fTLPYenxnXHlc44gNJ4x4Gr/
 XhzDqj/oj12oH+G4k4weAAAADGNyaXNwaW5AdmFzaAE=
 -----END OPENSSH PRIVATE KEY-----
 "
-    :passphrase nil}})
+    :passphrase nil}
+
+   :ed25519-passphrase
+   {:public "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDToBPcUTRmkiEkhl74DzPXTKIOfUU0Ul7gAt/Q/036p crispin@vash"
+    :private "-----BEGIN OPENSSH PRIVATE KEY-----
+b3BlbnNzaC1rZXktdjEAAAAACmFlczI1Ni1jdHIAAAAGYmNyeXB0AAAAGAAAABDdik46VK
+ijL05uwZlPxfncAAAAEAAAAAEAAAAzAAAAC3NzaC1lZDI1NTE5AAAAIDToBPcUTRmkiEkh
+l74DzPXTKIOfUU0Ul7gAt/Q/036pAAAAkHJYL/6sSsRlRSzQG/tMfQ8Ekacd8fdpKGD9Vo
+gDe6ni2j3AfbrFC/2zx6BbJ08bR86pkRztlI/EoQvzfXxql6sbBKGIQr/rwTj2At0bZmsG
+7O4L75are2XlczU+BlqHKlyetLT1WV6tu/S2RoyudIF6s0UVZgtF6+YCl7s+NkyT5vcKaW
+D+NEBr1t+RWPPFLg==
+-----END OPENSSH PRIVATE KEY-----
+"
+    :passphrase "passphrase"}})
 
 (defn create-key-pair [agent key-id]
   (key-pair/load-bytes

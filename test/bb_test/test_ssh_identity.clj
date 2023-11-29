@@ -15,8 +15,8 @@
   (docker/run "rm -rf .test/bbssh-test-key" "could not clean .test/bbssh-test-key")
   (docker/run "mkdir -p .test/bbssh-test-key" "could not mkdir .test/bbssh-test-key")
   (docker/run "chmod 0700 .test/bbssh-test-key" "could not chmod .test/bbssh-test-key")
-  (spit ".test/bbssh-test-key/bbssh_test_id_rsa" (get-in keys/keys [key-name :private]) )
-  (docker/run "chmod 0600 .test/bbssh-test-key/bbssh_test_id_rsa" "could not chmod .test/bbssh-test-key/bbssh_test_id_rsa"))
+  (spit ".test/bbssh-test-key/bbssh_test_id_key" (get-in keys/keys [key-name :private]) )
+  (docker/run "chmod 0600 .test/bbssh-test-key/bbssh_test_id_key" "could not chmod .test/bbssh-test-key/bbssh_test_id_key"))
 
 (defn passphrase [key-name]
   (get-in keys/keys [key-name :passphrase]))
@@ -29,7 +29,7 @@
 
   (-> (bbssh/ssh "localhost" {:port 9876
                               :username "root"
-                              :identity ".test/bbssh-test-key/bbssh_test_id_rsa"
+                              :identity ".test/bbssh-test-key/bbssh_test_id_key"
                               :strict-host-key-checking false})
       (bbssh/exec "echo 'running remote'" {:out :string})
       deref
@@ -47,7 +47,7 @@
 
   (-> (bbssh/ssh "localhost" {:port 9876
                               :username "root"
-                              :identity ".test/bbssh-test-key/bbssh_test_id_rsa"
+                              :identity ".test/bbssh-test-key/bbssh_test_id_key"
                               :passphrase (passphrase :rsa-passphrase)
                               :strict-host-key-checking false})
       (bbssh/exec "echo 'running remote'" {:out :string})
@@ -68,7 +68,7 @@
   (let [state-asked? (atom false)]
     (-> (bbssh/ssh "localhost" {:port 9876
                                 :username "root"
-                                :identity ".test/bbssh-test-key/bbssh_test_id_rsa"
+                                :identity ".test/bbssh-test-key/bbssh_test_id_key"
                                 :strict-host-key-checking false
                                 :user-info
                                 (user-info/new
@@ -87,7 +87,7 @@
   ;; and then wrong password is given
   (->> (-> (bbssh/ssh "localhost" {:port 9876
                                    :username "root"
-                                   :identity ".test/bbssh-test-key/bbssh_test_id_rsa"
+                                   :identity ".test/bbssh-test-key/bbssh_test_id_key"
                                    :strict-host-key-checking false
                                    :user-info
                                    (user-info/new
@@ -106,7 +106,7 @@
   ;; auth is cancelled
   (->> (-> (bbssh/ssh "localhost" {:port 9876
                                    :username "root"
-                                   :identity ".test/bbssh-test-key/bbssh_test_id_rsa"
+                                   :identity ".test/bbssh-test-key/bbssh_test_id_key"
                                    :strict-host-key-checking false
                                    :user-info
                                    (user-info/new
@@ -126,7 +126,7 @@
   ;; ensure connection fails if passphrase decryption is denied
   (->> (-> (bbssh/ssh "localhost" {:port 9876
                                    :username "root"
-                                   :identity ".test/bbssh-test-key/bbssh_test_id_rsa"
+                                   :identity ".test/bbssh-test-key/bbssh_test_id_key"
                                    :strict-host-key-checking false
                                    :user-info
                                    (user-info/new
@@ -142,5 +142,42 @@
            deref)
        (thrown? clojure.lang.ExceptionInfo)
        is)
+
+  (docker/cleanup))
+
+(deftest test-ssh-via-identity-ed25519-no-passphrase
+  (docker/cleanup)
+  (docker/build {:root-password "root-access-please"})
+  (docker/start {:ssh-port 9876})
+  (setup-server-client-keys :ed25519-no-passphrase)
+
+  (-> (bbssh/ssh "localhost" {:port 9876
+                              :username "root"
+                              :identity ".test/bbssh-test-key/bbssh_test_id_key"
+                              :strict-host-key-checking false})
+      (bbssh/exec "echo 'running remote'" {:out :string})
+      deref
+      :out
+      (= "running remote\n")
+      is)
+
+  (docker/cleanup))
+
+(deftest test-ssh-via-identity-ed25519-with-passphrase
+  (docker/cleanup)
+  (docker/build {:root-password "root-access-please"})
+  (docker/start {:ssh-port 9876})
+  (setup-server-client-keys :ed25519-passphrase)
+
+  (-> (bbssh/ssh "localhost" {:port 9876
+                              :username "root"
+                              :identity ".test/bbssh-test-key/bbssh_test_id_key"
+                              :passphrase (passphrase :ed25519-passphrase)
+                              :strict-host-key-checking false})
+      (bbssh/exec "echo 'running remote'" {:out :string})
+      deref
+      :out
+      (= "running remote\n")
+      is)
 
   (docker/cleanup))

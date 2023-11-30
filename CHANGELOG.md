@@ -3,6 +3,15 @@ All notable changes to this project will be documented in this file. This change
 
 ## [Unreleased]
 
+## [0.6.0] - 2023-11-30
+
+### Fixed
+- Babashka script with bbssh pod gets stuck on exit - #14
+- Attempt to use passphrase encrypted ED25519 key to login results in bcrypt error - #15
+
+### Added
+- Easy way to silence any SSH Banner from being echoed - #16
+
 ## [0.5.0] - 2023-6-12
 
 ### Added
@@ -40,7 +49,10 @@ All notable changes to this project will be documented in this file. This change
 ## [0.1.0] - 2022-9-28
 Initial release.
 
-[Unreleased]: https://github.com/epiccastle/bbssh/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/epiccastle/bbssh/compare/v0.6.0...HEAD
+[0.6.0]: https://github.com/epiccastle/bbssh/compare/v0.5.0...v0.6.0
+[0.5.0]: https://github.com/epiccastle/bbssh/compare/v0.4.0...v0.5.0
+[0.4.0]: https://github.com/epiccastle/bbssh/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/epiccastle/bbssh/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/epiccastle/bbssh/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/epiccastle/bbssh/tree/v0.1.0

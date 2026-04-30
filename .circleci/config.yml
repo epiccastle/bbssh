@@ -113,7 +113,7 @@ jobs:
 
   mac:
     macos:
-      xcode: "14.3.1"
+      xcode: "14.0.0"
       resource_class: macos.x86.medium
     environment:
       GRAALVM_HOME: /Users/distiller/graalvm-jdk-21.0.1+12.1/Contents/Home

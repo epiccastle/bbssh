@@ -113,8 +113,8 @@ jobs:
 
   mac:
     macos:
-      xcode: "14.0.0"
-      resource_class: macos.x86.medium
+      xcode: "14.3.1"
+      resource_class: m4pro.medium
     environment:
       GRAALVM_HOME: /Users/distiller/graalvm-jdk-21.0.1+12.1/Contents/Home
     steps:
@@ -126,6 +126,10 @@ jobs:
           name: Install Clojure
           command: |
             .circleci/script/install-clojure /usr/local
+      - run:
+          name: Install Rosetta
+          command: |
+            sudo /usr/sbin/softwareupdate --install-rosetta --agree-to-license
       - run:
           name: Download GraalVM
           command: |
@@ -307,6 +311,10 @@ workflows:
             branches:
               only: main
       - mac:
+          filters:
+            branches:
+              only: main
+      - macm4:
           filters:
             branches:
               only: main

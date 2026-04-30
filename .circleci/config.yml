@@ -129,7 +129,7 @@ jobs:
       - run:
           name: Install Clojure
           command: |
-            .circleci/script/install-clojure /usr/local
+            brew install clojure/tools/clojure
       - run:
           name: Install Rosetta
           command: |
@@ -175,7 +175,7 @@ jobs:
       - run:
           name: Install Clojure
           command: |
-            .circleci/script/install-clojure /usr/local
+            brew install clojure/tools/clojure
       - run:
           name: Download GraalVM
           command: |

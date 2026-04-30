@@ -100,6 +100,7 @@ jobs:
             else
               echo "exists"
             fi
+            ls -alF
       - run:
           name: Build binary
           command: |

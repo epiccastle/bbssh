@@ -1,13 +1,12 @@
 (ns bb-test.test-host-key
-  (:require [bb-test.docker :as docker]
+  (:require [pod.epiccastle.bbssh.agent :as agent]
+            [pod.epiccastle.bbssh.key-pair :as key-pair]
+            [bb-test.docker :as docker]
+            [bb-test.keys :as keys]
             [clojure.test :refer [is deftest]]))
 
 (deftest host-key
-  (docker/cleanup)
-  (docker/build {:root-password "root-access-please"})
-  (docker/start {:ssh-port 9876})
-
-  #_(let [agent (agent/new)
+  (let [agent (agent/new)
         kp (keys/create-key-pair agent :rsa-nopassphrase)]
     (is (= (key-pair/get-finger-print kp)
              (get-in keys/keys [:rsa-nopassphrase :fingerprint])))
@@ -24,7 +23,4 @@
              1024))
       (is (= (seq (key-pair/get-public-key-blob kp))
              (get-in keys/keys [:rsa-passphrase :public-blob])))
-      (is (key-pair/is-encrypted kp))))
-
-  (docker/cleanup)
-  )
+      (is (key-pair/is-encrypted kp)))))

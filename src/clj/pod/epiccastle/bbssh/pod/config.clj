@@ -47,6 +47,7 @@
    ^String key))
 
 (defn get-values [config key]
-  (.getValues
-   ^ConfigRepository$Config (references/get-instance config)
-   ^String key))
+  (vec
+    (.getValues
+      ^ConfigRepository$Config (references/get-instance config)
+      ^String key)))

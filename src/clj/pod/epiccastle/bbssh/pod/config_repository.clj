@@ -22,9 +22,10 @@
     nil))
 
 (defn get-config [config-repository hostname]
-  (.getConfig
-   ^ConfigRepository (references/get-instance config-repository)
-   ^String hostname))
+  (references/add-instance
+    (.getConfig
+      ^ConfigRepository (references/get-instance config-repository)
+      ^String hostname)))
 
 (defn openssh-config-file [config-file]
   (references/add-instance

@@ -33,9 +33,10 @@
   "return the config reference for the specified `hostname` in
   the `config-repository`"
   [config-repository hostname]
-  (config-repository/get-config
-   (cleaner/split-key config-repository)
-   hostname))
+  (cleaner/register
+    (config-repository/get-config
+      (cleaner/split-key config-repository)
+      hostname)))
 
 (defn openssh-config-file
   "Create an OpenSSH config-repository from a file. `config-file`

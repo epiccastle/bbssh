@@ -4,6 +4,7 @@
             [pod.epiccastle.bbssh.session :as session]
             [pod.epiccastle.bbssh.key-pair :as key-pair]
             [pod.epiccastle.bbssh.config-repository :as config-repository]
+            [pod.epiccastle.bbssh.config :as config]
             [babashka.process :as process]
             [bb-test.docker :as docker]
             [clojure.test :refer [is deftest]]
@@ -43,6 +44,31 @@ Host *
         (is (= "test\n" out)))))
 
   (docker/cleanup))
+
+(deftest test-openssh-config-get
+  (let [config (config-repository/openssh-config-string "
+Port 9876
+
+Host docker-host
+  User root
+  Hostname localhost
+
+Host *
+  ConnectTime 30000
+  PreferredAuthentications keyboard-interactive,password,publickey
+  IdentityFile ~/.ssh/id_rsa
+  IdentityFile ~/.ssh/id_ed25519
+  IdentityFile ~/.ssh/work_key
+")
+        host-config (config-repository/get-config config "docker-host")]
+
+    (is (= "localhost" (config/get-hostname host-config)))
+    (is (= "root" (config/get-user host-config)))
+    (is (= 9876 (config/get-port host-config)))
+    (is (= "keyboard-interactive,password,publickey"
+           (config/get-value host-config "PreferredAuthentications")))
+    (is (= ["~/.ssh/id_rsa" "~/.ssh/id_ed25519" "~/.ssh/work_key"]
+           (config/get-values host-config "IdentityFile")))))
 
 (deftest test-openssh-config-file
   (docker/cleanup)

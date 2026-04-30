@@ -41,7 +41,7 @@ jobs:
           name: Download GraalVM
           command: |
             cd ~
-            if ! [ -d graalvm-jdk-25 ]; then
+            if ! [ -d graalvm-25 ]; then
               curl -O -sL https://download.oracle.com/graalvm/25/archive/graalvm-jdk-25_linux-x64_bin.tar.gz
               tar xzf graalvm-jdk-25_linux-x64_bin.tar.gz
             fi
@@ -72,7 +72,7 @@ jobs:
     working_directory: ~/repo
     environment:
       LEIN_ROOT: "true"
-      GRAALVM_HOME: /home/circleci/graalvm-jdk-25
+      GRAALVM_HOME: /home/circleci/graalvm-25
     steps:
       - checkout
       - restore_cache:
@@ -93,7 +93,7 @@ jobs:
           name: Download GraalVM
           command: |
             cd ~
-            if ! [ -d graalvm-jdk-25 ]; then
+            if ! [ -d graalvm-25 ]; then
               curl -O -sL https://download.oracle.com/graalvm/25/archive/graalvm-jdk-25_linux-x64_bin.tar.gz
               tar xzf graalvm-jdk-25_linux-x64_bin.tar.gz
             fi
@@ -116,7 +116,7 @@ jobs:
       xcode: "14.3.1"
       resource_class: m4pro.medium
     environment:
-      GRAALVM_HOME: /Users/distiller/graalvm-jdk-25/Contents/Home
+      GRAALVM_HOME: /Users/distiller/graalvm-25/Contents/Home
     steps:
       - checkout
       - restore_cache:
@@ -135,7 +135,7 @@ jobs:
           command: |
             cd ~
             ls -la
-            if ! [ -d graalvm-jdk-25 ]; then
+            if ! [ -d graalvm-25 ]; then
               curl -O -sL https://download.oracle.com/graalvm/25/archive/graalvm-jdk-25_macos-x64_bin.tar.gz
               tar xzf graalvm-jdk-25_macos-x64_bin.tar.gz
             fi
@@ -162,7 +162,7 @@ jobs:
       xcode: "14.3.1"
       resource_class: m4pro.medium
     environment:
-      GRAALVM_HOME: /Users/distiller/graalvm-jdk-25/Contents/Home
+      GRAALVM_HOME: /Users/distiller/graalvm-25/Contents/Home
     steps:
       - checkout
       - restore_cache:
@@ -177,7 +177,7 @@ jobs:
           command: |
             cd ~
             ls -la
-            if ! [ -d graalvm-jdk-25 ]; then
+            if ! [ -d graalvm-25 ]; then
               curl -O -sL https://download.oracle.com/graalvm/25/archive/graalvm-jdk-25_macos-aarch64_bin.tar.gz
               tar xzf graalvm-jdk-25_macos-aarch64_bin.tar.gz
             fi
@@ -256,14 +256,14 @@ jobs:
             lib /out:build\bbssh.lib bbssh.obj
 
             Write-Host "installing bbssh lib..."
-            copy build\bbssh.lib C:\Users\circleci\project\graalvm\graalvm-jdk-25\lib\static\windows-amd64\
+            copy build\bbssh.lib C:\Users\circleci\project\graalvm\graalvm-25\lib\static\windows-amd64\
 
             Write-Host "Installed clojure:"
             clj --version
 
-            $env:Path = 'C:\Users\circleci\project\graalvm\graalvm-jdk-25\bin;' + $env:Path
-            $env:GRAALVM_HOME = 'C:\Users\circleci\project\graalvm\graalvm-jdk-25'
-            $env:JAVA_HOME = 'C:\Users\circleci\project\graalvm\graalvm-jdk-25'
+            $env:Path = 'C:\Users\circleci\project\graalvm\graalvm-25\bin;' + $env:Path
+            $env:GRAALVM_HOME = 'C:\Users\circleci\project\graalvm\graalvm-25'
+            $env:JAVA_HOME = 'C:\Users\circleci\project\graalvm\graalvm-25'
 
             Write-Host "PATH: $env:Path"
             Write-Host "GRAALVM_HOME: $env:GRAALVM_HOME"
@@ -276,7 +276,7 @@ jobs:
             clj -M:native-image-windows
 
             Write-Host "Cleaning bbssh.lib..."
-            Remove-Item "C:\Users\circleci\project\graalvm\graalvm-jdk-25\lib\static\windows-amd64\bbssh.lib"
+            Remove-Item "C:\Users\circleci\project\graalvm\graalvm-25\lib\static\windows-amd64\bbssh.lib"
 
             # Write-Host "testing bbssh..."
             # $env:TEST = 1

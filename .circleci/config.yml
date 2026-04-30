@@ -41,9 +41,9 @@ jobs:
           name: Download GraalVM
           command: |
             cd ~
-            if ! [ -d graalvm-jdk-21.0.1+12.1 ]; then
-              curl -O -sL https://download.oracle.com/graalvm/21/archive/graalvm-jdk-21.0.1_linux-x64_bin.tar.gz
-              tar xzf graalvm-jdk-21.0.1_linux-x64_bin.tar.gz
+            if ! [ -d graalvm-jdk-25 ]; then
+              curl -O -sL https://download.oracle.com/graalvm/21/archive/graalvm-jdk-25_linux-x64_bin.tar.gz
+              tar xzf graalvm-jdk-25_linux-x64_bin.tar.gz
             fi
       - run:
           name: Install babashka
@@ -72,7 +72,7 @@ jobs:
     working_directory: ~/repo
     environment:
       LEIN_ROOT: "true"
-      GRAALVM_HOME: /home/circleci/graalvm-jdk-21.0.1+12.1
+      GRAALVM_HOME: /home/circleci/graalvm-jdk-25
     steps:
       - checkout
       - restore_cache:
@@ -93,9 +93,9 @@ jobs:
           name: Download GraalVM
           command: |
             cd ~
-            if ! [ -d graalvm-jdk-21.0.1+12.1 ]; then
-              curl -O -sL https://download.oracle.com/graalvm/21/archive/graalvm-jdk-21.0.1_linux-x64_bin.tar.gz
-              tar xzf graalvm-jdk-21.0.1_linux-x64_bin.tar.gz
+            if ! [ -d graalvm-jdk-25 ]; then
+              curl -O -sL https://download.oracle.com/graalvm/21/archive/graalvm-jdk-25_linux-x64_bin.tar.gz
+              tar xzf graalvm-jdk-25_linux-x64_bin.tar.gz
             fi
       - run:
           name: Build binary
@@ -105,7 +105,7 @@ jobs:
       - save_cache:
           paths:
             - ~/.m2
-            - ~/graalvm-jdk-21.0.1+12.1
+            - ~/graalvm-jdk-25
           key: linux-{{ checksum "deps.edn" }}-{{ checksum ".circleci/config.yml" }}
       - store_artifacts:
           path: dist
@@ -116,7 +116,7 @@ jobs:
       xcode: "14.3.1"
       resource_class: m4pro.medium
     environment:
-      GRAALVM_HOME: /Users/distiller/graalvm-jdk-21.0.1+12.1/Contents/Home
+      GRAALVM_HOME: /Users/distiller/graalvm-jdk-25/Contents/Home
     steps:
       - checkout
       - restore_cache:
@@ -135,9 +135,9 @@ jobs:
           command: |
             cd ~
             ls -la
-            if ! [ -d graalvm-jdk-21.0.1+12.1 ]; then
-              curl -O -sL https://download.oracle.com/graalvm/21/archive/graalvm-jdk-21.0.1_macos-x64_bin.tar.gz
-              tar xzf graalvm-jdk-21.0.1_macos-x64_bin.tar.gz
+            if ! [ -d graalvm-jdk-25 ]; then
+              curl -O -sL https://download.oracle.com/graalvm/21/archive/graalvm-jdk-25_macos-x64_bin.tar.gz
+              tar xzf graalvm-jdk-25_macos-x64_bin.tar.gz
             fi
       # - run:
       #     name: Run JVM tests
@@ -151,18 +151,18 @@ jobs:
       - save_cache:
           paths:
             - ~/.m2
-            - ~/graalvm-jdk-21.0.1+12.1
+            - ~/graalvm-jdk-25
           key: mac-{{ checksum "deps.edn" }}-{{ checksum ".circleci/config.yml" }}
       - store_artifacts:
           path: dist
           destination: dist
 
-  macm4:
+  macm1:
     macos:
       xcode: "14.3.1"
       resource_class: m4pro.medium
     environment:
-      GRAALVM_HOME: /Users/distiller/graalvm-jdk-21.0.1+12.1/Contents/Home
+      GRAALVM_HOME: /Users/distiller/graalvm-jdk-25/Contents/Home
     steps:
       - checkout
       - restore_cache:
@@ -177,9 +177,9 @@ jobs:
           command: |
             cd ~
             ls -la
-            if ! [ -d graalvm-jdk-21.0.1+12.1 ]; then
-              curl -O -sL https://download.oracle.com/graalvm/21/archive/graalvm-jdk-21.0.1_macos-aarch64_bin.tar.gz
-              tar xzf graalvm-jdk-21.0.1_macos-aarch64_bin.tar.gz
+            if ! [ -d graalvm-jdk-25 ]; then
+              curl -O -sL https://download.oracle.com/graalvm/21/archive/graalvm-jdk-25_macos-aarch64_bin.tar.gz
+              tar xzf graalvm-jdk-25_macos-aarch64_bin.tar.gz
             fi
       # - run:
       #     name: Run JVM tests
@@ -193,7 +193,7 @@ jobs:
       - save_cache:
           paths:
             - ~/.m2
-            - ~/graalvm-jdk-21.0.1+12.1
+            - ~/graalvm-jdk-25
           key: mac-{{ checksum "deps.edn" }}-{{ checksum ".circleci/config.yml" }}
       - store_artifacts:
           path: dist
@@ -223,7 +223,7 @@ jobs:
               Write-Host "skipping graal download."
             } else {
               Write-Host "downloading graal..."
-              (New-Object Net.WebClient).DownloadFile( 'https://download.oracle.com/graalvm/21/archive/graalvm-jdk-21.0.1_windows-x64_bin.zip', 'graalvm.zip')
+              (New-Object Net.WebClient).DownloadFile( 'https://download.oracle.com/graalvm/21/archive/graalvm-jdk-25_windows-x64_bin.zip', 'graalvm.zip')
             }
 
             if (Test-Path('graalvm')) {
@@ -256,14 +256,14 @@ jobs:
             lib /out:build\bbssh.lib bbssh.obj
 
             Write-Host "installing bbssh lib..."
-            copy build\bbssh.lib C:\Users\circleci\project\graalvm\graalvm-jdk-21.0.1+12.1\lib\static\windows-amd64\
+            copy build\bbssh.lib C:\Users\circleci\project\graalvm\graalvm-jdk-25\lib\static\windows-amd64\
 
             Write-Host "Installed clojure:"
             clj --version
 
-            $env:Path = 'C:\Users\circleci\project\graalvm\graalvm-jdk-21.0.1+12.1\bin;' + $env:Path
-            $env:GRAALVM_HOME = 'C:\Users\circleci\project\graalvm\graalvm-jdk-21.0.1+12.1'
-            $env:JAVA_HOME = 'C:\Users\circleci\project\graalvm\graalvm-jdk-21.0.1+12.1'
+            $env:Path = 'C:\Users\circleci\project\graalvm\graalvm-jdk-25\bin;' + $env:Path
+            $env:GRAALVM_HOME = 'C:\Users\circleci\project\graalvm\graalvm-jdk-25'
+            $env:JAVA_HOME = 'C:\Users\circleci\project\graalvm\graalvm-jdk-25'
 
             Write-Host "PATH: $env:Path"
             Write-Host "GRAALVM_HOME: $env:GRAALVM_HOME"
@@ -276,7 +276,7 @@ jobs:
             clj -M:native-image-windows
 
             Write-Host "Cleaning bbssh.lib..."
-            Remove-Item "C:\Users\circleci\project\graalvm\graalvm-jdk-21.0.1+12.1\lib\static\windows-amd64\bbssh.lib"
+            Remove-Item "C:\Users\circleci\project\graalvm\graalvm-jdk-25\lib\static\windows-amd64\bbssh.lib"
 
             # Write-Host "testing bbssh..."
             # $env:TEST = 1
@@ -314,7 +314,7 @@ workflows:
           filters:
             branches:
               only: main
-      - macm4:
+      - macm1:
           filters:
             branches:
               only: main

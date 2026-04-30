@@ -145,7 +145,7 @@ codox-upload:
 #
 ARCH=x86_64
 MUSL_PREBUILT_TOOLCHAIN_VERSION=10.2.1
-ZLIB_VERSION=1.3
+ZLIB_VERSION=1.3.2
 CURRENT_DIR = $(shell pwd)
 
 toolchain/$(ARCH)-linux-musl-native/bin/gcc:

@@ -42,7 +42,7 @@ jobs:
           command: |
             cd ~
             if ! [ -d graalvm-jdk-25 ]; then
-              curl -O -sL https://download.oracle.com/graalvm/21/archive/graalvm-jdk-25_linux-x64_bin.tar.gz
+              curl -O -sL https://download.oracle.com/graalvm/25/archive/graalvm-jdk-25_linux-x64_bin.tar.gz
               tar xzf graalvm-jdk-25_linux-x64_bin.tar.gz
             fi
       - run:
@@ -94,7 +94,7 @@ jobs:
           command: |
             cd ~
             if ! [ -d graalvm-jdk-25 ]; then
-              curl -O -sL https://download.oracle.com/graalvm/21/archive/graalvm-jdk-25_linux-x64_bin.tar.gz
+              curl -O -sL https://download.oracle.com/graalvm/25/archive/graalvm-jdk-25_linux-x64_bin.tar.gz
               tar xzf graalvm-jdk-25_linux-x64_bin.tar.gz
             fi
       - run:
@@ -136,7 +136,7 @@ jobs:
             cd ~
             ls -la
             if ! [ -d graalvm-jdk-25 ]; then
-              curl -O -sL https://download.oracle.com/graalvm/21/archive/graalvm-jdk-25_macos-x64_bin.tar.gz
+              curl -O -sL https://download.oracle.com/graalvm/25/archive/graalvm-jdk-25_macos-x64_bin.tar.gz
               tar xzf graalvm-jdk-25_macos-x64_bin.tar.gz
             fi
       # - run:
@@ -178,7 +178,7 @@ jobs:
             cd ~
             ls -la
             if ! [ -d graalvm-jdk-25 ]; then
-              curl -O -sL https://download.oracle.com/graalvm/21/archive/graalvm-jdk-25_macos-aarch64_bin.tar.gz
+              curl -O -sL https://download.oracle.com/graalvm/25/archive/graalvm-jdk-25_macos-aarch64_bin.tar.gz
               tar xzf graalvm-jdk-25_macos-aarch64_bin.tar.gz
             fi
       # - run:
@@ -223,7 +223,7 @@ jobs:
               Write-Host "skipping graal download."
             } else {
               Write-Host "downloading graal..."
-              (New-Object Net.WebClient).DownloadFile( 'https://download.oracle.com/graalvm/21/archive/graalvm-jdk-25_windows-x64_bin.zip', 'graalvm.zip')
+              (New-Object Net.WebClient).DownloadFile( 'https://download.oracle.com/graalvm/25/archive/graalvm-jdk-25_windows-x64_bin.zip', 'graalvm.zip')
             }
 
             if (Test-Path('graalvm')) {

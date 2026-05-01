@@ -3,6 +3,13 @@ All notable changes to this project will be documented in this file. This change
 
 ## [Unreleased]
 
+## [0.7.0] - 2026-5-1
+
+### Fixed
+- config-repository/openssh-config-file fails - #17
+- config/get-values fails
+- some documentation examples
+
 ## [0.6.0] - 2023-11-30
 
 ### Fixed

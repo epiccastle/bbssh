@@ -6,7 +6,7 @@
 (ns my-program
   (:require [babashka.pods :as pods]))
 
-(pods/load-pod 'epiccastle/bbssh "0.6.0")
+(pods/load-pod 'epiccastle/bbssh "0.7.0")
 ```
 
 ## Requiring
@@ -163,6 +163,7 @@ You can scp files from the local filesystem to a remote machine with `pod.epicca
               "local-destination"
               {:session session})
 ;; => nil
+
 ```
 
 ## Copying a remote directory to the local machine

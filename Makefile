@@ -52,7 +52,11 @@ src/c/jni/BbsshUtils.class: src/c/jni/BbsshUtils.java
 
 build/libbbssh.a: src/c/native/BbsshUtils.class
 	-mkdir build
+ifeq ($(UNAME),Darwin)
+	$(CC) -arch $(MAC_ARCH) $(INCLUDE_ARGS) -c src/c/bbssh.c -o build/libbbssh.a
+else
 	$(CC) $(INCLUDE_ARGS) -c src/c/bbssh.c -o build/libbbssh.a
+endif
 
 build/libbbssh.so: src/c/jni/BbsshUtils.class
 	-mkdir build

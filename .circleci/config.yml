@@ -42,7 +42,7 @@ jobs:
           command: |
             cd ~
             if ! [ -d graalvm-jdk-24.0.2+11.1 ]; then
-              curl -O -sL https://download.oracle.com/graalvm/25/archive/graalvm-jdk-24.0.2_linux-x64_bin.tar.gz
+              curl -O -sL https://download.oracle.com/graalvm/24/archive/graalvm-jdk-24.0.2_linux-x64_bin.tar.gz
               tar xzf graalvm-jdk-24.0.2_linux-x64_bin.tar.gz
             fi
       - run:
@@ -95,7 +95,7 @@ jobs:
             cd ~
             if ! [ -d graalvm-jdk-24.0.2+11.1 ]; then
               echo "missing"
-              curl -O -sL https://download.oracle.com/graalvm/25/archive/graalvm-jdk-24.0.2_linux-x64_bin.tar.gz
+              curl -O -sL https://download.oracle.com/graalvm/24/archive/graalvm-jdk-24.0.2_linux-x64_bin.tar.gz
               tar xzf graalvm-jdk-24.0.2_linux-x64_bin.tar.gz
             else
               echo "exists"
@@ -227,7 +227,7 @@ jobs:
               Write-Host "skipping graal download."
             } else {
               Write-Host "downloading graal..."
-              (New-Object Net.WebClient).DownloadFile( 'https://download.oracle.com/graalvm/25/archive/graalvm-jdk-24.0.2_windows-x64_bin.zip', 'graalvm.zip')
+              (New-Object Net.WebClient).DownloadFile( 'https://download.oracle.com/graalvm/24/archive/graalvm-jdk-24.0.2_windows-x64_bin.zip', 'graalvm.zip')
             }
 
             if (Test-Path('graalvm')) {

@@ -156,7 +156,7 @@ jobs:
           paths:
             - ~/.m2
             - ~/graalvm-jdk-24.0.2+11.1
-          key: mac-{{ checksum "deps.edn" }}-{{ checksum ".circleci/config.yml" }}
+          key: mac-x86_64-{{ checksum "deps.edn" }}-{{ checksum ".circleci/config.yml" }}
       - store_artifacts:
           path: dist
           destination: dist
@@ -198,7 +198,7 @@ jobs:
           paths:
             - ~/.m2
             - ~/graalvm-jdk-24.0.2+11.1
-          key: mac-{{ checksum "deps.edn" }}-{{ checksum ".circleci/config.yml" }}
+          key: mac-amd64-{{ checksum "deps.edn" }}-{{ checksum ".circleci/config.yml" }}
       - store_artifacts:
           path: dist
           destination: dist

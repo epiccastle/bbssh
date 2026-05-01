@@ -11,6 +11,7 @@ JAVA_HOME=$(GRAALVM_HOME)
 JAVAC=$(JAVA_HOME)/bin/javac
 INCLUDE_DIRS=$(shell find $(JAVA_HOME)/include -type d)
 INCLUDE_ARGS=$(INCLUDE_DIRS:%=-I%)
+MAC_ARCH=arm64
 CLOJURE_FILES=$(shell find src/clj -name '*.clj')
 ifeq ($(UNAME),Linux)
 	NATIVE_LIB_FILE=build/libbbssh.a
@@ -51,7 +52,7 @@ src/c/jni/BbsshUtils.class: src/c/jni/BbsshUtils.java
 
 build/libbbssh.a: src/c/native/BbsshUtils.class
 	-mkdir build
-	$(CC) $(INCLUDE_ARGS) -c src/c/bbssh.c -o build/libbbssh.a
+	$(CC) -arch $(MAC_ARCH) $(INCLUDE_ARGS) -c src/c/bbssh.c -o build/libbbssh.a
 
 build/libbbssh.so: src/c/jni/BbsshUtils.class
 	-mkdir build

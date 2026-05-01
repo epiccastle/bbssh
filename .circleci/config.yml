@@ -150,7 +150,7 @@ jobs:
       - run:
           name: Build binary
           command: |
-            make package-macos GRAALVM_HOME=$GRAALVM_HOME STATIC=false
+            make package-macos GRAALVM_HOME=$GRAALVM_HOME STATIC=false MAC_ARCH=x86_64
           no_output_timeout: 40m
       - save_cache:
           paths:

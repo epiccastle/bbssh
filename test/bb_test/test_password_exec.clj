@@ -259,14 +259,3 @@
       (is (= "foo bar baz\n" (:err process)))))
 
   (docker/cleanup))
-
-
-
-
-#_
-(deftest exec-in-nil
-  (docker/cleanup)
-  (docker/build {:root-password "root-access-please"})
-  (docker/start {:ssh-port 9876})
-
-  (docker/cleanup))

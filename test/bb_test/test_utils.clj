@@ -133,5 +133,4 @@
            string/split-lines
            second
            (string/starts-with? "drwx------")))
-  (process/sh "rm -rf .test")
-  )
+  (process/sh "rm -rf .test"))

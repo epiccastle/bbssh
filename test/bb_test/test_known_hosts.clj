@@ -161,7 +161,4 @@
                (host-key-repository/check
                 hkr
                 new-host
-                new-key))))
-
-
-      )))
+                new-key)))))))

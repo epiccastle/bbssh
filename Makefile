@@ -52,7 +52,7 @@ src/c/jni/BbsshUtils.class: src/c/jni/BbsshUtils.java
 
 build/libbbssh.a: src/c/native/BbsshUtils.class
 	-mkdir build
-	$(CC) -arch $(MAC_ARCH) $(INCLUDE_ARGS) -c src/c/bbssh.c -o build/libbbssh.a
+	$(CC) $(INCLUDE_ARGS) -c src/c/bbssh.c -o build/libbbssh.a
 
 build/libbbssh.so: src/c/jni/BbsshUtils.class
 	-mkdir build
@@ -64,7 +64,7 @@ build/libbbssh.so: src/c/jni/BbsshUtils.class
 
 build/libbbssh.dylib: src/c/jni/BbsshUtils.class
 	-mkdir build
-	$(CC) $(INCLUDE_ARGS) -dynamiclib \
+	$(CC) -arch $(MAC_ARCH) $(INCLUDE_ARGS) -dynamiclib \
 		-undefined suppress \
 		-flat_namespace \
 		-Isrc/c \

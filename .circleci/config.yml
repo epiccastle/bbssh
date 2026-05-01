@@ -125,7 +125,7 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - mac-{{ checksum "deps.edn" }}-{{ checksum ".circleci/config.yml" }}
+            - mac-x86_64-{{ checksum "deps.edn" }}-{{ checksum ".circleci/config.yml" }}
       - run:
           name: Install Clojure
           command: |
@@ -171,7 +171,7 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - mac-{{ checksum "deps.edn" }}-{{ checksum ".circleci/config.yml" }}
+            - mac-amd64-{{ checksum "deps.edn" }}-{{ checksum ".circleci/config.yml" }}
       - run:
           name: Install Clojure
           command: |

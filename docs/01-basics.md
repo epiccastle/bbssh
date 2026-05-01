@@ -6,7 +6,7 @@
 (ns my-program
   (:require [babashka.pods :as pods]))
 
-(pods/load-pod 'epiccastle/bbssh "0.1.0")
+(pods/load-pod 'epiccastle/bbssh "0.6.0")
 ```
 
 ## Requiring

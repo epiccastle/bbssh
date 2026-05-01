@@ -44,7 +44,8 @@ Try writing the following into `test_bbssh.clj`
 (let [session (bbssh/ssh "localhost")]
   (-> (bbssh/exec session "echo 'I am running over ssh'" {:out :string})
       deref
-      :out))
+      :out
+      prn))
 ```
 
 Then execute the file with babashka. You will be prompted for your ssh password. Enter it and press return:

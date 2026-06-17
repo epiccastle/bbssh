@@ -1,8 +1,8 @@
-(ns pod.epiccastle.bbssh.output-stream
+(ns pod.epiccastle.bbssh.impl.output-stream
   "Creates and calls the various methods of a PipedOutputStream that
   exists on the pod heap."
   (:refer-clojure :exclude [flush])
-  (:require [pod.epiccastle.bbssh.pod.output-stream :as output-stream]
+  (:require [pod.epiccastle.bbssh.pod.impl.output-stream :as output-stream]
             [pod.epiccastle.bbssh.impl.cleaner :as cleaner]
             [pod.epiccastle.bbssh.impl.utils :as utils]))
 
@@ -87,7 +87,7 @@
 (defn new-pod-proxy
   [callbacks]
   (utils/new-invoker
-   {:call-sym 'pod.epiccastle.bbssh.pod.output-stream/new-pod-proxy
+   {:call-sym 'pod.epiccastle.bbssh.pod.impl.output-stream/new-pod-proxy
     :args []
     :callbacks callbacks
     :preprocess-args-fn preprocess-args}))

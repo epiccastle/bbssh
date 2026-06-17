@@ -6,8 +6,8 @@
             [pod.epiccastle.bbssh.pod.agent]
             [pod.epiccastle.bbssh.pod.session]
             [pod.epiccastle.bbssh.pod.channel-exec]
-            [pod.epiccastle.bbssh.pod.input-stream]
-            [pod.epiccastle.bbssh.pod.output-stream]
+            [pod.epiccastle.bbssh.pod.impl.input-stream]
+            [pod.epiccastle.bbssh.pod.impl.output-stream]
             [pod.epiccastle.bbssh.pod.byte-array-input-stream]
             [pod.epiccastle.bbssh.pod.byte-array-output-stream]
             [pod.epiccastle.bbssh.pod.user-info]
@@ -138,8 +138,8 @@
                          pod.epiccastle.bbssh.pod.agent
                          pod.epiccastle.bbssh.pod.session
                          pod.epiccastle.bbssh.pod.channel-exec
-                         pod.epiccastle.bbssh.pod.input-stream
-                         pod.epiccastle.bbssh.pod.output-stream
+                         pod.epiccastle.bbssh.pod.impl.input-stream
+                         pod.epiccastle.bbssh.pod.impl.output-stream
                          pod.epiccastle.bbssh.pod.byte-array-input-stream
                          pod.epiccastle.bbssh.pod.byte-array-output-stream
                          pod.epiccastle.bbssh.pod.user-info
@@ -166,8 +166,8 @@
                          pod.epiccastle.bbssh.agent
                          pod.epiccastle.bbssh.session
                          pod.epiccastle.bbssh.channel-exec
-                         pod.epiccastle.bbssh.input-stream
-                         pod.epiccastle.bbssh.output-stream
+                         pod.epiccastle.bbssh.impl.input-stream
+                         pod.epiccastle.bbssh.impl.output-stream
                          pod.epiccastle.bbssh.byte-array-input-stream
                          pod.epiccastle.bbssh.byte-array-output-stream
                          pod.epiccastle.bbssh.user-info

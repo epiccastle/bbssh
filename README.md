@@ -3,7 +3,7 @@ Babashka pod for SSH support.
 
 [![CircleCI](https://circleci.com/gh/epiccastle/bbssh/tree/main.svg?style=shield)](https://circleci.com/gh/epiccastle/bbssh/tree/main)
 [![Babashka](https://raw.githubusercontent.com/babashka/babashka/master/logo/badge.svg)](https://github.com/babashka/babashka)
-[![docs](https://img.shields.io/badge/website-docs-blue)](https://epiccastle.io/bbssh)
+[![docs](https://img.shields.io/badge/website-docs-blue)](https://epiccastle.io/bbssh/1.0.0)
 
 ## Installing
 

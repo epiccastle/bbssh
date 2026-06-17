@@ -139,10 +139,10 @@ codox: src/c/jni/BbsshUtils.class
 	cp -a src/bb codox-processed
 	sed -e "s/babashka.pods/'babashka.pods/" codox-processed/bb/pod/epiccastle/bbssh/impl/utils.clj -i
 	sed -e "s/babashka.pods/'babashka.pods/" codox-processed/bb/pod/epiccastle/bbssh/agent.clj -i
-	clj -X:codox
+	clj -X:codox :version '"${VERSION}"'
 
 codox-upload:
-	rsync -av --delete target/docs/ www-data@epiccastle.io:~/epiccastle.io/public/bbssh/
+	rsync -av --delete target/docs/ www-data@epiccastle.io:~/epiccastle.io/public/bbssh/${VERSION}
 
 
 #

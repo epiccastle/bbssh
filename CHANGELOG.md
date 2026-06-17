@@ -3,6 +3,13 @@ All notable changes to this project will be documented in this file. This change
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-6-17
+
+### Fixed
+- mitigate potential vulnarability when copying from remote malicious server. thanks @jjttjj
+- move input-stream and output-stream namespaces under impl subspace
+- bring JSch version up to latest 2.28.0 (Breaking changes)
+
 ## [0.7.0] - 2026-5-1
 
 ### Fixed

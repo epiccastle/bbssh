@@ -52,7 +52,7 @@
              {:host host-hash
               :type "ssh-rsa"
               :key public-b64
-              :finger-print (get-in keys/keys [:rsa-nopassphrase :fingerprint-256])
+              :finger-print (get-in keys/keys [:rsa-nopassphrase :fingerprint])
               :comment "some comment ￰ﾟﾚﾀ " ;; JSch interprets file as ascii?
               :marker ""}))
 

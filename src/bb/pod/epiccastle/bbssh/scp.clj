@@ -407,6 +407,12 @@
     :as options}]
   (io-copy-num-bytes out file length options))
 
+(defn- single-path-component?
+     [name]
+     (and (string? name)
+          (not (#{"" "." ".."} name))
+          (not (string/includes? name "/"))))
+
 (defn- scp-from-receive
   "scp commands copying from remote to local"
   [{:keys [out in] :as process}
@@ -436,6 +442,9 @@
                                        string/trim
                                        (subs 1)
                                        (string/split #" " 3))
+            _ (when-not (single-path-component? filename)
+                   (throw (ex-info "scp: unexpected filename"
+                                   {:type ::path-traversal :name filename})))
             mode (edn/read-string mode) ;; octal
             length (edn/read-string length)
             new-file (if (and (.exists file)
@@ -471,6 +480,9 @@
                                   string/trim
                                   (subs 1)
                                   (string/split #" " 3))
+            _ (when-not (single-path-component? filename)
+                   (throw (ex-info "scp: unexpected filename"
+                                   {:type ::path-traversal :name filename})))
             mode (edn/read-string mode) ;; octal
             dir (File. file filename)]
         (when (and (.exists dir) (not (.isDirectory dir)))
